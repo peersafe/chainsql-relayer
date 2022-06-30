@@ -1,0 +1,19 @@
+{
+    "PolyConfig": {
+      "RestURL": "http://127.0.0.1:21336",
+      "EntranceContractAddress": "0300000000000000000000000000000000000000",
+      "WalletFile": "/home/dbliu/polynetwork/node1/wallet.dat",
+      "WalletPwd": "123456"
+    },
+    "ChainsqlConfig": {
+      "SideChainId": 10000,
+      "ECCMContractAddress": "zUNXDrb1HCyZX3hwCtKHuEyjkkNF7NpdAX",
+      "ECCDContractAddress": "zPPAkeMM8GRF68ZK7SUhpRvw9RVrGcNpAC",
+      "Rpc": "ws://127.0.0.1:6006",
+      "AgencyPath": "agency.crt",
+      "NodePath": "node.crt",
+      "KeyPath": "node.key",
+      "IsGM": false
+    },
+    "BoltDbPath": "./boltdb"
+  }
