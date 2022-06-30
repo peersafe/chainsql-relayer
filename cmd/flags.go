@@ -52,6 +52,12 @@ var (
 		Value: config.DEFAULT_CONFIG_FILE_NAME,
 	}
 
+	ChainsqlConfigPathFlag = cli.StringFlag{
+		Name:  "chainsql",
+		Usage: "chainsql config file `<path>`",
+		Value: config.CHAINSQL_DEFAULT_CONFIG_FILE_NAME,
+	}
+
 	ChainsqlStartForceFlag = cli.Uint64Flag{
 		Name:  "chainsqlforce",
 		Usage: "chainsql start block height ",

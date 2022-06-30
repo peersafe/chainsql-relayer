@@ -4,953 +4,576 @@
 package eccm_abi
 
 import (
+	"errors"
 	"math/big"
 	"strings"
 
-	"github.com/FISCO-BCOS/go-sdk/abi"
-	"github.com/FISCO-BCOS/go-sdk/abi/bind"
-	"github.com/FISCO-BCOS/go-sdk/core/types"
-	"github.com/FISCO-BCOS/go-sdk/event"
-	ethereum "github.com/ethereum/go-ethereum"
-	"github.com/ethereum/go-ethereum/common"
+	"github.com/ChainSQL/go-chainsql-api/abigen/abi"
+	"github.com/ChainSQL/go-chainsql-api/abigen/abi/bind"
+	"github.com/ChainSQL/go-chainsql-api/common"
+	"github.com/ChainSQL/go-chainsql-api/core"
+	"github.com/ChainSQL/go-chainsql-api/data"
+	"github.com/ChainSQL/go-chainsql-api/event"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var (
+	_ = errors.New
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
-	_ = types.BloomLookup
-	_ = event.NewSubscription
 )
 
-// ContextABI is the input ABI used to generate the binding from.
-const ContextABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]"
-
-// Context is an auto generated Go binding around a Solidity contract.
-type Context struct {
-	ContextCaller     // Read-only binding to the contract
-	ContextTransactor // Write-only binding to the contract
-	ContextFilterer   // Log filterer for contract events
-}
-
-// ContextCaller is an auto generated read-only Go binding around a Solidity contract.
-type ContextCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ContextTransactor is an auto generated write-only Go binding around a Solidity contract.
-type ContextTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ContextFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type ContextFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ContextSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type ContextSession struct {
-	Contract     *Context          // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// ContextCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type ContextCallerSession struct {
-	Contract *ContextCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts  // Call options to use throughout this session
-}
-
-// ContextTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type ContextTransactorSession struct {
-	Contract     *ContextTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts  // Transaction auth options to use throughout this session
-}
-
-// ContextRaw is an auto generated low-level Go binding around a Solidity contract.
-type ContextRaw struct {
-	Contract *Context // Generic contract binding to access the raw methods on
-}
-
-// ContextCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type ContextCallerRaw struct {
-	Contract *ContextCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// ContextTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type ContextTransactorRaw struct {
-	Contract *ContextTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewContext creates a new instance of Context, bound to a specific deployed contract.
-func NewContext(address common.Address, backend bind.ContractBackend) (*Context, error) {
-	contract, err := bindContext(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &Context{ContextCaller: ContextCaller{contract: contract}, ContextTransactor: ContextTransactor{contract: contract}, ContextFilterer: ContextFilterer{contract: contract}}, nil
-}
-
-// NewContextCaller creates a new read-only instance of Context, bound to a specific deployed contract.
-func NewContextCaller(address common.Address, caller bind.ContractCaller) (*ContextCaller, error) {
-	contract, err := bindContext(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ContextCaller{contract: contract}, nil
-}
-
-// NewContextTransactor creates a new write-only instance of Context, bound to a specific deployed contract.
-func NewContextTransactor(address common.Address, transactor bind.ContractTransactor) (*ContextTransactor, error) {
-	contract, err := bindContext(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ContextTransactor{contract: contract}, nil
-}
-
-// NewContextFilterer creates a new log filterer instance of Context, bound to a specific deployed contract.
-func NewContextFilterer(address common.Address, filterer bind.ContractFilterer) (*ContextFilterer, error) {
-	contract, err := bindContext(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &ContextFilterer{contract: contract}, nil
-}
-
-// bindContext binds a generic wrapper to an already deployed contract.
-func bindContext(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(ContextABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Context *ContextRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Context.Contract.ContextCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Context *ContextRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Context.Contract.ContextTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Context *ContextRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Context.Contract.ContextTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Context *ContextCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Context.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Context *ContextTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Context.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Context *ContextTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Context.Contract.contract.Transact(opts, method, params...)
-}
-
-// ECCUtilsABI is the input ABI used to generate the binding from.
-const ECCUtilsABI = "[]"
-
-// ECCUtilsBin is the compiled bytecode used for deploying new contracts.
-var ECCUtilsBin = "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820b42f8897e8276ec644811aff0300f293e30cad193f15472ba636eac21ce99d7f0029"
-
-// DeployECCUtils deploys a new contract, binding an instance of ECCUtils to it.
-func DeployECCUtils(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ECCUtils, error) {
-	parsed, err := abi.JSON(strings.NewReader(ECCUtilsABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ECCUtilsBin), backend)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &ECCUtils{ECCUtilsCaller: ECCUtilsCaller{contract: contract}, ECCUtilsTransactor: ECCUtilsTransactor{contract: contract}, ECCUtilsFilterer: ECCUtilsFilterer{contract: contract}}, nil
-}
-
-func AsyncDeployECCUtils(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(ECCUtilsABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(ECCUtilsBin), backend)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// ECCUtils is an auto generated Go binding around a Solidity contract.
-type ECCUtils struct {
-	ECCUtilsCaller     // Read-only binding to the contract
-	ECCUtilsTransactor // Write-only binding to the contract
-	ECCUtilsFilterer   // Log filterer for contract events
-}
-
-// ECCUtilsCaller is an auto generated read-only Go binding around a Solidity contract.
-type ECCUtilsCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ECCUtilsTransactor is an auto generated write-only Go binding around a Solidity contract.
-type ECCUtilsTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ECCUtilsFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type ECCUtilsFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ECCUtilsSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type ECCUtilsSession struct {
-	Contract     *ECCUtils         // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// ECCUtilsCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type ECCUtilsCallerSession struct {
-	Contract *ECCUtilsCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts   // Call options to use throughout this session
-}
-
-// ECCUtilsTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type ECCUtilsTransactorSession struct {
-	Contract     *ECCUtilsTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
-}
-
-// ECCUtilsRaw is an auto generated low-level Go binding around a Solidity contract.
-type ECCUtilsRaw struct {
-	Contract *ECCUtils // Generic contract binding to access the raw methods on
-}
-
-// ECCUtilsCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type ECCUtilsCallerRaw struct {
-	Contract *ECCUtilsCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// ECCUtilsTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type ECCUtilsTransactorRaw struct {
-	Contract *ECCUtilsTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewECCUtils creates a new instance of ECCUtils, bound to a specific deployed contract.
-func NewECCUtils(address common.Address, backend bind.ContractBackend) (*ECCUtils, error) {
-	contract, err := bindECCUtils(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &ECCUtils{ECCUtilsCaller: ECCUtilsCaller{contract: contract}, ECCUtilsTransactor: ECCUtilsTransactor{contract: contract}, ECCUtilsFilterer: ECCUtilsFilterer{contract: contract}}, nil
-}
-
-// NewECCUtilsCaller creates a new read-only instance of ECCUtils, bound to a specific deployed contract.
-func NewECCUtilsCaller(address common.Address, caller bind.ContractCaller) (*ECCUtilsCaller, error) {
-	contract, err := bindECCUtils(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ECCUtilsCaller{contract: contract}, nil
-}
-
-// NewECCUtilsTransactor creates a new write-only instance of ECCUtils, bound to a specific deployed contract.
-func NewECCUtilsTransactor(address common.Address, transactor bind.ContractTransactor) (*ECCUtilsTransactor, error) {
-	contract, err := bindECCUtils(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ECCUtilsTransactor{contract: contract}, nil
-}
-
-// NewECCUtilsFilterer creates a new log filterer instance of ECCUtils, bound to a specific deployed contract.
-func NewECCUtilsFilterer(address common.Address, filterer bind.ContractFilterer) (*ECCUtilsFilterer, error) {
-	contract, err := bindECCUtils(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &ECCUtilsFilterer{contract: contract}, nil
-}
-
-// bindECCUtils binds a generic wrapper to an already deployed contract.
-func bindECCUtils(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(ECCUtilsABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ECCUtils *ECCUtilsRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ECCUtils.Contract.ECCUtilsCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ECCUtils *ECCUtilsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ECCUtils.Contract.ECCUtilsTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ECCUtils *ECCUtilsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ECCUtils.Contract.ECCUtilsTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ECCUtils *ECCUtilsCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ECCUtils.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ECCUtils *ECCUtilsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ECCUtils.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ECCUtils *ECCUtilsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ECCUtils.Contract.contract.Transact(opts, method, params...)
+// EthCrossChainManagerMetaData contains all meta data concerning the EthCrossChainManager contract.
+var EthCrossChainManagerMetaData = &core.CtrMetaData{
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_eccd\",\"type\":\"address\"},{\"internalType\":\"uint64\",\"name\":\"_chainId\",\"type\":\"uint64\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"height\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"rawHeader\",\"type\":\"bytes\"}],\"name\":\"ChangeBookKeeperEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"txId\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"proxyOrAssetContract\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"toChainId\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"toContract\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"rawdata\",\"type\":\"bytes\"}],\"name\":\"CrossChainEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"height\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"rawHeader\",\"type\":\"bytes\"}],\"name\":\"InitGenesisBlockEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"fromChainID\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"toContract\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"crossChainTxHash\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"fromChainTxHash\",\"type\":\"bytes\"}],\"name\":\"VerifyHeaderAndExecuteTxEvent\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"EthCrossChainDataAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"chainId\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"pubKeyList\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"sigList\",\"type\":\"bytes\"}],\"name\":\"changeBookKeeper\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"toChainId\",\"type\":\"uint64\"},{\"internalType\":\"bytes\",\"name\":\"toContract\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"method\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"txData\",\"type\":\"bytes\"}],\"name\":\"crossChain\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"pubKeyList\",\"type\":\"bytes\"}],\"name\":\"initGenesisBlock\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"pause\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint64\",\"name\":\"_newChainId\",\"type\":\"uint64\"}],\"name\":\"setChainId\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"unpause\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"newEthCrossChainManagerAddress\",\"type\":\"address\"}],\"name\":\"upgradeToNew\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"proof\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"headerProof\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"curRawHeader\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"headerSig\",\"type\":\"bytes\"}],\"name\":\"verifyHeaderAndExecuteTx\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x60806040523480156200001157600080fd5b5060405162006d3b38038062006d3b833981810160405260408110156200003757600080fd5b81019080805190602001909291908051906020019092919050505081816000620000666200019260201b60201c565b9050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508073ffffffffffffffffffffffffffffffffffffffff16600073ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a35060008060146101000a81548160ff02191690831515021790555081600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600160146101000a81548167ffffffffffffffff021916908367ffffffffffffffff160217905550505050506200019a565b600033905090565b616b9180620001aa6000396000f3fe608060405234801561001057600080fd5b50600436106100f45760003560e01c80637e724ff3116100975780639a8a0592116100665780639a8a059214610636578063bd5cf62514610668578063d450e04c146107b7578063f2fde38b14610ae6576100f4565b80637e724ff31461054c5780638456cb59146105a85780638da5cb5b146105ca5780638f32d59b14610614576100f4565b80633f4ba83a116100d35780633f4ba83a146104ae5780635c975abb146104d05780636f31031d146104f2578063715018a614610542576100f4565b8062ba1694146100f957806329dcf4ab1461014357806334a773eb14610344575b600080fd5b610101610b2a565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61032a6004803603606081101561015957600080fd5b810190808035906020019064010000000081111561017657600080fd5b82018360208201111561018857600080fd5b803590602001918460018302840111640100000000831117156101aa57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561020d57600080fd5b82018360208201111561021f57600080fd5b8035906020019184600183028401116401000000008311171561024157600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803590602001906401000000008111156102a457600080fd5b8201836020820111156102b657600080fd5b803590602001918460018302840111640100000000831117156102d857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610b50565b604051808215151515815260200191505060405180910390f35b6104946004803603604081101561035a57600080fd5b810190808035906020019064010000000081111561037757600080fd5b82018360208201111561038957600080fd5b803590602001918460018302840111640100000000831117156103ab57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561040e57600080fd5b82018360208201111561042057600080fd5b8035906020019184600183028401116401000000008311171561044257600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929050505061130f565b604051808215151515815260200191505060405180910390f35b6104b661190d565b604051808215151515815260200191505060405180910390f35b6104d8611b2d565b604051808215151515815260200191505060405180910390f35b6105286004803603602081101561050857600080fd5b81019080803567ffffffffffffffff169060200190929190505050611b43565b604051808215151515815260200191505060405180910390f35b61054a611c72565b005b61058e6004803603602081101561056257600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050611dab565b604051808215151515815260200191505060405180910390f35b6105b0611f70565b604051808215151515815260200191505060405180910390f35b6105d261218e565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61061c6121b7565b604051808215151515815260200191505060405180910390f35b61063e612215565b604051808267ffffffffffffffff1667ffffffffffffffff16815260200191505060405180910390f35b61079d6004803603608081101561067e57600080fd5b81019080803567ffffffffffffffff169060200190929190803590602001906401000000008111156106af57600080fd5b8201836020820111156106c157600080fd5b803590602001918460018302840111640100000000831117156106e357600080fd5b90919293919293908035906020019064010000000081111561070457600080fd5b82018360208201111561071657600080fd5b8035906020019184600183028401116401000000008311171561073857600080fd5b90919293919293908035906020019064010000000081111561075957600080fd5b82018360208201111561076b57600080fd5b8035906020019184600183028401116401000000008311171561078d57600080fd5b909192939192939050505061222f565b604051808215151515815260200191505060405180910390f35b610acc600480360360a08110156107cd57600080fd5b81019080803590602001906401000000008111156107ea57600080fd5b8201836020820111156107fc57600080fd5b8035906020019184600183028401116401000000008311171561081e57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561088157600080fd5b82018360208201111561089357600080fd5b803590602001918460018302840111640100000000831117156108b557600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019064010000000081111561091857600080fd5b82018360208201111561092a57600080fd5b8035906020019184600183028401116401000000008311171561094c57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803590602001906401000000008111156109af57600080fd5b8201836020820111156109c157600080fd5b803590602001918460018302840111640100000000831117156109e357600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929080359060200190640100000000811115610a4657600080fd5b820183602082011115610a5857600080fd5b80359060200191846001830284011164010000000083111715610a7a57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050612ad7565b604051808215151515815260200191505060405180910390f35b610b2860048036036020811015610afc57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050613531565b005b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060149054906101000a900460ff1615610bd4576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260108152602001807f5061757361626c653a207061757365640000000000000000000000000000000081525060200191505060405180910390fd5b610bdc616549565b610be5856135b7565b90506000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905060008173ffffffffffffffffffffffffffffffffffffffff16635ac407906040518163ffffffff1660e01b815260040160206040518083038186803b158015610c5657600080fd5b505afa158015610c6a573d6000803e3d6000fd5b505050506040513d6020811015610c8057600080fd5b810190808051906020019092919050505063ffffffff1690508067ffffffffffffffff16836060015163ffffffff1611610d05576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603e81526020018061681f603e913960400191505060405180910390fd5b600060601b6bffffffffffffffffffffffff19168361014001516bffffffffffffffffffffffff19161415610d85576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260258152602001806166cb6025913960400191505060405180910390fd5b6060610ece8373ffffffffffffffffffffffffffffffffffffffff166369d480746040518163ffffffff1660e01b815260040160006040518083038186803b158015610dd057600080fd5b505afa158015610de4573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f820116820180604052506020811015610e0e57600080fd5b8101908080516040519392919084640100000000821115610e2e57600080fd5b83820191506020820185811115610e4457600080fd5b8251866001820283011164010000000082111715610e6157600080fd5b8083526020830192505050908051906020019080838360005b83811015610e95578082015181840152602081019050610e7a565b50505050905090810190601f168015610ec25780820380516001836020036101000a031916815260200191505b50604052505050613742565b9050600081519050610ef189888460036001860381610ee957fe5b048503613830565b610f63576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260188152602001807f566572696679207369676e6174757265206661696c656421000000000000000081525060200191505060405180910390fd5b60006060610f708a613ae3565b91509150816bffffffffffffffffffffffff19168761014001516bffffffffffffffffffffffff19161461100c576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260138152602001807f4e657874426f6f6b65727320696c6c6567616c0000000000000000000000000081525060200191505060405180910390fd5b8573ffffffffffffffffffffffffffffffffffffffff16638a8bd17f88606001516040518263ffffffff1660e01b8152600401808263ffffffff1663ffffffff168152602001915050602060405180830381600087803b15801561106f57600080fd5b505af1158015611083573d6000803e3d6000fd5b505050506040513d602081101561109957600080fd5b81019080805190602001909291905050506110ff576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602d815260200180616919602d913960400191505060405180910390fd5b8573ffffffffffffffffffffffffffffffffffffffff166341973cd961112483613c13565b6040518263ffffffff1660e01b81526004018080602001828103825283818151815260200191508051906020019080838360005b83811015611173578082015181840152602081019050611158565b50505050905090810190601f1680156111a05780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156111bf57600080fd5b505af11580156111d3573d6000803e3d6000fd5b505050506040513d60208110156111e957600080fd5b810190808051906020019092919050505061124f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252603b815260200180616888603b913960400191505060405180910390fd5b7fe60d33488cba3977bf65766cd2f8ac9617f64bf3b3198aff6240ce5c7d43b69087606001518c604051808363ffffffff16815260200180602001828103825283818151815260200191508051906020019080838360005b838110156112c25780820151818401526020810190506112a7565b50505050905090810190601f1680156112ef5780820380516001836020036101000a031916815260200191505b50935050505060405180910390a160019750505050505050509392505050565b60008060149054906101000a900460ff1615611393576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260108152602001807f5061757361626c653a207061757365640000000000000000000000000000000081525060200191505060405180910390fd5b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905060008173ffffffffffffffffffffffffffffffffffffffff166369d480746040518163ffffffff1660e01b815260040160006040518083038186803b15801561140257600080fd5b505afa158015611416573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f82011682018060405250602081101561144057600080fd5b810190808051604051939291908464010000000082111561146057600080fd5b8382019150602082018581111561147657600080fd5b825186600182028301116401000000008211171561149357600080fd5b8083526020830192505050908051906020019080838360005b838110156114c75780820151818401526020810190506114ac565b50505050905090810190601f1680156114f45780820380516001836020036101000a031916815260200191505b506040525050505114611552576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260388152602001806169fe6038913960400191505060405180910390fd5b61155a616549565b611563856135b7565b90506000606061157286613ae3565b91509150816bffffffffffffffffffffffff19168361014001516bffffffffffffffffffffffff19161461160e576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260138152602001807f4e657874426f6f6b65727320696c6c6567616c0000000000000000000000000081525060200191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff16638a8bd17f84606001516040518263ffffffff1660e01b8152600401808263ffffffff1663ffffffff168152602001915050602060405180830381600087803b15801561167157600080fd5b505af1158015611685573d6000803e3d6000fd5b505050506040513d602081101561169b57600080fd5b8101908080519060200190929190505050611701576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260438152602001806167626043913960600191505060405180910390fd5b8373ffffffffffffffffffffffffffffffffffffffff166341973cd961172683613c13565b6040518263ffffffff1660e01b81526004018080602001828103825283818151815260200191508051906020019080838360005b8381101561177557808201518184015260208101905061175a565b50505050905090810190601f1680156117a25780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156117c157600080fd5b505af11580156117d5573d6000803e3d6000fd5b505050506040513d60208110156117eb57600080fd5b8101908080519060200190929190505050611851576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526043815260200180616a366043913960600191505060405180910390fd5b7ff01968fc3a2655cf1b5144cb32de6dc898f91b9239c103744e8457152ab2fbde836060015188604051808363ffffffff16815260200180602001828103825283818151815260200191508051906020019080838360005b838110156118c45780820151818401526020810190506118a9565b50505050905090810190601f1680156118f15780820380516001836020036101000a031916815260200191505b50935050505060405180910390a1600194505050505092915050565b60006119176121b7565b611989576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b611991611b2d565b1561199f5761199e613d31565b5b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff16635c975abb6040518163ffffffff1660e01b815260040160206040518083038186803b158015611a0c57600080fd5b505afa158015611a20573d6000803e3d6000fd5b505050506040513d6020811015611a3657600080fd5b810190808051906020019092919050505015611b25578073ffffffffffffffffffffffffffffffffffffffff16633f4ba83a6040518163ffffffff1660e01b8152600401602060405180830381600087803b158015611a9457600080fd5b505af1158015611aa8573d6000803e3d6000fd5b505050506040513d6020811015611abe57600080fd5b8101908080519060200190929190505050611b24576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260298152602001806166f06029913960400191505060405180910390fd5b5b600191505090565b60008060149054906101000a900460ff16905090565b60008060149054906101000a900460ff16611bc6576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260148152602001807f5061757361626c653a206e6f742070617573656400000000000000000000000081525060200191505060405180910390fd5b611bce6121b7565b611c40576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b81600160146101000a81548167ffffffffffffffff021916908367ffffffffffffffff16021790555060019050919050565b611c7a6121b7565b611cec576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a360008060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550565b60008060149054906101000a900460ff16611e2e576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260148152602001807f5061757361626c653a206e6f742070617573656400000000000000000000000081525060200191505060405180910390fd5b611e366121b7565b611ea8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663f2fde38b846040518263ffffffff1660e01b8152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b158015611f4e57600080fd5b505af1158015611f62573d6000803e3d6000fd5b505050506001915050919050565b6000611f7a6121b7565b611fec576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b611ff4611b2d565b61200157612000613e39565b5b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff16635c975abb6040518163ffffffff1660e01b815260040160206040518083038186803b15801561206e57600080fd5b505afa158015612082573d6000803e3d6000fd5b505050506040513d602081101561209857600080fd5b8101908080519060200190929190505050612186578073ffffffffffffffffffffffffffffffffffffffff16638456cb596040518163ffffffff1660e01b8152600401602060405180830381600087803b1580156120f557600080fd5b505af1158015612109573d6000803e3d6000fd5b505050506040513d602081101561211f57600080fd5b8101908080519060200190929190505050612185576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260278152602001806166a46027913960400191505060405180910390fd5b5b600191505090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166121f9613f43565b73ffffffffffffffffffffffffffffffffffffffff1614905090565b600160149054906101000a900467ffffffffffffffff1681565b60008060149054906101000a900460ff16156122b3576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260108152602001807f5061757361626c653a207061757365640000000000000000000000000000000081525060200191505060405180910390fd5b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905060008173ffffffffffffffffffffffffffffffffffffffff1663ff3d24a16040518163ffffffff1660e01b815260040160206040518083038186803b15801561232257600080fd5b505afa158015612336573d6000803e3d6000fd5b505050506040513d602081101561234c57600080fd5b81019080805190602001909291905050509050606061236a82613f4b565b9050606061237782613ffe565b6124dd60023085604051602001808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1660601b815260140182805190602001908083835b602083106123e957805182526020820191506020810190506020830392506123c6565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083835b60208310612451578051825260208201915060208101905060208303925061242e565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015612493573d6000803e3d6000fd5b5050506040513d60208110156124a857600080fd5b810190808051906020019092919050505060405160200180828152602001915050604051602081830303815290604052613ffe565b6124ee6124e9336140d4565b613ffe565b6124f78f6140f4565b6125448f8f8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050613ffe565b6125918e8e8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050613ffe565b6125de8d8d8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050613ffe565b6040516020018088805190602001908083835b6020831061261457805182526020820191506020810190506020830392506125f1565b6001836020036101000a03801982511681845116808217855250505050505090500187805190602001908083835b602083106126655780518252602082019150602081019050602083039250612642565b6001836020036101000a03801982511681845116808217855250505050505090500186805190602001908083835b602083106126b65780518252602082019150602081019050602083039250612693565b6001836020036101000a03801982511681845116808217855250505050505090500185805190602001908083835b6020831061270757805182526020820191506020810190506020830392506126e4565b6001836020036101000a03801982511681845116808217855250505050505090500184805190602001908083835b602083106127585780518252602082019150602081019050602083039250612735565b6001836020036101000a03801982511681845116808217855250505050505090500183805190602001908083835b602083106127a95780518252602082019150602081019050602083039250612786565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b602083106127fa57805182526020820191506020810190506020830392506127d7565b6001836020036101000a03801982511681845116808217855250505050505090500197505050505050505060405160208183030381529060405290508373ffffffffffffffffffffffffffffffffffffffff16634c3ccf6482805190602001206040518263ffffffff1660e01b815260040180828152602001915050602060405180830381600087803b15801561289057600080fd5b505af11580156128a4573d6000803e3d6000fd5b505050506040513d60208110156128ba57600080fd5b8101908080519060200190929190505050612920576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526030815260200180616abd6030913960400191505060405180910390fd5b3273ffffffffffffffffffffffffffffffffffffffff167f6ad3bf15c1988bc04bc153490cab16db8efb9a3990215bf1c64ea6e28be8848383338f8f8f8760405180806020018773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018667ffffffffffffffff1667ffffffffffffffff168152602001806020018060200184810384528a818151815260200191508051906020019080838360005b838110156129f25780820151818401526020810190506129d7565b50505050905090810190601f168015612a1f5780820380516001836020036101000a031916815260200191505b508481038352878782818152602001925080828437600081840152601f19601f820116905080830192505050848103825285818151815260200191508051906020019080838360005b83811015612a83578082015181840152602081019050612a68565b50505050905090810190601f168015612ab05780820380516001836020036101000a031916815260200191505b50995050505050505050505060405180910390a26001945050505050979650505050505050565b60008060149054906101000a900460ff1615612b5b576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260108152602001807f5061757361626c653a207061757365640000000000000000000000000000000081525060200191505060405180910390fd5b612b63616549565b612b6c866135b7565b90506000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690506060612cde8273ffffffffffffffffffffffffffffffffffffffff166369d480746040518163ffffffff1660e01b815260040160006040518083038186803b158015612be057600080fd5b505afa158015612bf4573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f820116820180604052506020811015612c1e57600080fd5b8101908080516040519392919084640100000000821115612c3e57600080fd5b83820191506020820185811115612c5457600080fd5b8251866001820283011164010000000082111715612c7157600080fd5b8083526020830192505050908051906020019080838360005b83811015612ca5578082015181840152602081019050612c8a565b50505050905090810190601f168015612cd25780820380516001836020036101000a031916815260200191505b50604052505050613742565b905060008273ffffffffffffffffffffffffffffffffffffffff16635ac407906040518163ffffffff1660e01b815260040160206040518083038186803b158015612d2857600080fd5b505afa158015612d3c573d6000803e3d6000fd5b505050506040513d6020811015612d5257600080fd5b810190808051906020019092919050505063ffffffff16905060008251905081856060015163ffffffff1610612df757612d9d8a888560036001860381612d9557fe5b048503613830565b612df2576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602a815260200180616b33602a913960400191505060405180910390fd5b612f15565b612e1288888560036001860381612e0a57fe5b048503613830565b612e67576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260388152602001806169466038913960400191505060405180910390fd5b612e6f616549565b612e78896135b7565b90506060612e8b8b83610100015161413c565b9050612e9681614309565b612e9f8d61438e565b14612f12576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f766572696679206865616465722070726f6f66206661696c656421000000000081525060200191505060405180910390fd5b50505b6060612f258c8760e0015161413c565b9050612f2f6165e4565b612f38826144f0565b90508573ffffffffffffffffffffffffffffffffffffffff16630586763c8260200151612f688460000151614309565b6040518363ffffffff1660e01b8152600401808367ffffffffffffffff1667ffffffffffffffff1681526020018281526020019250505060206040518083038186803b158015612fb757600080fd5b505afa158015612fcb573d6000803e3d6000fd5b505050506040513d6020811015612fe157600080fd5b810190808051906020019092919050505015613048576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526022815260200180616a9b6022913960400191505060405180910390fd5b8573ffffffffffffffffffffffffffffffffffffffff1663e90bfdcf82602001516130768460000151614309565b6040518363ffffffff1660e01b8152600401808367ffffffffffffffff1667ffffffffffffffff16815260200182815260200192505050602060405180830381600087803b1580156130c757600080fd5b505af11580156130db573d6000803e3d6000fd5b505050506040513d60208110156130f157600080fd5b8101908080519060200190929190505050613174576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f536176652063726f7373636861696e207478206578697374206661696c65642181525060200191505060405180910390fd5b600160149054906101000a900467ffffffffffffffff1667ffffffffffffffff1681604001516060015167ffffffffffffffff16146131fe576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260268152602001806167a56026913960400191505060405180910390fd5b6000613211826040015160800151614626565b9050600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614156132d7576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252600d8152602001807f4e6f20656363642068657265210000000000000000000000000000000000000081525060200191505060405180910390fd5b61330081836040015160a00151846040015160c00151856040015160400151866020015161468e565b613372576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601d8152602001807f457865637574652043726f7373436861696e205478206661696c65642100000081525060200191505060405180910390fd5b7f8a4a2663ce60ce4955c595da2894de0415240f1ace024cfbff85f513b656bdae82602001518360400151608001518460000151856040015160000151604051808567ffffffffffffffff1667ffffffffffffffff168152602001806020018060200180602001848103845287818151815260200191508051906020019080838360005b838110156134115780820151818401526020810190506133f6565b50505050905090810190601f16801561343e5780820380516001836020036101000a031916815260200191505b50848103835286818151815260200191508051906020019080838360005b8381101561347757808201518184015260208101905061345c565b50505050905090810190601f1680156134a45780820380516001836020036101000a031916815260200191505b50848103825285818151815260200191508051906020019080838360005b838110156134dd5780820151818401526020810190506134c2565b50505050905090810190601f16801561350a5780820380516001836020036101000a031916815260200191505b5097505050505050505060405180910390a160019850505050505050505095945050505050565b6135396121b7565b6135ab576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e657281525060200191505060405180910390fd5b6135b481614b38565b50565b6135bf616549565b6135c7616549565b60008090506135d68482614c7c565b836000018193508263ffffffff1663ffffffff1681525050506135f98482614d44565b836020018193508267ffffffffffffffff1667ffffffffffffffff1681525050506136248482614e0c565b8360a00181935082815250505061363b8482614e0c565b8360c0018193508281525050506136528482614e0c565b8360e0018193508281525050506136698482614e0c565b83610100018193508281525050506136818482614c7c565b836040018193508263ffffffff1663ffffffff1681525050506136a48482614c7c565b836060018193508263ffffffff1663ffffffff1681525050506136c78482614d44565b836080018193508267ffffffffffffffff1667ffffffffffffffff1681525050506136f28482614eb3565b8191508361012001819350829052505061370c8482614fb3565b8361014001819350826bffffffffffffffffffffffff19166bffffffffffffffffffffffff191681525050508192505050919050565b6060600080905060006137558483614d44565b809350819250505060608167ffffffffffffffff166040519080825280602002602001820160405280156137985781602001602082028038833980820191505090505b509050606060008090505b8367ffffffffffffffff16811015613823576137bf8786614eb3565b80965081935050506137d082614626565b8382815181106137dc57fe5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff168152505080806001019150506137a3565b5081945050505050919050565b60008061383c8661438e565b905060006138556041875161503d90919063ffffffff16565b90506060816040519080825280602002602001820160405280156138885781602001602082028038833980820191505090505b509050600080600080600090505b85811015613ac6576138b56138b08c604184026020615087565b614309565b93506138d16138cc8c602060418502016020615087565b614309565b9250601b8b60406041840201815181106138e757fe5b602001015160f81c60f81b60f81c0191506001600288604051602001808281526020019150506040516020818303038152906040526040518082805190602001908083835b6020831061394f578051825260208201915060208101905060208303925061392c565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015613991573d6000803e3d6000fd5b5050506040513d60208110156139a657600080fd5b810190808051906020019092919050505083868660405160008152602001604052604051808581526020018460ff1660ff1681526020018381526020018281526020019450505050506020604051602081039080840390855afa158015613a11573d6000803e3d6000fd5b50505060206040510351858281518110613a2757fe5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff1681525050600073ffffffffffffffffffffffffffffffffffffffff16858281518110613a8557fe5b602002602001015173ffffffffffffffffffffffffffffffffffffffff161415613ab9576000975050505050505050613adb565b8080600101915050613896565b50613ad289858a615113565b96505050505050505b949350505050565b6000606060006043845181613af457fe5b0614613b68576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601b8152602001807f5f7075624b65794c697374206c656e67746820696c6c6567616c21000000000081525060200191505060405180910390fd5b60006043845181613b7557fe5b0490506001811015613bef576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260168152602001807f746f6f2073686f7274205f7075624b65794c697374210000000000000000000081525060200191505060405180910390fd5b613c098160036001840381613c0057fe5b048303866151f3565b9250925050915091565b60606000825190506060613c26826140f4565b905060008090505b82811015613d265781613c5b613c56878481518110613c4957fe5b60200260200101516140d4565b613ffe565b6040516020018083805190602001908083835b60208310613c915780518252602082019150602081019050602083039250613c6e565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b60208310613ce25780518252602082019150602081019050602083039250613cbf565b6001836020036101000a0380198251168184511680821785525050505050509050019250505060405160208183030381529060405291508080600101915050613c2e565b508092505050919050565b600060149054906101000a900460ff16613db3576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260148152602001807f5061757361626c653a206e6f742070617573656400000000000000000000000081525060200191505060405180910390fd5b60008060146101000a81548160ff0219169083151502179055507f5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa613df6613f43565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a1565b600060149054906101000a900460ff1615613ebc576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260108152602001807f5061757361626c653a207061757365640000000000000000000000000000000081525060200191505060405180910390fd5b6001600060146101000a81548160ff0219169083151502179055507f62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258613f00613f43565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a1565b600033905090565b60607f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff821115613fe3576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260178152602001807f56616c75652065786365656473207468652072616e676500000000000000000081525060200191505060405180910390fd5b60405190506020815281602082015260408101604052919050565b606060008251905061400f816155b5565b836040516020018083805190602001908083835b602083106140465780518252602082019150602081019050602083039250614023565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b602083106140975780518252602082019150602081019050602083039250614074565b6001836020036101000a03801982511681845116808217855250505050505090500192505050604051602081830303815290604052915050919050565b60606040519050601481528160601b602082015260408101604052919050565b606080604051905060088082526000601f5b828210156141295785811a82602086010153600182019150600181039050614106565b5050602882016040525080915050919050565b60606000809050606061414f8583614eb3565b809350819250505060006141628261588e565b9050600061418d602161417f868a516159ef90919063ffffffff16565b61503d90919063ffffffff16565b905060008060008090505b838110156142a1576141aa8a88615a39565b80985081935050506141bc8a88614e0c565b8098508194505050600060f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415614203576141fc8386615ae0565b9450614294565b600160f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614156142425761423b8584615ae0565b9450614293565b6040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e8152602001806168c3602e913960400191505060405180910390fd5b5b8080600101915050614198565b508784146142fa576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260318152602001806167ee6031913960400191505060405180910390fd5b84965050505050505092915050565b60006020825114614382576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260178152602001807f6279746573206c656e677468206973206e6f742033322e00000000000000000081525060200191505060405180910390fd5b60208201519050919050565b6000600280836040518082805190602001908083835b602083106143c757805182526020820191506020810190506020830392506143a4565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015614409573d6000803e3d6000fd5b5050506040513d602081101561441e57600080fd5b8101908080519060200190929190505050604051602001808281526020019150506040516020818303038152906040526040518082805190602001908083835b60208310614481578051825260208201915060208101905060208303925061445e565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa1580156144c3573d6000803e3d6000fd5b5050506040513d60208110156144d857600080fd5b81019080805190602001909291905050509050919050565b6144f86165e4565b6145006165e4565b600080905061450f8482614eb3565b8191508360000181935082905250506145288482614d44565b836020018193508267ffffffffffffffff1667ffffffffffffffff168152505050614551616615565b61455b8583614eb3565b8191508260000181945082905250506145748583614eb3565b81915082602001819450829052505061458d8583614eb3565b8191508260400181945082905250506145a68583614d44565b826060018194508267ffffffffffffffff1667ffffffffffffffff1681525050506145d18583614eb3565b8191508260800181945082905250506145ea8583614eb3565b8191508260a00181945082905250506146038583614eb3565b8191508260c0018194508290525050808360400181905250829350505050919050565b60006014825114614682576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260238152602001806167196023913960400191505060405180910390fd5b60148201519050919050565b600061469986615bff565b6146ee576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260288152602001806168f16028913960400191505060405180910390fd5b606060008773ffffffffffffffffffffffffffffffffffffffff16876040516020018082805190602001908083835b60208310614740578051825260208201915060208101905060208303925061471d565b6001836020036101000a038019825116818451168082178552505050505050905001807f2862797465732c62797465732c75696e74363429000000000000000000000000815250601401915050604051602081830303815290604052805190602001208787876040516020018080602001806020018467ffffffffffffffff1667ffffffffffffffff168152602001838103835286818151815260200191508051906020019080838360005b838110156148075780820151818401526020810190506147ec565b50505050905090810190601f1680156148345780820380516001836020036101000a031916815260200191505b50838103825285818151815260200191508051906020019080838360005b8381101561486d578082015181840152602081019050614852565b50505050905090810190601f16801561489a5780820380516001836020036101000a031916815260200191505b509550505050505060405160208183030381529060405260405160200180837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260040182805190602001908083835b6020831061492b5780518252602082019150602081019050602083039250614908565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083835b602083106149935780518252602082019150602081019050602083039250614970565b6001836020036101000a0380198251168184511680821785525050505050509050019150506000604051808303816000865af19150503d80600081146149f5576040519150601f19603f3d011682016040523d82523d6000602084013e6149fa565b606091505b5080935081925050506001151581151514614a60576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602b81526020018061685d602b913960400191505060405180910390fd5b600082511415614abb576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602781526020018061697e6027913960400191505060405180910390fd5b6000614ac883601f615c4a565b5090506001151581151514614b28576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260378152602001806169a56037913960400191505060405180910390fd5b6001935050505095945050505050565b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415614bbe576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602681526020018061673c6026913960400191505060405180910390fd5b8073ffffffffffffffffffffffffffffffffffffffff166000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a3806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b60008083516004840111158015614c9557506004830183105b614cea576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526022815260200180616aed6022913960400191505060405180910390fd5b600060405160046000600182038760208a0101515b83831015614d1f5780821a83860153600183019250600182039150614cff565b5050508082016040528060200382035192505050806004850192509250509250929050565b60008083516008840111158015614d5d57506008830183105b614db2576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526022815260200180616a796022913960400191505060405180910390fd5b600060405160086000600182038760208a0101515b83831015614de75780821a83860153600183019250600182039150614dc7565b5050508082016040528060200382035192505050806008850192509250509250929050565b60008083516020840111158015614e2557506020830183105b614e97576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4e657874486173682c206f66667365742065786365656473206d6178696d756d81525060200191505060405180910390fd5b6000602084018501519050806020850192509250509250929050565b6060600080614ec28585615dd1565b8095508192505050845181850111158015614ede575080840184105b614f33576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526024815260200180616b0f6024913960400191505060405180910390fd5b6060811560008114614f5057604051915060208201604052614fa1565b6040519150601f8316801560200281840101848101888315602002848c0101015b81831015614f8e5780518352602083019250602081019050614f71565b50858552601f19601f8301166040525050505b50808286019350935050509250929050565b60008083516014840111158015614fcc57506014830183105b615021576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260238152602001806167cb6023913960400191505060405180910390fd5b6000602084018501519050806014850192509250509250929050565b600061507f83836040518060400160405280601a81526020017f536166654d6174683a206469766973696f6e206279207a65726f000000000000815250616102565b905092915050565b60608183018451101561509957600080fd5b60608215600081146150b657604051915060208201604052615107565b6040519150601f8416801560200281840101858101878315602002848b0101015b818310156150f457805183526020830192506020810190506150d7565b50868552601f19601f8301166040525050505b50809150509392505050565b6000806000905060008090505b84518110156151e45760008090505b86518110156151d65786818151811061514457fe5b602002602001015173ffffffffffffffffffffffffffffffffffffffff1686838151811061516e57fe5b602002602001015173ffffffffffffffffffffffffffffffffffffffff1614156151c95782806001019350508681815181106151a657fe5b60200260200101600073ffffffffffffffffffffffffffffffffffffffff168152505b808060010191505061512f565b508080600101915050615120565b50828110159150509392505050565b6000606080615201866161c9565b90506060866040519080825280602002602001820160405280156152345781602001602082028038833980820191505090505b5090506000606060008090505b898110156153975761525888604383026043615087565b91508461526c61526784616211565b613ffe565b6040516020018083805190602001908083835b602083106152a2578051825260208201915060208101905060208303925061527f565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b602083106152f357805182526020820191506020810190506020830392506152d0565b6001836020036101000a0380198251168184511680821785525050505050509050019250505060405160208183030381529060405294506153378260036040615087565b8051906020012092508260001c84828151811061535057fe5b602002602001019073ffffffffffffffffffffffffffffffffffffffff16908173ffffffffffffffffffffffffffffffffffffffff16815250508080600101915050615241565b50836153a2896161c9565b6040516020018083805190602001908083835b602083106153d857805182526020820191506020810190506020830392506153b5565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b602083106154295780518252602082019150602081019050602083039250615406565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040529350600060036002866040518082805190602001908083835b6020831061549a5780518252602082019150602081019050602083039250615477565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa1580156154dc573d6000803e3d6000fd5b5050506040513d60208110156154f157600080fd5b8101908080519060200190929190505050604051602001808281526020019150506040516020818303038152906040526040518082805190602001908083835b602083106155545780518252602082019150602081019050602083039250615531565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015615596573d6000803e3d6000fd5b5050506040515160601b90508084965096505050505050935093915050565b606060fd8267ffffffffffffffff1610156155da576155d38261635d565b9050615889565b61ffff8267ffffffffffffffff16116156c6576155fa60fd60f81b616382565b615603836161c9565b6040516020018083805190602001908083835b602083106156395780518252602082019150602081019050602083039250615616565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b6020831061568a5780518252602082019150602081019050602083039250615667565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040529050615889565b63ffffffff8267ffffffffffffffff16116157b4576156e860fe60f81b616382565b6156f183616397565b6040516020018083805190602001908083835b602083106157275780518252602082019150602081019050602083039250615704565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b602083106157785780518252602082019150602081019050602083039250615755565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040529050615889565b6157c160ff60f81b616382565b6157ca836140f4565b6040516020018083805190602001908083835b6020831061580057805182526020820191506020810190506020830392506157dd565b6001836020036101000a03801982511681845116808217855250505050505090500182805190602001908083835b60208310615851578051825260208201915060208101905060208303925061582e565b6001836020036101000a0380198251168184511680821785525050505050509050019250505060405160208183030381529060405290505b919050565b60006002600060f81b8360405160200180837effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260010182805190602001908083835b6020831061591857805182526020820191506020810190506020830392506158f5565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083835b60208310615980578051825260208201915060208101905060208303925061595d565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa1580156159c2573d6000803e3d6000fd5b5050506040513d60208110156159d757600080fd5b81019080805190602001909291905050509050919050565b6000615a3183836040518060400160405280601e81526020017f536166654d6174683a207375627472616374696f6e206f766572666c6f7700008152506163df565b905092915050565b60008083516001840111158015615a5257506001830183105b615ac4576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4e657874427974652c204f66667365742065786365656473206d6178696d756d81525060200191505060405180910390fd5b6000836020860101519050806001850192509250509250929050565b60006002600160f81b848460405160200180847effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260010183815260200182815260200193505050506040516020818303038152906040526040518082805190602001908083835b60208310615b8f5780518252602082019150602081019050602083039250615b6c565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015615bd1573d6000803e3d6000fd5b5050506040513d6020811015615be657600080fd5b8101908080519060200190929190505050905092915050565b60008060007fc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a47060001b9050833f91506000801b8214158015615c415750808214155b92505050919050565b60008083516001840111158015615c6357506001830183105b615cd5576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260148152602001807f4f66667365742065786365656473206c696d697400000000000000000000000081525060200191505060405180910390fd5b60008360208601015190506000600160f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415615d195760019050615dbf565b600060f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415615d505760009050615dbe565b6040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260148152602001807f4e657874426f6f6c2076616c7565206572726f7200000000000000000000000081525060200191505060405180910390fd5b5b80600186019350935050509250929050565b6000806000615de08585615a39565b8095508192505050600060fd60f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415615ec357615e22868661649f565b8161ffff169150809650819250505060fd8110158015615e44575061ffff8111155b615eb6576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601f8152602001807f4e65787455696e7431362c2076616c7565206f7574736964652072616e67650081525060200191505060405180910390fd5b80859350935050506160fb565b60fe60f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415615fa057615efb8686614c7c565b8163ffffffff169150809650819250505061ffff81118015615f21575063ffffffff8111155b615f93576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4e65787456617255696e742c2076616c7565206f7574736964652072616e676581525060200191505060405180910390fd5b80859350935050506160fb565b60ff60f81b827effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916141561607357615fd88686614d44565b8167ffffffffffffffff169150809650819250505063ffffffff8111616066576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4e65787456617255696e742c2076616c7565206f7574736964652072616e676581525060200191505060405180910390fd5b80859350935050506160fb565b8160f81c60ff16905060fd81106160f2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f4e65787456617255696e742c2076616c7565206f7574736964652072616e676581525060200191505060405180910390fd5b80859350935050505b9250929050565b60008083141582906161af576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825283818151815260200191508051906020019080838360005b83811015616174578082015181840152602081019050616159565b50505050905090810190601f1680156161a15780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b5060008385816161bb57fe5b049050809150509392505050565b606080604051905060028082526000601f5b828210156161fe5785811a826020860101536001820191506001810390506161db565b5050602282016040525080915050919050565b606060438251101561628b576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260178152602001807f6b6579206c656e67676820697320746f6f2073686f727400000000000000000081525060200191505060405180910390fd5b6162988260006023615087565b905060006002836042815181106162ab57fe5b602001015160f81c60f81b60f81c60ff16816162c357fe5b0660ff16141561631357600260f81b816002815181106162df57fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a905350616355565b600360f81b8160028151811061632557fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053505b809050919050565b6060806040519050600181528260f81b60208201526021810160405280915050919050565b60606163908260f81c61635d565b9050919050565b606080604051905060048082526000601f5b828210156163cc5785811a826020860101536001820191506001810390506163a9565b5050602482016040525080915050919050565b600083831115829061648c576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825283818151815260200191508051906020019080838360005b83811015616451578082015181840152602081019050616436565b50505050905090810190601f16801561647e5780820380516001836020036101000a031916815260200191505b509250505060405180910390fd5b5060008385039050809150509392505050565b600080835160028401111580156164b857506002830183105b61650d576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260228152602001806169dc6022913960400191505060405180910390fd5b6000604051846020870101518060011a82538060001a600183015360028201604052601e82035192505050806002850192509250509250929050565b604051806101600160405280600063ffffffff168152602001600067ffffffffffffffff168152602001600063ffffffff168152602001600063ffffffff168152602001600067ffffffffffffffff168152602001600080191681526020016000801916815260200160008019168152602001600080191681526020016060815260200160006bffffffffffffffffffffffff191681525090565b604051806060016040528060608152602001600067ffffffffffffffff16815260200161660f61665c565b81525090565b6040518060e00160405280606081526020016060815260200160608152602001600067ffffffffffffffff1681526020016060815260200160608152602001606081525090565b6040518060e00160405280606081526020016060815260200160608152602001600067ffffffffffffffff168152602001606081526020016060815260200160608152509056fe70617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c6564546865206e657874426f6f6b4b6565706572206f662068656164657220697320656d707479756e70617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c65646279746573206c656e67746820646f6573206e6f74206d6174636820616464726573734f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573735361766520506f6c7920636861696e2063757272656e742065706f63682073746172742068656967687420746f204461746120636f6e7472616374206661696c65642154686973205478206973206e6f742061696d696e672061742074686973206e6574776f726b214e657874427974657332302c206f66667365742065786365656473206d6178696d756d6d65726b6c6550726f76652c2065787065637420726f6f74206973206e6f7420657175616c2061637475616c20726f6f7454686520686569676874206f6620686561646572206973206c6f776572207468616e2063757272656e742065706f6368207374617274206865696768742145746843726f7373436861696e2063616c6c20627573696e65737320636f6e7472616374206661696c65645361766520506f6c7920636861696e20626f6f6b206b65657065727320627974657320746f204461746120636f6e7472616374206661696c6564216d65726b6c6550726f76652c204e6578744279746520666f7220706f736974696f6e20696e666f206661696c65645468652070617373656420696e2061646472657373206973206e6f74206120636f6e74726163742153617665204d43204c617465737448656967687420746f204461746120636f6e7472616374206661696c65642156657269667920706f6c7920636861696e2063757272656e742065706f636820686561646572207369676e6174757265206661696c6564214e6f2072657475726e2076616c75652066726f6d20627573696e65737320636f6e74726163742145746843726f7373436861696e2063616c6c20627573696e65737320636f6e74726163742072657475726e206973206e6f7420747275654e65787455696e7431362c206f66667365742065786365656473206d6178696d756d45746843726f7373436861696e4461746120636f6e74726163742068617320616c7265616479206265656e20696e697469616c697a6564215361766520506f6c7920636861696e2063757272656e742065706f636820626f6f6b206b65657065727320746f204461746120636f6e7472616374206661696c6564214e65787455696e7436342c206f66667365742065786365656473206d6178696d756d746865207472616e73616374696f6e20686173206265656e20657865637574656421536176652065746854784861736820627920696e64657820746f204461746120636f6e7472616374206661696c6564214e65787455696e7433322c206f66667365742065786365656473206d6178696d756d4e65787456617242797465732c206f66667365742065786365656473206d6178696d756d56657269667920706f6c7920636861696e20686561646572207369676e6174757265206661696c656421a265627a7a7231582054c70849fc7ed0651889cfb80017bcf3c793fc9181a7d7ea7f3b89dd4b91f6b064736f6c63430005110032",
 }
 
 // EthCrossChainManagerABI is the input ABI used to generate the binding from.
-const EthCrossChainManagerABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"toChainId\",\"type\":\"uint64\"},{\"name\":\"toContract\",\"type\":\"bytes\"},{\"name\":\"method\",\"type\":\"bytes\"},{\"name\":\"txData\",\"type\":\"bytes\"}],\"name\":\"crossChain\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"unpause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"name\":\"pubKeyList\",\"type\":\"bytes\"},{\"name\":\"sigList\",\"type\":\"bytes\"}],\"name\":\"changeBookKeeper\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"proof\",\"type\":\"bytes\"},{\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"name\":\"headerProof\",\"type\":\"bytes\"},{\"name\":\"curRawHeader\",\"type\":\"bytes\"},{\"name\":\"headerSig\",\"type\":\"bytes\"}],\"name\":\"verifyHeaderAndExecuteTx\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"rawHeader\",\"type\":\"bytes\"},{\"name\":\"pubKeyList\",\"type\":\"bytes\"}],\"name\":\"initGenesisBlock\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"EthCrossChainDataAddress\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newEthCrossChainManagerAddress\",\"type\":\"address\"}],\"name\":\"upgradeToNew\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"pause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"_eccd\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"height\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"rawHeader\",\"type\":\"bytes\"}],\"name\":\"InitGenesisBlockEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"height\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"rawHeader\",\"type\":\"bytes\"}],\"name\":\"ChangeBookKeeperEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"txId\",\"type\":\"bytes\"},{\"indexed\":false,\"name\":\"proxyOrAssetContract\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"toChainId\",\"type\":\"uint64\"},{\"indexed\":false,\"name\":\"toContract\",\"type\":\"bytes\"},{\"indexed\":false,\"name\":\"rawdata\",\"type\":\"bytes\"}],\"name\":\"CrossChainEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"fromChainID\",\"type\":\"uint64\"},{\"indexed\":false,\"name\":\"toContract\",\"type\":\"bytes\"},{\"indexed\":false,\"name\":\"crossChainTxHash\",\"type\":\"bytes\"},{\"indexed\":false,\"name\":\"fromChainTxHash\",\"type\":\"bytes\"}],\"name\":\"VerifyHeaderAndExecuteTxEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}]"
-
-// EthCrossChainManagerFuncSigs maps the 4-byte function signature to its string representation.
-var EthCrossChainManagerFuncSigs = map[string]string{
-	"ed9a3dc3": "EthCrossChainDataAddress()",
-	"9ad77567": "changeBookKeeper(bytes,bytes,bytes)",
-	"1f5045a8": "crossChain(uint64,bytes,bytes,bytes)",
-	"ed8873be": "initGenesisBlock(bytes,bytes)",
-	"ede8e529": "isOwner()",
-	"5089e2c8": "owner()",
-	"f4fbb0c8": "pause()",
-	"d4bc9601": "paused()",
-	"d86e29e2": "renounceOwnership()",
-	"16cad12a": "transferOwnership(address)",
-	"63c37526": "unpause()",
-	"f4e614d2": "upgradeToNew(address)",
-	"cbd41b35": "verifyHeaderAndExecuteTx(bytes,bytes,bytes,bytes,bytes)",
-}
+// Deprecated: Use EthCrossChainManagerMetaData.ABI instead.
+var EthCrossChainManagerABI = EthCrossChainManagerMetaData.ABI
 
 // EthCrossChainManagerBin is the compiled bytecode used for deploying new contracts.
-var EthCrossChainManagerBin = "0x60806040523480156200001157600080fd5b50604051602080620051ff833981018060405260208110156200003357600080fd5b50518060006200004b640100000000620000cc810204565b60008054600160a060020a031916600160a060020a0383169081178255604051929350917f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d0908290a3506000805460a060020a60ff021916905560018054600160a060020a031916600160a060020a039290921691909117905550620000d0565b3390565b61511f80620000e06000396000f3fe6080604052600436106100c65760003560e060020a90048063d4bc960111610083578063ed9a3dc31161005d578063ed9a3dc314610880578063ede8e52914610895578063f4e614d2146108aa578063f4fbb0c8146108dd576100c6565b8063d4bc96011461071c578063d86e29e214610731578063ed8873be14610746576100c6565b806316cad12a146100cb5780631f5045a8146101005780635089e2c81461024657806363c37526146102775780639ad775671461028c578063cbd41b351461044d575b600080fd5b3480156100d757600080fd5b506100fe600480360360208110156100ee57600080fd5b5035600160a060020a03166108f2565b005b34801561010c57600080fd5b506102326004803603608081101561012357600080fd5b67ffffffffffffffff823516919081019060408101602082013564010000000081111561014f57600080fd5b82018360208201111561016157600080fd5b8035906020019184600183028401116401000000008311171561018357600080fd5b9193909290916020810190356401000000008111156101a157600080fd5b8201836020820111156101b357600080fd5b803590602001918460018302840111640100000000831117156101d557600080fd5b9193909290916020810190356401000000008111156101f357600080fd5b82018360208201111561020557600080fd5b8035906020019184600183028401116401000000008311171561022757600080fd5b50909250905061094b565b604080519115158252519081900360200190f35b34801561025257600080fd5b5061025b6110b6565b60408051600160a060020a039092168252519081900360200190f35b34801561028357600080fd5b506102326110c5565b34801561029857600080fd5b50610232600480360360608110156102af57600080fd5b8101906020810181356401000000008111156102ca57600080fd5b8201836020820111156102dc57600080fd5b803590602001918460018302840111640100000000831117156102fe57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929594936020810193503591505064010000000081111561035157600080fd5b82018360208201111561036357600080fd5b8035906020019184600183028401116401000000008311171561038557600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092959493602081019350359150506401000000008111156103d857600080fd5b8201836020820111156103ea57600080fd5b8035906020019184600183028401116401000000008311171561040c57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061126c945050505050565b34801561045957600080fd5b50610232600480360360a081101561047057600080fd5b81019060208101813564010000000081111561048b57600080fd5b82018360208201111561049d57600080fd5b803590602001918460018302840111640100000000831117156104bf57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929594936020810193503591505064010000000081111561051257600080fd5b82018360208201111561052457600080fd5b8035906020019184600183028401116401000000008311171561054657600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929594936020810193503591505064010000000081111561059957600080fd5b8201836020820111156105ab57600080fd5b803590602001918460018302840111640100000000831117156105cd57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929594936020810193503591505064010000000081111561062057600080fd5b82018360208201111561063257600080fd5b8035906020019184600183028401116401000000008311171561065457600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092959493602081019350359150506401000000008111156106a757600080fd5b8201836020820111156106b957600080fd5b803590602001918460018302840111640100000000831117156106db57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929550611861945050505050565b34801561072857600080fd5b50610232611f78565b34801561073d57600080fd5b506100fe611f88565b34801561075257600080fd5b506102326004803603604081101561076957600080fd5b81019060208101813564010000000081111561078457600080fd5b82018360208201111561079657600080fd5b803590602001918460018302840111640100000000831117156107b857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929594936020810193503591505064010000000081111561080b57600080fd5b82018360208201111561081d57600080fd5b8035906020019184600183028401116401000000008311171561083f57600080fd5b91908080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525092955061202c945050505050565b34801561088c57600080fd5b5061025b6124d9565b3480156108a157600080fd5b506102326124e8565b3480156108b657600080fd5b50610232600480360360208110156108cd57600080fd5b5035600160a060020a031661250c565b3480156108e957600080fd5b5061023261264b565b6108fa6124e8565b151561093f576040805160e160020a636381e5890281526020600482018190526024820152600080516020614f8f833981519152604482015290519081900360640190fd5b610948816127ec565b50565b6000805460a060020a900460ff161561099d576040805160e160020a636381e5890281526020600482015260106024820152600080516020614c9d833981519152604482015290519081900360640190fd5b600154604080517fab907a6f0000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691600091839163ab907a6f91600480820192602092909190829003018186803b158015610a0057600080fd5b505afa158015610a14573d6000803e3d6000fd5b505050506040513d6020811015610a2a57600080fd5b505190506060610a398261289f565b90506060610a4682612935565b610b80600230856040516020018083600160a060020a0316600160a060020a03166c0100000000000000000000000002815260140182805190602001908083835b60208310610aa65780518252601f199092019160209182019101610a87565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083835b60208310610b0a5780518252601f199092019160209182019101610aeb565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa158015610b49573d6000803e3d6000fd5b5050506040513d6020811015610b5e57600080fd5b5051604080516020818101939093528151808203909301835281019052612935565b610b91610b8c336129fb565b612935565b610b9a8f612a16565b610bd98f8f8080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525061293592505050565b610c188e8e8080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525061293592505050565b610c578d8d8080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525061293592505050565b6040516020018088805190602001908083835b60208310610c895780518252601f199092019160209182019101610c6a565b51815160209384036101000a60001901801990921691161790528a5191909301928a0191508083835b60208310610cd15780518252601f199092019160209182019101610cb2565b51815160209384036101000a600019018019909216911617905289519190930192890191508083835b60208310610d195780518252601f199092019160209182019101610cfa565b51815160209384036101000a600019018019909216911617905288519190930192880191508083835b60208310610d615780518252601f199092019160209182019101610d42565b51815160209384036101000a600019018019909216911617905287519190930192870191508083835b60208310610da95780518252601f199092019160209182019101610d8a565b51815160209384036101000a600019018019909216911617905286519190930192860191508083835b60208310610df15780518252601f199092019160209182019101610dd2565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b60208310610e395780518252601f199092019160209182019101610e1a565b6001836020036101000a038019825116818451168082178552505050505050905001975050505050505050604051602081830303815290604052905083600160a060020a03166393645d5782805190602001206040518263ffffffff1660e060020a02815260040180828152602001915050602060405180830381600087803b158015610ec557600080fd5b505af1158015610ed9573d6000803e3d6000fd5b505050506040513d6020811015610eef57600080fd5b50511515610f325760405160e160020a636381e589028152600401808060200182810382526030815260200180614c216030913960400191505060405180910390fd5b32600160a060020a03167f9d458f048ef70e1fcea210e7efaaf60e4856c03ab11a3871ad703f6f3e46de1083338f8f8f87604051808060200187600160a060020a0316600160a060020a031681526020018667ffffffffffffffff1667ffffffffffffffff168152602001806020018060200184810384528a818151815260200191508051906020019080838360005b83811015610fda578181015183820152602001610fc2565b50505050905090810190601f1680156110075780820380516001836020036101000a031916815260200191505b5084810383528681526020018787808284376000838201819052601f909101601f191690920186810384528751815287516020918201939189019250908190849084905b8381101561106357818101518382015260200161104b565b50505050905090810190601f1680156110905780820380516001836020036101000a031916815260200191505b50995050505050505050505060405180910390a25060019b9a5050505050505050505050565b600054600160a060020a031690565b60006110cf6124e8565b1515611114576040805160e160020a636381e5890281526020600482018190526024820152600080516020614f8f833981519152604482015290519081900360640190fd5b61111c611f78565b1561112957611129612a59565b600154604080517fd4bc96010000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691829163d4bc9601916004808301926020929190829003018186803b15801561118857600080fd5b505afa15801561119c573d6000803e3d6000fd5b505050506040513d60208110156111b257600080fd5b5051156112645780600160a060020a03166363c375266040518163ffffffff1660e060020a028152600401602060405180830381600087803b1580156111f757600080fd5b505af115801561120b573d6000803e3d6000fd5b505050506040513d602081101561122157600080fd5b505115156112645760405160e160020a636381e589028152600401808060200182810382526029815260200180614c516029913960400191505060405180910390fd5b600191505090565b6000805460a060020a900460ff16156112be576040805160e160020a636381e5890281526020600482015260106024820152600080516020614c9d833981519152604482015290519081900360640190fd5b6112c6614b2d565b6112cf85612b21565b90506000600160009054906101000a9004600160a060020a03169050600081600160a060020a031663a10431386040518163ffffffff1660e060020a02815260040160206040518083038186803b15801561132957600080fd5b505afa15801561133d573d6000803e3d6000fd5b505050506040513d602081101561135357600080fd5b5051606084015163ffffffff91821692501681106113a65760405160e160020a636381e58902815260040180806020018281038252603e815260200180614e39603e913960400191505060405180910390fd5b6101408301516bffffffffffffffffffffffff191615156113fc5760405160e160020a636381e589028152600401808060200182810382526025815260200180614f476025913960400191505060405180910390fd5b60606114cc83600160a060020a031663a87c3ab26040518163ffffffff1660e060020a02815260040160006040518083038186803b15801561143d57600080fd5b505afa158015611451573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561147a57600080fd5b81019080805164010000000081111561149257600080fd5b820160208101848111156114a557600080fd5b81516401000000008111828201871017156114bf57600080fd5b5050929190505050612c42565b80519091506114e7898884600360001986015b048503612cf8565b151561153e576040805160e160020a636381e58902815260206004820152601860248201527f566572696679207369676e6174757265206661696c6564210000000000000000604482015290519081900360640190fd5b6000606061154b8a612f05565b61014089015191935091506bffffffffffffffffffffffff198084169116146115bf576040805160e160020a636381e58902815260206004820152601360248201527f4e657874426f6f6b65727320696c6c6567616c00000000000000000000000000604482015290519081900360640190fd5b85600160a060020a0316639b9272ae88606001516040518263ffffffff1660e060020a028152600401808263ffffffff1663ffffffff168152602001915050602060405180830381600087803b15801561161857600080fd5b505af115801561162c573d6000803e3d6000fd5b505050506040513d602081101561164257600080fd5b505115156116855760405160e160020a636381e58902815260040180806020018281038252602d815260200180614e77602d913960400191505060405180910390fd5b85600160a060020a031663795c2da661169d83612feb565b6040518263ffffffff1660e060020a0281526004018080602001828103825283818151815260200191508051906020019080838360005b838110156116ec5781810151838201526020016116d4565b50505050905090810190601f1680156117195780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b15801561173857600080fd5b505af115801561174c573d6000803e3d6000fd5b505050506040513d602081101561176257600080fd5b505115156117a55760405160e160020a636381e58902815260040180806020018281038252603b81526020018061508b603b913960400191505060405180910390fd5b7fb6fce21dbe2c1a233dd0989cca037e288c704b03a00063fae57ab78216c24c6087606001518c604051808363ffffffff16815260200180602001828103825283818151815260200191508051906020019080838360005b838110156118155781810151838201526020016117fd565b50505050905090810190601f1680156118425780820380516001836020036101000a031916815260200191505b50935050505060405180910390a15060019a9950505050505050505050565b6000805460a060020a900460ff16156118b3576040805160e160020a636381e5890281526020600482015260106024820152600080516020614c9d833981519152604482015290519081900360640190fd5b6118bb614b2d565b6118c486612b21565b90506000600160009054906101000a9004600160a060020a03169050606061192182600160a060020a031663a87c3ab26040518163ffffffff1660e060020a02815260040160006040518083038186803b15801561143d57600080fd5b9050600082600160a060020a031663a10431386040518163ffffffff1660e060020a02815260040160206040518083038186803b15801561196157600080fd5b505afa158015611975573d6000803e3d6000fd5b505050506040513d602081101561198b57600080fd5b50518251606086015163ffffffff928316935090911682116119ff576119b98a8885600360001986016114df565b15156119fa5760405160e160020a636381e58902815260040180806020018281038252602a815260200180614bf7602a913960400191505060405180910390fd5b611ae3565b611a11888885600360001986016114df565b1515611a525760405160e160020a636381e589028152600401808060200182810382526038815260200180614ea46038913960400191505060405180910390fd5b611a5a614b2d565b611a6389612b21565b90506060611a768b8361010001516130f1565b9050611a8181613223565b611a8a8d613288565b14611ae0576040805160e160020a636381e58902815260206004820152601b60248201527f766572696679206865616465722070726f6f66206661696c6564210000000000604482015290519081900360640190fd5b50505b6060611af38c8760e001516130f1565b9050611afd614b88565b611b06826133b9565b905085600160a060020a031663e7eed3f38260200151611b298460000151613223565b6040518363ffffffff1660e060020a028152600401808367ffffffffffffffff1667ffffffffffffffff1681526020018281526020019250505060206040518083038186803b158015611b7b57600080fd5b505afa158015611b8f573d6000803e3d6000fd5b505050506040513d6020811015611ba557600080fd5b505115611be75760405160e160020a636381e589028152600401808060200182810382526022815260200180614f256022913960400191505060405180910390fd5b85600160a060020a0316631ce207568260200151611c088460000151613223565b6040518363ffffffff1660e060020a028152600401808367ffffffffffffffff1667ffffffffffffffff16815260200182815260200192505050602060405180830381600087803b158015611c5c57600080fd5b505af1158015611c70573d6000803e3d6000fd5b505050506040513d6020811015611c8657600080fd5b50511515611cdf576040805160e160020a636381e58902815260206004820181905260248201527f536176652063726f7373636861696e207478206578697374206661696c656421604482015290519081900360640190fd5b60408101516060015167ffffffffffffffff16600714611d345760405160e160020a636381e58902815260040180806020018281038252602a815260200180614d89602a913960400191505060405180910390fd5b6000611d47826040015160800151613497565b9050611d7281836040015160a00151846040015160c0015185604001516040015186602001516134e6565b1515611dc9576040805160e160020a636381e58902815260206004820152601d60248201527f457865637574652043726f7373436861696e205478206661696c656421000000604482015290519081900360640190fd5b7fd55b5c067cabb0efbee18e2ec831db82dc43142eaba7a8f53d34b5e695c6beb482602001518360400151608001518460000151856040015160000151604051808567ffffffffffffffff1667ffffffffffffffff168152602001806020018060200180602001848103845287818151815260200191508051906020019080838360005b83811015611e65578181015183820152602001611e4d565b50505050905090810190601f168015611e925780820380516001836020036101000a031916815260200191505b50848103835286518152865160209182019188019080838360005b83811015611ec5578181015183820152602001611ead565b50505050905090810190601f168015611ef25780820380516001836020036101000a031916815260200191505b50848103825285518152855160209182019187019080838360005b83811015611f25578181015183820152602001611f0d565b50505050905090810190601f168015611f525780820380516001836020036101000a031916815260200191505b5097505050505050505060405180910390a15060019d9c50505050505050505050505050565b60005460a060020a900460ff1690565b611f906124e8565b1515611fd5576040805160e160020a636381e5890281526020600482018190526024820152600080516020614f8f833981519152604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b6000805460a060020a900460ff161561207e576040805160e160020a636381e5890281526020600482015260106024820152600080516020614c9d833981519152604482015290519081900360640190fd5b600154604080517fa87c3ab20000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691829163a87c3ab2916004808301926000929190829003018186803b1580156120dd57600080fd5b505afa1580156120f1573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f19168201604052602081101561211a57600080fd5b81019080805164010000000081111561213257600080fd5b8201602081018481111561214557600080fd5b815164010000000081118282018710171561215f57600080fd5b5050511592506121a79150505760405160e160020a636381e589028152600401808060200182810382526038815260200180614db36038913960400191505060405180910390fd5b6121af614b2d565b6121b885612b21565b9050600060606121c786612f05565b61014085015191935091506bffffffffffffffffffffffff1980841691161461223b576040805160e160020a636381e58902815260206004820152601360248201527f4e657874426f6f6b65727320696c6c6567616c00000000000000000000000000604482015290519081900360640190fd5b83600160a060020a0316639b9272ae84606001516040518263ffffffff1660e060020a028152600401808263ffffffff1663ffffffff168152602001915050602060405180830381600087803b15801561229457600080fd5b505af11580156122a8573d6000803e3d6000fd5b505050506040513d60208110156122be57600080fd5b505115156123015760405160e160020a636381e5890281526004018080602001828103825260438152602001806150266043913960600191505060405180910390fd5b83600160a060020a031663795c2da661231983612feb565b6040518263ffffffff1660e060020a0281526004018080602001828103825283818151815260200191508051906020019080838360005b83811015612368578181015183820152602001612350565b50505050905090810190601f1680156123955780820380516001836020036101000a031916815260200191505b5092505050602060405180830381600087803b1580156123b457600080fd5b505af11580156123c8573d6000803e3d6000fd5b505050506040513d60208110156123de57600080fd5b505115156124215760405160e160020a636381e589028152600401808060200182810382526043815260200180614d466043913960600191505060405180910390fd5b7fd0d0850c800a72b596c3214e30d7c2ea4ecad050030857167699f214d5705c3a836060015188604051808363ffffffff16815260200180602001828103825283818151815260200191508051906020019080838360005b83811015612491578181015183820152602001612479565b50505050905090810190601f1680156124be5780820380516001836020036101000a031916815260200191505b50935050505060405180910390a15060019695505050505050565b600154600160a060020a031681565b60008054600160a060020a03166124fd613902565b600160a060020a031614905090565b6000805460a060020a900460ff161515612571576040805160e160020a636381e58902815260206004820152601460248201527f5061757361626c653a206e6f7420706175736564000000000000000000000000604482015290519081900360640190fd5b6125796124e8565b15156125be576040805160e160020a636381e5890281526020600482018190526024820152600080516020614f8f833981519152604482015290519081900360640190fd5b600154604080517f16cad12a000000000000000000000000000000000000000000000000000000008152600160a060020a0385811660048301529151919092169182916316cad12a9160248082019260009290919082900301818387803b15801561262857600080fd5b505af115801561263c573d6000803e3d6000fd5b5050505060019150505b919050565b60006126556124e8565b151561269a576040805160e160020a636381e5890281526020600482018190526024820152600080516020614f8f833981519152604482015290519081900360640190fd5b6126a2611f78565b15156126b0576126b0613906565b600154604080517fd4bc96010000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691829163d4bc9601916004808301926020929190829003018186803b15801561270f57600080fd5b505afa158015612723573d6000803e3d6000fd5b505050506040513d602081101561273957600080fd5b505115156112645780600160a060020a031663f4fbb0c86040518163ffffffff1660e060020a028152600401602060405180830381600087803b15801561277f57600080fd5b505af1158015612793573d6000803e3d6000fd5b505050506040513d60208110156127a957600080fd5b505115156112645760405160e160020a636381e589028152600401808060200182810382526027815260200180614d1f6027913960400191505060405180910390fd5b600160a060020a03811615156128375760405160e160020a636381e589028152600401808060200182810382526026815260200180614deb6026913960400191505060405180910390fd5b60008054604051600160a060020a03808516939216917f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0392909216919091179055565b60607f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82111561291a576040805160e160020a636381e58902815260206004820152601760248201527f56616c75652065786365656473207468652072616e6765000000000000000000604482015290519081900360640190fd5b60405190506020815281602082015260408101604052919050565b8051606090612943816139a4565b836040516020018083805190602001908083835b602083106129765780518252601f199092019160209182019101612957565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b602083106129be5780518252601f19909201916020918201910161299f565b6001836020036101000a03801982511681845116808217855250505050505090500192505050604051602081830303815290604052915050919050565b604080516014815260609290921b6020830152818101905290565b6040516008808252606091906000601f5b82821015612a495785811a826020860101536001919091019060001901612a27565b5050506028810160405292915050565b60005460a060020a900460ff161515612abd576040805160e160020a636381e58902815260206004820152601460248201527f5061757361626c653a206e6f7420706175736564000000000000000000000000604482015290519081900360640190fd5b6000805474ff0000000000000000000000000000000000000000191690557f44693cadc19db35d7d96cdf4ec424cb6160570279ff61a4d437c15aed7a3f2e4612b04613902565b60408051600160a060020a039092168252519081900360200190a1565b612b29614b2d565b612b31614b2d565b6000612b3d8482613b25565b63ffffffff90911683529050612b538482613bd3565b67ffffffffffffffff90911660208401529050612b708482613c7f565b60a08401919091529050612b848482613c7f565b60c08401919091529050612b988482613c7f565b60e08401919091529050612bac8482613c7f565b6101008401919091529050612bc18482613b25565b63ffffffff90911660408401529050612bda8482613b25565b63ffffffff90911660608401529050612bf38482613bd3565b67ffffffffffffffff90911660808401529050612c108482613cff565b6101208401919091529050612c258482613dd8565b506bffffffffffffffffffffffff19166101408301525092915050565b6060600080612c518482613bd3565b809350819250505060608167ffffffffffffffff16604051908082528060200260200182016040528015612c8f578160200160208202803883390190505b509050606060005b8367ffffffffffffffff16811015612ced57612cb38786613cff565b95509150612cc082613497565b8382815181101515612cce57fe5b600160a060020a03909216602092830290910190910152600101612c97565b509095945050505050565b600080612d0486613288565b85519091506000908190604190049050606081604051908082528060200260200182016040528015612d40578160200160208202803883390190505b50905060008080805b85811015612ee957612d68612d638d604184026020613e46565b613223565b9350612d7f612d638d604184026020016020613e46565b92508b60418202604001815181101515612d9557fe5b90602001015160f860020a900460f860020a0260f860020a9004601b0191506001600289604051602001808281526020019150506040516020818303038152906040526040518082805190602001908083835b60208310612e075780518252601f199092019160209182019101612de8565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa158015612e46573d6000803e3d6000fd5b5050506040513d6020811015612e5b57600080fd5b5051604080516000815260208181018084529390935260ff8616818301526060810188905260808101879052905160a08083019392601f198301929081900390910190855afa158015612eb2573d6000803e3d6000fd5b505050602060405103518582815181101515612eca57fe5b600160a060020a03909216602092830290910190910152600101612d49565b50612ef58a858b613ec8565b9c9b505050505050505050505050565b6000606060438351811515612f1657fe5b0615612f6d576040805160e160020a636381e58902815260206004820152601b60248201527f5f7075624b65794c697374206c656e67746820696c6c6567616c210000000000604482015290519081900360640190fd5b8251604390046001811015612fcd576040805160e160020a636381e58902815260206004820152601660248201527f746f6f2073686f7274205f7075624b65794c6973742100000000000000000000604482015290519081900360640190fd5b612fe1816003600019820104830386613f68565b9250925050915091565b805160609081612ffa82612a16565b905060005b828110156130e9578161302b610b8c878481518110151561301c57fe5b906020019060200201516129fb565b6040516020018083805190602001908083835b6020831061305d5780518252601f19909201916020918201910161303e565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b602083106130a55780518252601f199092019160209182019101613086565b6001836020036101000a0380198251168184511680821785525050505050509050019250505060405160208183030381529060405291508080600101915050612fff565b509392505050565b60606000816131008583613cff565b92509050600061310f826142c3565b9050600060218488510381151561312257fe5b049050600080805b838110156131d35761313c8a8861436a565b9750915061314a8a88613c7f565b97509250600160f860020a0319821615156131705761316983866143ee565b94506131cb565b60f860020a600160f860020a0319831614156131905761316985846143ee565b60405160e160020a636381e58902815260040180806020018281038252602e8152602001806150c6602e913960400191505060405180910390fd5b60010161312a565b508388146132165760405160e160020a636381e589028152600401808060200182810382526031815260200180614fd16031913960400191505060405180910390fd5b5092979650505050505050565b8051600090602014613280576040805160e160020a636381e58902815260206004820152601760248201527f6279746573206c656e677468206973206e6f742033322e000000000000000000604482015290519081900360640190fd5b506020015190565b6000600280836040518082805190602001908083835b602083106132bd5780518252601f19909201916020918201910161329e565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa1580156132fc573d6000803e3d6000fd5b5050506040513d602081101561331157600080fd5b50516040805160208181019390935281518082038401815290820191829052805190928291908401908083835b6020831061335d5780518252601f19909201916020918201910161333e565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa15801561339c573d6000803e3d6000fd5b5050506040513d60208110156133b157600080fd5b505192915050565b6133c1614b88565b6133c9614b88565b60006133d58482613cff565b90835290506133e48482613bd3565b67ffffffffffffffff909116602084015290506133ff614bae565b6134098583613cff565b90825291506134188583613cff565b6020830191909152915061342c8583613cff565b604083019190915291506134408583613bd3565b67ffffffffffffffff9091166060830152915061345d8583613cff565b608083019190915291506134718583613cff565b60a083019190915291506134858583613cff565b5060c082015260408301525092915050565b80516000906014146134de5760405160e160020a636381e589028152600401808060200182810382526023815260200180614f6c6023913960400191505060405180910390fd5b506014015190565b60006134f1866144b2565b15156135325760405160e160020a636381e589028152600401808060200182810382526028815260200180614e116028913960400191505060405180910390fd5b6060600087600160a060020a0316876040516020018082805190602001908083835b602083106135735780518252601f199092019160209182019101613554565b51815160001960209485036101000a019081169019919091161790527f2862797465732c62797465732c75696e743634290000000000000000000000009390910192835260408051600b198186030181526014850190915280519082012067ffffffffffffffff8b1660748501526060603485019081528d5160948601528d519196508d95508c948c945090928392605483019260b4019188019080838360005b8381101561362c578181015183820152602001613614565b50505050905090810190601f1680156136595780820380516001836020036101000a031916815260200191505b50838103825285518152855160209182019187019080838360005b8381101561368c578181015183820152602001613674565b50505050905090810190601f1680156136b95780820380516001836020036101000a031916815260200191505b509550505050505060405160208183030381529060405260405160200180837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260040182805190602001908083835b602083106137465780518252601f199092019160209182019101613727565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083835b602083106137aa5780518252601f19909201916020918201910161378b565b6001836020036101000a0380198251168184511680821785525050505050509050019150506000604051808303816000865af19150503d806000811461380c576040519150601f19603f3d011682016040523d82523d6000602084013e613811565b606091505b509250905060018115151461385b5760405160e160020a636381e58902815260040180806020018281038252602b815260200180614cf4602b913960400191505060405180910390fd5b8151151561389e5760405160e160020a636381e589028152600401808060200182810382526027815260200180614efe6027913960400191505060405180910390fd5b60006138ab83601f6144ee565b5090506001811515146138f35760405160e160020a636381e589028152600401808060200182810382526037815260200180614cbd6037913960400191505060405180910390fd5b50600198975050505050505050565b3390565b60005460a060020a900460ff1615613957576040805160e160020a636381e5890281526020600482015260106024820152600080516020614c9d833981519152604482015290519081900360640190fd5b6000805474ff0000000000000000000000000000000000000000191660a060020a1790557f3572985a03189531d14bf182c5069e6eeb1ebd11ac4b5316dd3395136a20af7b612b04613902565b606060fd8267ffffffffffffffff1610156139c9576139c2826145fd565b9050612646565b61ffff67ffffffffffffffff831611613ac457613a057ffd00000000000000000000000000000000000000000000000000000000000000614619565b613a0e83614630565b6040516020018083805190602001908083835b60208310613a405780518252601f199092019160209182019101613a21565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b60208310613a885780518252601f199092019160209182019101613a69565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040529050612646565b63ffffffff67ffffffffffffffff831611613b0b57613b027ffe00000000000000000000000000000000000000000000000000000000000000614619565b613a0e83614673565b613b1c600160f860020a0319614619565b613a0e83612a16565b60008083518360040111158015613b3e57508260040183105b1515613b7f5760405160e160020a636381e589028152600401808060200182810382526022815260200180614edc6022913960400191505060405180910390fd5b600060405160046000600182038760208a0101515b83831015613bb45780821a83860153600183019250600182039150613b94565b50505080820160405260200390035192505050600482015b9250929050565b60008083518360080111158015613bec57508260080183105b1515613c2d5760405160e160020a636381e5890281526004018080602001828103825260228152602001806150696022913960400191505060405180910390fd5b600060405160086000600182038760208a0101515b83831015613c625780821a83860153600183019250600182039150613c42565b505050808201604052602003900351956008949094019450505050565b60008083518360200111158015613c9857508260200183105b1515613cef576040805160e160020a636381e58902815260206004820181905260248201527f4e657874486173682c206f66667365742065786365656473206d6178696d756d604482015290519081900360640190fd5b5050602091810182015192910190565b6060600080613d0e85856146b6565b865190955090915081850111801590613d28575080840184105b1515613d695760405160e160020a636381e5890281526004018080602001828103825260248152602001806150026024913960400191505060405180910390fd5b606081158015613d8457604051915060208201604052613dce565b6040519150601f8316801560200281840101848101888315602002848c0101015b81831015613dbd578051835260209283019201613da5565b5050848452601f01601f1916604052505b5095930193505050565b60008083518360140111158015613df157508260140183105b1515613e325760405160e160020a636381e589028152600401808060200182810382526023815260200180614c7a6023913960400191505060405180910390fd5b505081810160200151601482019250929050565b6060818301845110151515613e5a57600080fd5b606082158015613e7557604051915060208201604052613ebf565b6040519150601f8416801560200281840101858101878315602002848b0101015b81831015613eae578051835260209283019201613e96565b5050858452601f01601f1916604052505b50949350505050565b600080805b8451811015613f5c5760005b8651811015613f53578681815181101515613ef057fe5b90602001906020020151600160a060020a03168683815181101515613f1157fe5b90602001906020020151600160a060020a03161415613f4b578651600190930192879082908110613f3e57fe5b6000602091820290920101525b600101613ed9565b50600101613ecd565b50909111159392505050565b6000606080613f7686614630565b9050606086604051908082528060200260200182016040528015613fa4578160200160208202803883390190505b50905060006060815b898110156140cc57613fc488604383026043613e46565b915084613fd3610b8c84614921565b6040516020018083805190602001908083835b602083106140055780518252601f199092019160209182019101613fe6565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b6020831061404d5780518252601f19909201916020918201910161402e565b6001836020036101000a0380198251168184511680821785525050505050509050019250505060405160208183030381529060405294506140918260036040613e46565b805190602001209250826001900484828151811015156140ad57fe5b600160a060020a03909216602092830290910190910152600101613fad565b50836140d789614630565b6040516020018083805190602001908083835b602083106141095780518252601f1990920191602091820191016140ea565b51815160209384036101000a600019018019909216911617905285519190930192850191508083835b602083106141515780518252601f199092019160209182019101614132565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040529350600060036002866040518082805190602001908083835b602083106141be5780518252601f19909201916020918201910161419f565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa1580156141fd573d6000803e3d6000fd5b5050506040513d602081101561421257600080fd5b50516040805160208181019390935281518082038401815290820191829052805190928291908401908083835b6020831061425e5780518252601f19909201916020918201910161423f565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa15801561429d573d6000803e3d6000fd5b5050604051516c01000000000000000000000000029b949a509398505050505050505050565b6040516000602080830182815284519293600293859387939260210191908401908083835b602083106143075780518252601f1990920191602091820191016142e8565b6001836020036101000a038019825116818451168082178552505050505050905001925050506040516020818303038152906040526040518082805190602001908083836020831061335d5780518252601f19909201916020918201910161333e565b6000808351836001011115801561438357508260010183105b15156143da576040805160e160020a636381e58902815260206004820181905260248201527f4e657874427974652c204f66667365742065786365656473206d6178696d756d604482015290519081900360640190fd5b505081810160200151600182019250929050565b6040805160f860020a60208083019190915260218201859052604180830185905283518084039091018152606190920192839052815160009360029392909182918401908083835b602083106144555780518252601f199092019160209182019101614436565b51815160209384036101000a60001901801990921691161790526040519190930194509192505080830381855afa158015614494573d6000803e3d6000fd5b5050506040513d60208110156144a957600080fd5b50519392505050565b6000813f7fc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a47081158015906144e65750808214155b949350505050565b6000808351836001011115801561450757508260010183105b151561455e576040805160e160020a636381e58902815260206004820152601460248201527f4f66667365742065786365656473206c696d6974000000000000000000000000604482015290519081900360640190fd5b83830160200151600060f860020a600160f860020a031983161415614585575060016145ef565b600160f860020a03198216151561459e575060006145ef565b6040805160e160020a636381e58902815260206004820152601460248201527f4e657874426f6f6c2076616c7565206572726f72000000000000000000000000604482015290519081900360640190fd5b956001949094019450505050565b604080516001815260f89290921b602083015260218201905290565b606061462a60f860020a83046145fd565b92915050565b6040516002808252606091906000601f5b828210156146635785811a826020860101536001919091019060001901614641565b5050506022810160405292915050565b6040516004808252606091906000601f5b828210156146a65785811a826020860101536001919091019060001901614684565b5050506024810160405292915050565b60008060006146c5858561436a565b9450905060007ffd00000000000000000000000000000000000000000000000000000000000000600160f860020a031983161415614785576147078686614a9e565b955061ffff16905060fd8110801590614722575061ffff8111155b1515614779576040805160e160020a636381e58902815260206004820152601f60248201527f4e65787455696e7431362c2076616c7565206f7574736964652072616e676500604482015290519081900360640190fd5b9250839150613bcc9050565b7ffe00000000000000000000000000000000000000000000000000000000000000600160f860020a031983161415614837576147c18686613b25565b955063ffffffff16905061ffff811180156147e0575063ffffffff8111155b1515614779576040805160e160020a636381e58902815260206004820181905260248201527f4e65787456617255696e742c2076616c7565206f7574736964652072616e6765604482015290519081900360640190fd5b600160f860020a031980831614156148bd576148538686613bd3565b955067ffffffffffffffff16905063ffffffff8111614779576040805160e160020a636381e58902815260206004820181905260248201527f4e65787456617255696e742c2076616c7565206f7574736964652072616e6765604482015290519081900360640190fd5b5060ff60f860020a82041660fd8110614779576040805160e160020a636381e58902815260206004820181905260248201527f4e65787456617255696e742c2076616c7565206f7574736964652072616e6765604482015290519081900360640190fd5b60606043825110151515614980576040805160e160020a636381e58902815260206004820152601760248201527f6b6579206c656e67676820697320746f6f2073686f7274000000000000000000604482015290519081900360640190fd5b61498d8260006023613e46565b905060028260428151811015156149a057fe5b90602001015160f860020a900460f860020a0260f860020a900460ff168115156149c657fe5b0660ff1660001415614a385780517f02000000000000000000000000000000000000000000000000000000000000009082906002908110614a0357fe5b9060200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a905350612646565b80517f03000000000000000000000000000000000000000000000000000000000000009082906002908110614a6957fe5b9060200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a905350919050565b60008083518360020111158015614ab757508260020183105b1515614af85760405160e160020a636381e589028152600401808060200182810382526022815260200180614faf6022913960400191505060405180910390fd5b6000604051846020870101518060011a82538060001a6001830153506002818101604052601d19909101519694019450505050565b604080516101608101825260008082526020820181905291810182905260608082018390526080820183905260a0820183905260c0820183905260e08201839052610100820183905261012082015261014081019190915290565b60408051610120810182526060815260006020820152908101614ba9614bae565b905290565b60e060405190810160405280606081526020016060815260200160608152602001600067ffffffffffffffff168152602001606081526020016060815260200160608152509056fe56657269667920706f6c7920636861696e20686561646572207369676e6174757265206661696c656421536176652065746854784861736820627920696e64657820746f204461746120636f6e7472616374206661696c656421756e70617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c65644e657874427974657332302c206f66667365742065786365656473206d6178696d756d5061757361626c653a207061757365640000000000000000000000000000000045746843726f7373436861696e2063616c6c20627573696e65737320636f6e74726163742072657475726e206973206e6f74207472756545746843726f7373436861696e2063616c6c20627573696e65737320636f6e7472616374206661696c656470617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c65645361766520506f6c7920636861696e2063757272656e742065706f636820626f6f6b206b65657065727320746f204461746120636f6e7472616374206661696c65642154686973205478206973206e6f742061696d696e6720617420457468657265756d206e6574776f726b2145746843726f7373436861696e4461746120636f6e74726163742068617320616c7265616479206265656e20696e697469616c697a6564214f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573735468652070617373656420696e2061646472657373206973206e6f74206120636f6e74726163742154686520686569676874206f6620686561646572206973206c6f776572207468616e2063757272656e742065706f6368207374617274206865696768742153617665204d43204c617465737448656967687420746f204461746120636f6e7472616374206661696c65642156657269667920706f6c7920636861696e2063757272656e742065706f636820686561646572207369676e6174757265206661696c6564214e65787455696e7433322c206f66667365742065786365656473206d6178696d756d4e6f2072657475726e2076616c75652066726f6d20627573696e65737320636f6e747261637421746865207472616e73616374696f6e20686173206265656e20657865637574656421546865206e657874426f6f6b4b6565706572206f662068656164657220697320656d7074796279746573206c656e67746820646f6573206e6f74206d6174636820616464726573734f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65724e65787455696e7431362c206f66667365742065786365656473206d6178696d756d6d65726b6c6550726f76652c2065787065637420726f6f74206973206e6f7420657175616c2061637475616c20726f6f744e65787456617242797465732c206f66667365742065786365656473206d6178696d756d5361766520506f6c7920636861696e2063757272656e742065706f63682073746172742068656967687420746f204461746120636f6e7472616374206661696c6564214e65787455696e7436342c206f66667365742065786365656473206d6178696d756d5361766520506f6c7920636861696e20626f6f6b206b65657065727320627974657320746f204461746120636f6e7472616374206661696c6564216d65726b6c6550726f76652c204e6578744279746520666f7220706f736974696f6e20696e666f206661696c6564a165627a7a723058201a8a209bf3e2528de314e0407560885827c03cfe55e57e684e7f784434ce130a0029"
+// Deprecated: Use EthCrossChainManagerMetaData.Bin instead.
+var EthCrossChainManagerBin = EthCrossChainManagerMetaData.Bin
 
-// DeployEthCrossChainManager deploys a new contract, binding an instance of EthCrossChainManager to it.
-func DeployEthCrossChainManager(auth *bind.TransactOpts, backend bind.ContractBackend, _eccd common.Address) (common.Address, *types.Transaction, *EthCrossChainManager, error) {
-	parsed, err := abi.JSON(strings.NewReader(EthCrossChainManagerABI))
+// DeployEthCrossChainManager deploys a new ChainSQL contract, binding an instance of EthCrossChainManager to it.
+func DeployEthCrossChainManager(chainsql *core.Chainsql, auth *core.TransactOpts, _eccd common.Address, _chainId uint64) (*core.DeployTxRet, *EthCrossChainManager, error) {
+	parsed, err := EthCrossChainManagerMetaData.GetAbi()
 	if err != nil {
-		return common.Address{}, nil, nil, err
+		return &core.DeployTxRet{}, nil, err
+	}
+	if parsed == nil {
+		return &core.DeployTxRet{}, nil, errors.New("GetABI returned nil")
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(EthCrossChainManagerBin), backend, _eccd)
+	deployRet, contract, err := core.DeployContract(chainsql, auth, *parsed, common.FromHex(EthCrossChainManagerBin), _eccd, _chainId)
 	if err != nil {
-		return common.Address{}, nil, nil, err
+		return &core.DeployTxRet{}, nil, err
 	}
-	return address, tx, &EthCrossChainManager{EthCrossChainManagerCaller: EthCrossChainManagerCaller{contract: contract}, EthCrossChainManagerTransactor: EthCrossChainManagerTransactor{contract: contract}, EthCrossChainManagerFilterer: EthCrossChainManagerFilterer{contract: contract}}, nil
+	return deployRet, &EthCrossChainManager{EthCrossChainManagerCaller: EthCrossChainManagerCaller{contract: contract}, EthCrossChainManagerTransactor: EthCrossChainManagerTransactor{contract: contract}, EthCrossChainManagerFilterer: EthCrossChainManagerFilterer{contract: contract}}, nil
 }
 
-func AsyncDeployEthCrossChainManager(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend, _eccd common.Address) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(EthCrossChainManagerABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(EthCrossChainManagerBin), backend, _eccd)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// EthCrossChainManager is an auto generated Go binding around a Solidity contract.
+// EthCrossChainManager is an auto generated Go binding around an ChainSQL contract.
 type EthCrossChainManager struct {
 	EthCrossChainManagerCaller     // Read-only binding to the contract
 	EthCrossChainManagerTransactor // Write-only binding to the contract
 	EthCrossChainManagerFilterer   // Log filterer for contract events
 }
 
-// EthCrossChainManagerCaller is an auto generated read-only Go binding around a Solidity contract.
+// EthCrossChainManagerCaller is an auto generated read-only Go binding around an ChainSQL contract.
 type EthCrossChainManagerCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
+	contract *core.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// EthCrossChainManagerTransactor is an auto generated write-only Go binding around a Solidity contract.
+// EthCrossChainManagerTransactor is an auto generated write-only Go binding around an ChainSQL contract.
 type EthCrossChainManagerTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
+	contract *core.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// EthCrossChainManagerFilterer is an auto generated log filtering Go binding around a Solidity contract events.
+// EthCrossChainManagerFilterer is an auto generated log filtering Go binding around an ChainSQL contract events.
 type EthCrossChainManagerFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
+	contract *core.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// EthCrossChainManagerSession is an auto generated Go binding around a Solidity contract,
+// EthCrossChainManagerSession is an auto generated Go binding around an ChainSQL contract,
 // with pre-set call and transact options.
 type EthCrossChainManagerSession struct {
 	Contract     *EthCrossChainManager // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts         // Call options to use throughout this session
-	TransactOpts bind.TransactOpts     // Transaction auth options to use throughout this session
+	CallOpts     core.CallOpts         // Call options to use throughout this session
+	TransactOpts core.TransactOpts     // Transaction auth options to use throughout this session
 }
 
-// EthCrossChainManagerCallerSession is an auto generated read-only Go binding around a Solidity contract,
+// EthCrossChainManagerCallerSession is an auto generated read-only Go binding around an ChainSQL contract,
 // with pre-set call options.
 type EthCrossChainManagerCallerSession struct {
 	Contract *EthCrossChainManagerCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts               // Call options to use throughout this session
+	CallOpts core.CallOpts               // Call options to use throughout this session
 }
 
-// EthCrossChainManagerTransactorSession is an auto generated write-only Go binding around a Solidity contract,
+// EthCrossChainManagerTransactorSession is an auto generated write-only Go binding around an ChainSQL contract,
 // with pre-set transact options.
 type EthCrossChainManagerTransactorSession struct {
 	Contract     *EthCrossChainManagerTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts               // Transaction auth options to use throughout this session
+	TransactOpts core.TransactOpts               // Transaction auth options to use throughout this session
 }
 
-// EthCrossChainManagerRaw is an auto generated low-level Go binding around a Solidity contract.
+// EthCrossChainManagerRaw is an auto generated low-level Go binding around an ChainSQL contract.
 type EthCrossChainManagerRaw struct {
 	Contract *EthCrossChainManager // Generic contract binding to access the raw methods on
 }
 
-// EthCrossChainManagerCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
+// EthCrossChainManagerCallerRaw is an auto generated low-level read-only Go binding around an ChainSQL contract.
 type EthCrossChainManagerCallerRaw struct {
 	Contract *EthCrossChainManagerCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// EthCrossChainManagerTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
+// EthCrossChainManagerTransactorRaw is an auto generated low-level write-only Go binding around an ChainSQL contract.
 type EthCrossChainManagerTransactorRaw struct {
 	Contract *EthCrossChainManagerTransactor // Generic write-only contract binding to access the raw methods on
 }
 
 // NewEthCrossChainManager creates a new instance of EthCrossChainManager, bound to a specific deployed contract.
-func NewEthCrossChainManager(address common.Address, backend bind.ContractBackend) (*EthCrossChainManager, error) {
-	contract, err := bindEthCrossChainManager(address, backend, backend, backend)
+func NewEthCrossChainManager(chainsql *core.Chainsql, address string) (*EthCrossChainManager, error) {
+	contract, err := bindEthCrossChainManager(chainsql, address)
 	if err != nil {
 		return nil, err
 	}
 	return &EthCrossChainManager{EthCrossChainManagerCaller: EthCrossChainManagerCaller{contract: contract}, EthCrossChainManagerTransactor: EthCrossChainManagerTransactor{contract: contract}, EthCrossChainManagerFilterer: EthCrossChainManagerFilterer{contract: contract}}, nil
 }
 
-// NewEthCrossChainManagerCaller creates a new read-only instance of EthCrossChainManager, bound to a specific deployed contract.
-func NewEthCrossChainManagerCaller(address common.Address, caller bind.ContractCaller) (*EthCrossChainManagerCaller, error) {
-	contract, err := bindEthCrossChainManager(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerCaller{contract: contract}, nil
-}
+// // NewEthCrossChainManagerCaller creates a new read-only instance of EthCrossChainManager, bound to a specific deployed contract.
+// func NewEthCrossChainManagerCaller(address common.Address, caller bind.ContractCaller) (*EthCrossChainManagerCaller, error) {
+//   contract, err := bindEthCrossChainManager(address, caller, nil, nil)
+//   if err != nil {
+//     return nil, err
+//   }
+//   return &EthCrossChainManagerCaller{contract: contract}, nil
+// }
 
-// NewEthCrossChainManagerTransactor creates a new write-only instance of EthCrossChainManager, bound to a specific deployed contract.
-func NewEthCrossChainManagerTransactor(address common.Address, transactor bind.ContractTransactor) (*EthCrossChainManagerTransactor, error) {
-	contract, err := bindEthCrossChainManager(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerTransactor{contract: contract}, nil
-}
+// // NewEthCrossChainManagerTransactor creates a new write-only instance of EthCrossChainManager, bound to a specific deployed contract.
+// func NewEthCrossChainManagerTransactor(address common.Address, transactor bind.ContractTransactor) (*EthCrossChainManagerTransactor, error) {
+//   contract, err := bindEthCrossChainManager(address, nil, transactor, nil)
+//   if err != nil {
+//     return nil, err
+//   }
+//   return &EthCrossChainManagerTransactor{contract: contract}, nil
+// }
 
-// NewEthCrossChainManagerFilterer creates a new log filterer instance of EthCrossChainManager, bound to a specific deployed contract.
-func NewEthCrossChainManagerFilterer(address common.Address, filterer bind.ContractFilterer) (*EthCrossChainManagerFilterer, error) {
-	contract, err := bindEthCrossChainManager(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerFilterer{contract: contract}, nil
-}
+// // NewEthCrossChainManagerFilterer creates a new log filterer instance of EthCrossChainManager, bound to a specific deployed contract.
+// func NewEthCrossChainManagerFilterer(address common.Address, filterer bind.ContractFilterer) (*EthCrossChainManagerFilterer, error) {
+//   contract, err := bindEthCrossChainManager(address, nil, nil, filterer)
+//   if err != nil {
+//     return nil, err
+//   }
+//   return &EthCrossChainManagerFilterer{contract: contract}, nil
+// }
 
 // bindEthCrossChainManager binds a generic wrapper to an already deployed contract.
-func bindEthCrossChainManager(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+func bindEthCrossChainManager(chainsql *core.Chainsql, address string) (*core.BoundContract, error) {
 	parsed, err := abi.JSON(strings.NewReader(EthCrossChainManagerABI))
 	if err != nil {
 		return nil, err
 	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
+	return core.NewBoundContract(chainsql, address, parsed), nil
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_EthCrossChainManager *EthCrossChainManagerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _EthCrossChainManager.Contract.EthCrossChainManagerCaller.contract.Call(opts, result, method, params...)
-}
+// func (_EthCrossChainManager *EthCrossChainManagerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+// 	return _EthCrossChainManager.Contract.EthCrossChainManagerCaller.contract.Call(opts, result, method, params...)
+// }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_EthCrossChainManager *EthCrossChainManagerRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _EthCrossChainManager.Contract.EthCrossChainManagerTransactor.contract.Transfer(opts)
-}
+// func (_EthCrossChainManager *EthCrossChainManagerRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+// 	return _EthCrossChainManager.Contract.EthCrossChainManagerTransactor.contract.Transfer(opts)
+// }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_EthCrossChainManager *EthCrossChainManagerRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _EthCrossChainManager.Contract.EthCrossChainManagerTransactor.contract.Transact(opts, method, params...)
-}
+// func (_EthCrossChainManager *EthCrossChainManagerRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+// 	return _EthCrossChainManager.Contract.EthCrossChainManagerTransactor.contract.Transact(opts, method, params...)
+// }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_EthCrossChainManager *EthCrossChainManagerCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _EthCrossChainManager.Contract.contract.Call(opts, result, method, params...)
-}
+// func (_EthCrossChainManager *EthCrossChainManagerCallerRaw) Call(opts *core.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+// 	return _EthCrossChainManager.Contract.contract.Call(opts, result, method, params...)
+// }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_EthCrossChainManager *EthCrossChainManagerTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _EthCrossChainManager.Contract.contract.Transfer(opts)
-}
+// func (_EthCrossChainManager *EthCrossChainManagerTransactorRaw) Transfer(opts *core.TransactOpts) (*types.Transaction, error) {
+// 	return _EthCrossChainManager.Contract.contract.Transfer(opts)
+// }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_EthCrossChainManager *EthCrossChainManagerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _EthCrossChainManager.Contract.contract.Transact(opts, method, params...)
+// func (_EthCrossChainManager *EthCrossChainManagerTransactorRaw) Transact(opts *core.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+// 	return _EthCrossChainManager.Contract.contract.Transact(opts, method, params...)
+// }
+
+// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0x00ba1694.
+//
+// Solidity: function EthCrossChainDataAddress() view returns(address)
+func (_EthCrossChainManager *EthCrossChainManagerCaller) EthCrossChainDataAddress(opts *core.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _EthCrossChainManager.contract.Call(opts, &out, "EthCrossChainDataAddress")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
 }
 
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
+// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0x00ba1694.
 //
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
-func (_EthCrossChainManager *EthCrossChainManagerCaller) EthCrossChainDataAddress(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _EthCrossChainManager.contract.Call(opts, out, "EthCrossChainDataAddress")
-	return *ret0, err
-}
-
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
-//
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
+// Solidity: function EthCrossChainDataAddress() view returns(address)
 func (_EthCrossChainManager *EthCrossChainManagerSession) EthCrossChainDataAddress() (common.Address, error) {
 	return _EthCrossChainManager.Contract.EthCrossChainDataAddress(&_EthCrossChainManager.CallOpts)
 }
 
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
+// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0x00ba1694.
 //
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
+// Solidity: function EthCrossChainDataAddress() view returns(address)
 func (_EthCrossChainManager *EthCrossChainManagerCallerSession) EthCrossChainDataAddress() (common.Address, error) {
 	return _EthCrossChainManager.Contract.EthCrossChainDataAddress(&_EthCrossChainManager.CallOpts)
 }
 
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
+// ChainId is a free data retrieval call binding the contract method 0x9a8a0592.
 //
-// Solidity: function isOwner() constant returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _EthCrossChainManager.contract.Call(opts, out, "isOwner")
-	return *ret0, err
+// Solidity: function chainId() view returns(uint64)
+func (_EthCrossChainManager *EthCrossChainManagerCaller) ChainId(opts *core.CallOpts) (uint64, error) {
+	var out []interface{}
+	err := _EthCrossChainManager.contract.Call(opts, &out, "chainId")
+
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
+
 }
 
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
+// ChainId is a free data retrieval call binding the contract method 0x9a8a0592.
 //
-// Solidity: function isOwner() constant returns(bool)
+// Solidity: function chainId() view returns(uint64)
+func (_EthCrossChainManager *EthCrossChainManagerSession) ChainId() (uint64, error) {
+	return _EthCrossChainManager.Contract.ChainId(&_EthCrossChainManager.CallOpts)
+}
+
+// ChainId is a free data retrieval call binding the contract method 0x9a8a0592.
+//
+// Solidity: function chainId() view returns(uint64)
+func (_EthCrossChainManager *EthCrossChainManagerCallerSession) ChainId() (uint64, error) {
+	return _EthCrossChainManager.Contract.ChainId(&_EthCrossChainManager.CallOpts)
+}
+
+// IsOwner is a free data retrieval call binding the contract method 0x8f32d59b.
+//
+// Solidity: function isOwner() view returns(bool)
+func (_EthCrossChainManager *EthCrossChainManagerCaller) IsOwner(opts *core.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _EthCrossChainManager.contract.Call(opts, &out, "isOwner")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsOwner is a free data retrieval call binding the contract method 0x8f32d59b.
+//
+// Solidity: function isOwner() view returns(bool)
 func (_EthCrossChainManager *EthCrossChainManagerSession) IsOwner() (bool, error) {
 	return _EthCrossChainManager.Contract.IsOwner(&_EthCrossChainManager.CallOpts)
 }
 
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
+// IsOwner is a free data retrieval call binding the contract method 0x8f32d59b.
 //
-// Solidity: function isOwner() constant returns(bool)
+// Solidity: function isOwner() view returns(bool)
 func (_EthCrossChainManager *EthCrossChainManagerCallerSession) IsOwner() (bool, error) {
 	return _EthCrossChainManager.Contract.IsOwner(&_EthCrossChainManager.CallOpts)
 }
 
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function owner() constant returns(address)
-func (_EthCrossChainManager *EthCrossChainManagerCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _EthCrossChainManager.contract.Call(opts, out, "owner")
-	return *ret0, err
+// Solidity: function owner() view returns(address)
+func (_EthCrossChainManager *EthCrossChainManagerCaller) Owner(opts *core.CallOpts) (common.Address, error) {
+	var out []interface{}
+	err := _EthCrossChainManager.contract.Call(opts, &out, "owner")
+
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
+
 }
 
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function owner() constant returns(address)
+// Solidity: function owner() view returns(address)
 func (_EthCrossChainManager *EthCrossChainManagerSession) Owner() (common.Address, error) {
 	return _EthCrossChainManager.Contract.Owner(&_EthCrossChainManager.CallOpts)
 }
 
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
+// Owner is a free data retrieval call binding the contract method 0x8da5cb5b.
 //
-// Solidity: function owner() constant returns(address)
+// Solidity: function owner() view returns(address)
 func (_EthCrossChainManager *EthCrossChainManagerCallerSession) Owner() (common.Address, error) {
 	return _EthCrossChainManager.Contract.Owner(&_EthCrossChainManager.CallOpts)
 }
 
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() constant returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _EthCrossChainManager.contract.Call(opts, out, "paused")
-	return *ret0, err
+// Solidity: function paused() view returns(bool)
+func (_EthCrossChainManager *EthCrossChainManagerCaller) Paused(opts *core.CallOpts) (bool, error) {
+	var out []interface{}
+	err := _EthCrossChainManager.contract.Call(opts, &out, "paused")
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
 }
 
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() constant returns(bool)
+// Solidity: function paused() view returns(bool)
 func (_EthCrossChainManager *EthCrossChainManagerSession) Paused() (bool, error) {
 	return _EthCrossChainManager.Contract.Paused(&_EthCrossChainManager.CallOpts)
 }
 
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
+// Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
-// Solidity: function paused() constant returns(bool)
+// Solidity: function paused() view returns(bool)
 func (_EthCrossChainManager *EthCrossChainManagerCallerSession) Paused() (bool, error) {
 	return _EthCrossChainManager.Contract.Paused(&_EthCrossChainManager.CallOpts)
 }
 
-// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x9ad77567.
+// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x29dcf4ab.
 //
 // Solidity: function changeBookKeeper(bytes rawHeader, bytes pubKeyList, bytes sigList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) ChangeBookKeeper(opts *bind.TransactOpts, rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) ChangeBookKeeper(opts *core.TransactOpts, rawHeader []byte, pubKeyList []byte, sigList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "changeBookKeeper", rawHeader, pubKeyList, sigList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncChangeBookKeeper(handler func(*types.Receipt, error), opts *bind.TransactOpts, rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "changeBookKeeper", rawHeader, pubKeyList, sigList)
-}
-
-// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x9ad77567.
+// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x29dcf4ab.
 //
 // Solidity: function changeBookKeeper(bytes rawHeader, bytes pubKeyList, bytes sigList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) ChangeBookKeeper(rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) ChangeBookKeeper(rawHeader []byte, pubKeyList []byte, sigList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.ChangeBookKeeper(&_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList, sigList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncChangeBookKeeper(handler func(*types.Receipt, error), rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncChangeBookKeeper(handler, &_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList, sigList)
-}
-
-// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x9ad77567.
+// ChangeBookKeeper is a paid mutator transaction binding the contract method 0x29dcf4ab.
 //
 // Solidity: function changeBookKeeper(bytes rawHeader, bytes pubKeyList, bytes sigList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) ChangeBookKeeper(rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) ChangeBookKeeper(rawHeader []byte, pubKeyList []byte, sigList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.ChangeBookKeeper(&_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList, sigList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncChangeBookKeeper(handler func(*types.Receipt, error), rawHeader []byte, pubKeyList []byte, sigList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncChangeBookKeeper(handler, &_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList, sigList)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
+// CrossChain is a paid mutator transaction binding the contract method 0xbd5cf625.
 //
 // Solidity: function crossChain(uint64 toChainId, bytes toContract, bytes method, bytes txData) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) CrossChain(opts *bind.TransactOpts, toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) CrossChain(opts *core.TransactOpts, toChainId uint64, toContract []byte, method []byte, txData []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "crossChain", toChainId, toContract, method, txData)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncCrossChain(handler func(*types.Receipt, error), opts *bind.TransactOpts, toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "crossChain", toChainId, toContract, method, txData)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
+// CrossChain is a paid mutator transaction binding the contract method 0xbd5cf625.
 //
 // Solidity: function crossChain(uint64 toChainId, bytes toContract, bytes method, bytes txData) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) CrossChain(toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) CrossChain(toChainId uint64, toContract []byte, method []byte, txData []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.CrossChain(&_EthCrossChainManager.TransactOpts, toChainId, toContract, method, txData)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncCrossChain(handler func(*types.Receipt, error), toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncCrossChain(handler, &_EthCrossChainManager.TransactOpts, toChainId, toContract, method, txData)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
+// CrossChain is a paid mutator transaction binding the contract method 0xbd5cf625.
 //
 // Solidity: function crossChain(uint64 toChainId, bytes toContract, bytes method, bytes txData) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) CrossChain(toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) CrossChain(toChainId uint64, toContract []byte, method []byte, txData []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.CrossChain(&_EthCrossChainManager.TransactOpts, toChainId, toContract, method, txData)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncCrossChain(handler func(*types.Receipt, error), toChainId uint64, toContract []byte, method []byte, txData []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncCrossChain(handler, &_EthCrossChainManager.TransactOpts, toChainId, toContract, method, txData)
-}
-
-// InitGenesisBlock is a paid mutator transaction binding the contract method 0xed8873be.
+// InitGenesisBlock is a paid mutator transaction binding the contract method 0x34a773eb.
 //
 // Solidity: function initGenesisBlock(bytes rawHeader, bytes pubKeyList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) InitGenesisBlock(opts *bind.TransactOpts, rawHeader []byte, pubKeyList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) InitGenesisBlock(opts *core.TransactOpts, rawHeader []byte, pubKeyList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "initGenesisBlock", rawHeader, pubKeyList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncInitGenesisBlock(handler func(*types.Receipt, error), opts *bind.TransactOpts, rawHeader []byte, pubKeyList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "initGenesisBlock", rawHeader, pubKeyList)
-}
-
-// InitGenesisBlock is a paid mutator transaction binding the contract method 0xed8873be.
+// InitGenesisBlock is a paid mutator transaction binding the contract method 0x34a773eb.
 //
 // Solidity: function initGenesisBlock(bytes rawHeader, bytes pubKeyList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) InitGenesisBlock(rawHeader []byte, pubKeyList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) InitGenesisBlock(rawHeader []byte, pubKeyList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.InitGenesisBlock(&_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncInitGenesisBlock(handler func(*types.Receipt, error), rawHeader []byte, pubKeyList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncInitGenesisBlock(handler, &_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList)
-}
-
-// InitGenesisBlock is a paid mutator transaction binding the contract method 0xed8873be.
+// InitGenesisBlock is a paid mutator transaction binding the contract method 0x34a773eb.
 //
 // Solidity: function initGenesisBlock(bytes rawHeader, bytes pubKeyList) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) InitGenesisBlock(rawHeader []byte, pubKeyList []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) InitGenesisBlock(rawHeader []byte, pubKeyList []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.InitGenesisBlock(&_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncInitGenesisBlock(handler func(*types.Receipt, error), rawHeader []byte, pubKeyList []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncInitGenesisBlock(handler, &_EthCrossChainManager.TransactOpts, rawHeader, pubKeyList)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) Pause(opts *core.TransactOpts) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "pause")
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncPause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "pause")
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) Pause() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) Pause() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.Pause(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncPause(handler, &_EthCrossChainManager.TransactOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
+// Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) Pause() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) Pause() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.Pause(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncPause(handler, &_EthCrossChainManager.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
 //
 // Solidity: function renounceOwnership() returns()
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) RenounceOwnership(opts *core.TransactOpts) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "renounceOwnership")
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncRenounceOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "renounceOwnership")
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
 //
 // Solidity: function renounceOwnership() returns()
-func (_EthCrossChainManager *EthCrossChainManagerSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) RenounceOwnership() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.RenounceOwnership(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncRenounceOwnership(handler, &_EthCrossChainManager.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
+// RenounceOwnership is a paid mutator transaction binding the contract method 0x715018a6.
 //
 // Solidity: function renounceOwnership() returns()
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) RenounceOwnership() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.RenounceOwnership(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncRenounceOwnership(handler, &_EthCrossChainManager.TransactOpts)
+// SetChainId is a paid mutator transaction binding the contract method 0x6f31031d.
+//
+// Solidity: function setChainId(uint64 _newChainId) returns(bool)
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) SetChainId(opts *core.TransactOpts, _newChainId uint64) (*common.TxResult, error) {
+	return _EthCrossChainManager.contract.Transact(opts, "setChainId", _newChainId)
 }
 
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
+// SetChainId is a paid mutator transaction binding the contract method 0x6f31031d.
+//
+// Solidity: function setChainId(uint64 _newChainId) returns(bool)
+func (_EthCrossChainManager *EthCrossChainManagerSession) SetChainId(_newChainId uint64) (*common.TxResult, error) {
+	return _EthCrossChainManager.Contract.SetChainId(&_EthCrossChainManager.TransactOpts, _newChainId)
+}
+
+// SetChainId is a paid mutator transaction binding the contract method 0x6f31031d.
+//
+// Solidity: function setChainId(uint64 _newChainId) returns(bool)
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) SetChainId(_newChainId uint64) (*common.TxResult, error) {
+	return _EthCrossChainManager.Contract.SetChainId(&_EthCrossChainManager.TransactOpts, _newChainId)
+}
+
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
 //
 // Solidity: function transferOwnership(address newOwner) returns()
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) TransferOwnership(opts *core.TransactOpts, newOwner common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "transferOwnership", newOwner)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncTransferOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
 //
 // Solidity: function transferOwnership(address newOwner) returns()
-func (_EthCrossChainManager *EthCrossChainManagerSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) TransferOwnership(newOwner common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.TransferOwnership(&_EthCrossChainManager.TransactOpts, newOwner)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncTransferOwnership(handler, &_EthCrossChainManager.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
+// TransferOwnership is a paid mutator transaction binding the contract method 0xf2fde38b.
 //
 // Solidity: function transferOwnership(address newOwner) returns()
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) TransferOwnership(newOwner common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.TransferOwnership(&_EthCrossChainManager.TransactOpts, newOwner)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncTransferOwnership(handler, &_EthCrossChainManager.TransactOpts, newOwner)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) Unpause(opts *core.TransactOpts) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "unpause")
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncUnpause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "unpause")
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) Unpause() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) Unpause() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.Unpause(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncUnpause(handler, &_EthCrossChainManager.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
+// Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) Unpause() (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) Unpause() (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.Unpause(&_EthCrossChainManager.TransactOpts)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncUnpause(handler, &_EthCrossChainManager.TransactOpts)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
+// UpgradeToNew is a paid mutator transaction binding the contract method 0x7e724ff3.
 //
 // Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) UpgradeToNew(opts *bind.TransactOpts, newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) UpgradeToNew(opts *core.TransactOpts, newEthCrossChainManagerAddress common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "upgradeToNew", newEthCrossChainManagerAddress)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncUpgradeToNew(handler func(*types.Receipt, error), opts *bind.TransactOpts, newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "upgradeToNew", newEthCrossChainManagerAddress)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
+// UpgradeToNew is a paid mutator transaction binding the contract method 0x7e724ff3.
 //
 // Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.UpgradeToNew(&_EthCrossChainManager.TransactOpts, newEthCrossChainManagerAddress)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncUpgradeToNew(handler, &_EthCrossChainManager.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
+// UpgradeToNew is a paid mutator transaction binding the contract method 0x7e724ff3.
 //
 // Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.UpgradeToNew(&_EthCrossChainManager.TransactOpts, newEthCrossChainManagerAddress)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncUpgradeToNew(handler, &_EthCrossChainManager.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xcbd41b35.
+// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xd450e04c.
 //
 // Solidity: function verifyHeaderAndExecuteTx(bytes proof, bytes rawHeader, bytes headerProof, bytes curRawHeader, bytes headerSig) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) VerifyHeaderAndExecuteTx(opts *bind.TransactOpts, proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactor) VerifyHeaderAndExecuteTx(opts *core.TransactOpts, proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.contract.Transact(opts, "verifyHeaderAndExecuteTx", proof, rawHeader, headerProof, curRawHeader, headerSig)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerTransactor) AsyncVerifyHeaderAndExecuteTx(handler func(*types.Receipt, error), opts *bind.TransactOpts, proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.contract.AsyncTransact(opts, handler, "verifyHeaderAndExecuteTx", proof, rawHeader, headerProof, curRawHeader, headerSig)
-}
-
-// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xcbd41b35.
+// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xd450e04c.
 //
 // Solidity: function verifyHeaderAndExecuteTx(bytes proof, bytes rawHeader, bytes headerProof, bytes curRawHeader, bytes headerSig) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerSession) VerifyHeaderAndExecuteTx(proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerSession) VerifyHeaderAndExecuteTx(proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.VerifyHeaderAndExecuteTx(&_EthCrossChainManager.TransactOpts, proof, rawHeader, headerProof, curRawHeader, headerSig)
 }
 
-func (_EthCrossChainManager *EthCrossChainManagerSession) AsyncVerifyHeaderAndExecuteTx(handler func(*types.Receipt, error), proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncVerifyHeaderAndExecuteTx(handler, &_EthCrossChainManager.TransactOpts, proof, rawHeader, headerProof, curRawHeader, headerSig)
-}
-
-// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xcbd41b35.
+// VerifyHeaderAndExecuteTx is a paid mutator transaction binding the contract method 0xd450e04c.
 //
 // Solidity: function verifyHeaderAndExecuteTx(bytes proof, bytes rawHeader, bytes headerProof, bytes curRawHeader, bytes headerSig) returns(bool)
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) VerifyHeaderAndExecuteTx(proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, *types.Receipt, error) {
+func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) VerifyHeaderAndExecuteTx(proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*common.TxResult, error) {
 	return _EthCrossChainManager.Contract.VerifyHeaderAndExecuteTx(&_EthCrossChainManager.TransactOpts, proof, rawHeader, headerProof, curRawHeader, headerSig)
-}
-
-func (_EthCrossChainManager *EthCrossChainManagerTransactorSession) AsyncVerifyHeaderAndExecuteTx(handler func(*types.Receipt, error), proof []byte, rawHeader []byte, headerProof []byte, curRawHeader []byte, headerSig []byte) (*types.Transaction, error) {
-	return _EthCrossChainManager.Contract.AsyncVerifyHeaderAndExecuteTx(handler, &_EthCrossChainManager.TransactOpts, proof, rawHeader, headerProof, curRawHeader, headerSig)
 }
 
 // EthCrossChainManagerChangeBookKeeperEventIterator is returned from FilterChangeBookKeeperEvent and is used to iterate over the raw logs and unpacked data for ChangeBookKeeperEvent events raised by the EthCrossChainManager contract.
 type EthCrossChainManagerChangeBookKeeperEventIterator struct {
 	Event *EthCrossChainManagerChangeBookKeeperEvent // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1011,41 +634,44 @@ func (it *EthCrossChainManagerChangeBookKeeperEventIterator) Close() error {
 type EthCrossChainManagerChangeBookKeeperEvent struct {
 	Height    *big.Int
 	RawHeader []byte
-	Raw       types.Log // Blockchain specific contextual infos
+	Raw       data.Log // Blockchain specific contextual infos
 }
 
-// FilterChangeBookKeeperEvent is a free log retrieval operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000b6fce21d.
+// FilterChangeBookKeeperEvent is a free log retrieval operation binding the contract event 0xe60d33488cba3977bf65766cd2f8ac9617f64bf3b3198aff6240ce5c7d43b690.
 //
 // Solidity: event ChangeBookKeeperEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterChangeBookKeeperEvent(opts *bind.FilterOpts) (*EthCrossChainManagerChangeBookKeeperEventIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterChangeBookKeeperEvent(opts *core.FilterOpts) (*EthCrossChainManagerChangeBookKeeperEventIterator, error) {
+//
+//
+//
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "ChangeBookKeeperEvent")
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerChangeBookKeeperEventIterator{contract: _EthCrossChainManager.contract, event: "ChangeBookKeeperEvent", logs: logs, sub: sub}, nil
-}
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "ChangeBookKeeperEvent")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerChangeBookKeeperEventIterator{contract: _EthCrossChainManager.contract, event: "ChangeBookKeeperEvent", logs: logs, sub: sub}, nil
+// }
 
-// WatchChangeBookKeeperEvent is a free log subscription operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000b6fce21d.
+// WatchChangeBookKeeperEvent is a free log subscription operation binding the contract event 0xe60d33488cba3977bf65766cd2f8ac9617f64bf3b3198aff6240ce5c7d43b690.
 //
 // Solidity: event ChangeBookKeeperEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchChangeBookKeeperEvent(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerChangeBookKeeperEvent) (event.Subscription, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchChangeBookKeeperEvent(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerChangeBookKeeperEvent) (event.Subscription, error) {
 
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "ChangeBookKeeperEvent")
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "ChangeBookKeeperEvent")
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerChangeBookKeeperEvent)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "ChangeBookKeeperEvent", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "ChangeBookKeeperEvent", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1063,14 +689,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchChangeBookKeeper
 	}), nil
 }
 
-// ParseChangeBookKeeperEvent is a log parse operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000b6fce21d.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetChangeBookKeeperEventPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerChangeBookKeeperEvent, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerChangeBookKeeperEvent
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseChangeBookKeeperEvent(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseChangeBookKeeperEvent is a log parse operation binding the contract event 0xe60d33488cba3977bf65766cd2f8ac9617f64bf3b3198aff6240ce5c7d43b690.
 //
 // Solidity: event ChangeBookKeeperEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseChangeBookKeeperEvent(log types.Log) (*EthCrossChainManagerChangeBookKeeperEvent, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseChangeBookKeeperEvent(log data.Log) (*EthCrossChainManagerChangeBookKeeperEvent, error) {
 	event := new(EthCrossChainManagerChangeBookKeeperEvent)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "ChangeBookKeeperEvent", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1078,13 +732,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseChangeBookKeeper
 type EthCrossChainManagerCrossChainEventIterator struct {
 	Event *EthCrossChainManagerCrossChainEvent // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1149,51 +803,56 @@ type EthCrossChainManagerCrossChainEvent struct {
 	ToChainId            uint64
 	ToContract           []byte
 	Rawdata              []byte
-	Raw                  types.Log // Blockchain specific contextual infos
+	Raw                  data.Log // Blockchain specific contextual infos
 }
 
-// FilterCrossChainEvent is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000009d458f04.
+// FilterCrossChainEvent is a free log retrieval operation binding the contract event 0x6ad3bf15c1988bc04bc153490cab16db8efb9a3990215bf1c64ea6e28be88483.
 //
 // Solidity: event CrossChainEvent(address indexed sender, bytes txId, address proxyOrAssetContract, uint64 toChainId, bytes toContract, bytes rawdata)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterCrossChainEvent(opts *bind.FilterOpts, sender []common.Address) (*EthCrossChainManagerCrossChainEventIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterCrossChainEvent(opts *core.FilterOpts, sender []common.Address) (*EthCrossChainManagerCrossChainEventIterator, error) {
+//
+// 	var senderRule []interface{}
+// 	for _, senderItem := range sender {
+// 		senderRule = append(senderRule, senderItem)
+// 	}
+//
+//
+//
+//
+//
+
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "CrossChainEvent", senderRule)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerCrossChainEventIterator{contract: _EthCrossChainManager.contract, event: "CrossChainEvent", logs: logs, sub: sub}, nil
+// }
+
+// WatchCrossChainEvent is a free log subscription operation binding the contract event 0x6ad3bf15c1988bc04bc153490cab16db8efb9a3990215bf1c64ea6e28be88483.
+//
+// Solidity: event CrossChainEvent(address indexed sender, bytes txId, address proxyOrAssetContract, uint64 toChainId, bytes toContract, bytes rawdata)
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchCrossChainEvent(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerCrossChainEvent, sender []common.Address) (event.Subscription, error) {
 
 	var senderRule []interface{}
 	for _, senderItem := range sender {
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "CrossChainEvent", senderRule)
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerCrossChainEventIterator{contract: _EthCrossChainManager.contract, event: "CrossChainEvent", logs: logs, sub: sub}, nil
-}
-
-// WatchCrossChainEvent is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000009d458f04.
-//
-// Solidity: event CrossChainEvent(address indexed sender, bytes txId, address proxyOrAssetContract, uint64 toChainId, bytes toContract, bytes rawdata)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchCrossChainEvent(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerCrossChainEvent, sender []common.Address) (event.Subscription, error) {
-
-	var senderRule []interface{}
-	for _, senderItem := range sender {
-		senderRule = append(senderRule, senderItem)
-	}
-
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "CrossChainEvent", senderRule)
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "CrossChainEvent", senderRule)
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerCrossChainEvent)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "CrossChainEvent", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "CrossChainEvent", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1211,14 +870,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchCrossChainEvent(
 	}), nil
 }
 
-// ParseCrossChainEvent is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000009d458f04.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetCrossChainEventPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerCrossChainEvent, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerCrossChainEvent
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseCrossChainEvent(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseCrossChainEvent is a log parse operation binding the contract event 0x6ad3bf15c1988bc04bc153490cab16db8efb9a3990215bf1c64ea6e28be88483.
 //
 // Solidity: event CrossChainEvent(address indexed sender, bytes txId, address proxyOrAssetContract, uint64 toChainId, bytes toContract, bytes rawdata)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseCrossChainEvent(log types.Log) (*EthCrossChainManagerCrossChainEvent, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseCrossChainEvent(log data.Log) (*EthCrossChainManagerCrossChainEvent, error) {
 	event := new(EthCrossChainManagerCrossChainEvent)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "CrossChainEvent", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1226,13 +913,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseCrossChainEvent(
 type EthCrossChainManagerInitGenesisBlockEventIterator struct {
 	Event *EthCrossChainManagerInitGenesisBlockEvent // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1293,41 +980,44 @@ func (it *EthCrossChainManagerInitGenesisBlockEventIterator) Close() error {
 type EthCrossChainManagerInitGenesisBlockEvent struct {
 	Height    *big.Int
 	RawHeader []byte
-	Raw       types.Log // Blockchain specific contextual infos
+	Raw       data.Log // Blockchain specific contextual infos
 }
 
-// FilterInitGenesisBlockEvent is a free log retrieval operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d0d0850c.
+// FilterInitGenesisBlockEvent is a free log retrieval operation binding the contract event 0xf01968fc3a2655cf1b5144cb32de6dc898f91b9239c103744e8457152ab2fbde.
 //
 // Solidity: event InitGenesisBlockEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterInitGenesisBlockEvent(opts *bind.FilterOpts) (*EthCrossChainManagerInitGenesisBlockEventIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterInitGenesisBlockEvent(opts *core.FilterOpts) (*EthCrossChainManagerInitGenesisBlockEventIterator, error) {
+//
+//
+//
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "InitGenesisBlockEvent")
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerInitGenesisBlockEventIterator{contract: _EthCrossChainManager.contract, event: "InitGenesisBlockEvent", logs: logs, sub: sub}, nil
-}
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "InitGenesisBlockEvent")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerInitGenesisBlockEventIterator{contract: _EthCrossChainManager.contract, event: "InitGenesisBlockEvent", logs: logs, sub: sub}, nil
+// }
 
-// WatchInitGenesisBlockEvent is a free log subscription operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d0d0850c.
+// WatchInitGenesisBlockEvent is a free log subscription operation binding the contract event 0xf01968fc3a2655cf1b5144cb32de6dc898f91b9239c103744e8457152ab2fbde.
 //
 // Solidity: event InitGenesisBlockEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchInitGenesisBlockEvent(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerInitGenesisBlockEvent) (event.Subscription, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchInitGenesisBlockEvent(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerInitGenesisBlockEvent) (event.Subscription, error) {
 
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "InitGenesisBlockEvent")
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "InitGenesisBlockEvent")
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerInitGenesisBlockEvent)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "InitGenesisBlockEvent", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "InitGenesisBlockEvent", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1345,14 +1035,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchInitGenesisBlock
 	}), nil
 }
 
-// ParseInitGenesisBlockEvent is a log parse operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d0d0850c.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetInitGenesisBlockEventPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerInitGenesisBlockEvent, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerInitGenesisBlockEvent
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseInitGenesisBlockEvent(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseInitGenesisBlockEvent is a log parse operation binding the contract event 0xf01968fc3a2655cf1b5144cb32de6dc898f91b9239c103744e8457152ab2fbde.
 //
 // Solidity: event InitGenesisBlockEvent(uint256 height, bytes rawHeader)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseInitGenesisBlockEvent(log types.Log) (*EthCrossChainManagerInitGenesisBlockEvent, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseInitGenesisBlockEvent(log data.Log) (*EthCrossChainManagerInitGenesisBlockEvent, error) {
 	event := new(EthCrossChainManagerInitGenesisBlockEvent)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "InitGenesisBlockEvent", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1360,13 +1078,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseInitGenesisBlock
 type EthCrossChainManagerOwnershipTransferredIterator struct {
 	Event *EthCrossChainManagerOwnershipTransferred // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1427,13 +1145,34 @@ func (it *EthCrossChainManagerOwnershipTransferredIterator) Close() error {
 type EthCrossChainManagerOwnershipTransferred struct {
 	PreviousOwner common.Address
 	NewOwner      common.Address
-	Raw           types.Log // Blockchain specific contextual infos
+	Raw           data.Log // Blockchain specific contextual infos
 }
 
-// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
+// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
 //
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*EthCrossChainManagerOwnershipTransferredIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterOwnershipTransferred(opts *core.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*EthCrossChainManagerOwnershipTransferredIterator, error) {
+//
+// 	var previousOwnerRule []interface{}
+// 	for _, previousOwnerItem := range previousOwner {
+// 		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
+// 	}
+// 	var newOwnerRule []interface{}
+// 	for _, newOwnerItem := range newOwner {
+// 		newOwnerRule = append(newOwnerRule, newOwnerItem)
+// 	}
+
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerOwnershipTransferredIterator{contract: _EthCrossChainManager.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
+// }
+
+// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
+//
+// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchOwnershipTransferred(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
 
 	var previousOwnerRule []interface{}
 	for _, previousOwnerItem := range previousOwner {
@@ -1444,42 +1183,21 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterOwnershipTransf
 		newOwnerRule = append(newOwnerRule, newOwnerItem)
 	}
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerOwnershipTransferredIterator{contract: _EthCrossChainManager.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
-}
-
-// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerOwnershipTransferred)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "OwnershipTransferred", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1497,14 +1215,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchOwnershipTransfe
 	}), nil
 }
 
-// ParseOwnershipTransferred is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetOwnershipTransferredPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerOwnershipTransferred, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerOwnershipTransferred
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseOwnershipTransferred(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseOwnershipTransferred is a log parse operation binding the contract event 0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0.
 //
 // Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseOwnershipTransferred(log types.Log) (*EthCrossChainManagerOwnershipTransferred, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseOwnershipTransferred(log data.Log) (*EthCrossChainManagerOwnershipTransferred, error) {
 	event := new(EthCrossChainManagerOwnershipTransferred)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1512,13 +1258,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseOwnershipTransfe
 type EthCrossChainManagerPausedIterator struct {
 	Event *EthCrossChainManagerPaused // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1578,41 +1324,43 @@ func (it *EthCrossChainManagerPausedIterator) Close() error {
 // EthCrossChainManagerPaused represents a Paused event raised by the EthCrossChainManager contract.
 type EthCrossChainManagerPaused struct {
 	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+	Raw     data.Log // Blockchain specific contextual infos
 }
 
-// FilterPaused is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
+// FilterPaused is a free log retrieval operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterPaused(opts *bind.FilterOpts) (*EthCrossChainManagerPausedIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterPaused(opts *core.FilterOpts) (*EthCrossChainManagerPausedIterator, error) {
+//
+//
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerPausedIterator{contract: _EthCrossChainManager.contract, event: "Paused", logs: logs, sub: sub}, nil
-}
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "Paused")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerPausedIterator{contract: _EthCrossChainManager.contract, event: "Paused", logs: logs, sub: sub}, nil
+// }
 
-// WatchPaused is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
+// WatchPaused is a free log subscription operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerPaused) (event.Subscription, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchPaused(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerPaused) (event.Subscription, error) {
 
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "Paused")
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "Paused")
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerPaused)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "Paused", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "Paused", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1630,14 +1378,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchPaused(opts *bin
 	}), nil
 }
 
-// ParsePaused is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetPausedPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerPaused, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerPaused
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParsePaused(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParsePaused(log types.Log) (*EthCrossChainManagerPaused, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParsePaused(log data.Log) (*EthCrossChainManagerPaused, error) {
 	event := new(EthCrossChainManagerPaused)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "Paused", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1645,13 +1421,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParsePaused(log types
 type EthCrossChainManagerUnpausedIterator struct {
 	Event *EthCrossChainManagerUnpaused // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1711,41 +1487,43 @@ func (it *EthCrossChainManagerUnpausedIterator) Close() error {
 // EthCrossChainManagerUnpaused represents a Unpaused event raised by the EthCrossChainManager contract.
 type EthCrossChainManagerUnpaused struct {
 	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+	Raw     data.Log // Blockchain specific contextual infos
 }
 
-// FilterUnpaused is a free log retrieval operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
+// FilterUnpaused is a free log retrieval operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterUnpaused(opts *bind.FilterOpts) (*EthCrossChainManagerUnpausedIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterUnpaused(opts *core.FilterOpts) (*EthCrossChainManagerUnpausedIterator, error) {
+//
+//
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "Unpaused")
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerUnpausedIterator{contract: _EthCrossChainManager.contract, event: "Unpaused", logs: logs, sub: sub}, nil
-}
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "Unpaused")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerUnpausedIterator{contract: _EthCrossChainManager.contract, event: "Unpaused", logs: logs, sub: sub}, nil
+// }
 
-// WatchUnpaused is a free log subscription operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
+// WatchUnpaused is a free log subscription operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerUnpaused) (event.Subscription, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchUnpaused(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerUnpaused) (event.Subscription, error) {
 
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "Unpaused")
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "Unpaused")
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerUnpaused)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "Unpaused", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "Unpaused", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1763,14 +1541,42 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchUnpaused(opts *b
 	}), nil
 }
 
-// ParseUnpaused is a log parse operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetUnpausedPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerUnpaused, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerUnpaused
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseUnpaused(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseUnpaused(log types.Log) (*EthCrossChainManagerUnpaused, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseUnpaused(log data.Log) (*EthCrossChainManagerUnpaused, error) {
 	event := new(EthCrossChainManagerUnpaused)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "Unpaused", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }
 
@@ -1778,13 +1584,13 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseUnpaused(log typ
 type EthCrossChainManagerVerifyHeaderAndExecuteTxEventIterator struct {
 	Event *EthCrossChainManagerVerifyHeaderAndExecuteTxEvent // Event containing the contract specifics and raw log
 
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	contract *core.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
 
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
+	logs chan data.Log      // Log channel receiving the found contract events
+	sub  event.Subscription // Subscription for errors, completion and termination
+	done bool               // Whether the subscription completed delivering logs
+	fail error              // Occurred error to stop iteration
 }
 
 // Next advances the iterator to the subsequent event, returning whether there
@@ -1847,41 +1653,46 @@ type EthCrossChainManagerVerifyHeaderAndExecuteTxEvent struct {
 	ToContract       []byte
 	CrossChainTxHash []byte
 	FromChainTxHash  []byte
-	Raw              types.Log // Blockchain specific contextual infos
+	Raw              data.Log // Blockchain specific contextual infos
 }
 
-// FilterVerifyHeaderAndExecuteTxEvent is a free log retrieval operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d55b5c06.
+// FilterVerifyHeaderAndExecuteTxEvent is a free log retrieval operation binding the contract event 0x8a4a2663ce60ce4955c595da2894de0415240f1ace024cfbff85f513b656bdae.
 //
 // Solidity: event VerifyHeaderAndExecuteTxEvent(uint64 fromChainID, bytes toContract, bytes crossChainTxHash, bytes fromChainTxHash)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterVerifyHeaderAndExecuteTxEvent(opts *bind.FilterOpts) (*EthCrossChainManagerVerifyHeaderAndExecuteTxEventIterator, error) {
+// func (_EthCrossChainManager *EthCrossChainManagerFilterer) FilterVerifyHeaderAndExecuteTxEvent(opts *core.FilterOpts) (*EthCrossChainManagerVerifyHeaderAndExecuteTxEventIterator, error) {
+//
+//
+//
+//
+//
 
-	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "VerifyHeaderAndExecuteTxEvent")
-	if err != nil {
-		return nil, err
-	}
-	return &EthCrossChainManagerVerifyHeaderAndExecuteTxEventIterator{contract: _EthCrossChainManager.contract, event: "VerifyHeaderAndExecuteTxEvent", logs: logs, sub: sub}, nil
-}
+// 	logs, sub, err := _EthCrossChainManager.contract.FilterLogs(opts, "VerifyHeaderAndExecuteTxEvent")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &EthCrossChainManagerVerifyHeaderAndExecuteTxEventIterator{contract: _EthCrossChainManager.contract, event: "VerifyHeaderAndExecuteTxEvent", logs: logs, sub: sub}, nil
+// }
 
-// WatchVerifyHeaderAndExecuteTxEvent is a free log subscription operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d55b5c06.
+// WatchVerifyHeaderAndExecuteTxEvent is a free log subscription operation binding the contract event 0x8a4a2663ce60ce4955c595da2894de0415240f1ace024cfbff85f513b656bdae.
 //
 // Solidity: event VerifyHeaderAndExecuteTxEvent(uint64 fromChainID, bytes toContract, bytes crossChainTxHash, bytes fromChainTxHash)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchVerifyHeaderAndExecuteTxEvent(opts *bind.WatchOpts, sink chan<- *EthCrossChainManagerVerifyHeaderAndExecuteTxEvent) (event.Subscription, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchVerifyHeaderAndExecuteTxEvent(opts *core.WatchOpts, sink chan<- *EthCrossChainManagerVerifyHeaderAndExecuteTxEvent) (event.Subscription, error) {
 
-	logs, sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "VerifyHeaderAndExecuteTxEvent")
+	sub, err := _EthCrossChainManager.contract.WatchLogs(opts, "VerifyHeaderAndExecuteTxEvent")
 	if err != nil {
 		return nil, err
 	}
 	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
+		defer sub.UnSubscribe()
 		for {
 			select {
-			case log := <-logs:
+			case log := <-sub.EventMsgCh:
 				// New log arrived, parse the event and forward to the user
 				event := new(EthCrossChainManagerVerifyHeaderAndExecuteTxEvent)
-				if err := _EthCrossChainManager.contract.UnpackLog(event, "VerifyHeaderAndExecuteTxEvent", log); err != nil {
+				if err := _EthCrossChainManager.contract.UnpackLog(event, "VerifyHeaderAndExecuteTxEvent", *log); err != nil {
 					return err
 				}
-				event.Raw = log
+				event.Raw = *log
 
 				select {
 				case sink <- event:
@@ -1899,3551 +1710,41 @@ func (_EthCrossChainManager *EthCrossChainManagerFilterer) WatchVerifyHeaderAndE
 	}), nil
 }
 
-// ParseVerifyHeaderAndExecuteTxEvent is a log parse operation binding the contract event 0x00000000000000000000000000000000000000000000000000000000d55b5c06.
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) GetVerifyHeaderAndExecuteTxEventPastEvent(txHash string, ContractLogs string) ([]*EthCrossChainManagerVerifyHeaderAndExecuteTxEvent, error) {
+	var logRaws []*data.Log
+	var err error
+	if ContractLogs != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByCtrLog(ContractLogs)
+	} else if txHash != "" {
+		logRaws, err = _EthCrossChainManager.contract.GetPastEventByTxHash(txHash)
+	} else {
+		return nil, errors.New("both txHash or ContractLogs is not provided for param")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var events []*EthCrossChainManagerVerifyHeaderAndExecuteTxEvent
+	for _, logRaw := range logRaws {
+		event, err := _EthCrossChainManager.ParseVerifyHeaderAndExecuteTxEvent(*logRaw)
+		if err != nil && err.Error() != "event signature mismatch" {
+			return nil, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+	}
+	return events, nil
+}
+
+// ParseVerifyHeaderAndExecuteTxEvent is a log parse operation binding the contract event 0x8a4a2663ce60ce4955c595da2894de0415240f1ace024cfbff85f513b656bdae.
 //
 // Solidity: event VerifyHeaderAndExecuteTxEvent(uint64 fromChainID, bytes toContract, bytes crossChainTxHash, bytes fromChainTxHash)
-func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseVerifyHeaderAndExecuteTxEvent(log types.Log) (*EthCrossChainManagerVerifyHeaderAndExecuteTxEvent, error) {
+func (_EthCrossChainManager *EthCrossChainManagerFilterer) ParseVerifyHeaderAndExecuteTxEvent(log data.Log) (*EthCrossChainManagerVerifyHeaderAndExecuteTxEvent, error) {
 	event := new(EthCrossChainManagerVerifyHeaderAndExecuteTxEvent)
 	if err := _EthCrossChainManager.contract.UnpackLog(event, "VerifyHeaderAndExecuteTxEvent", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
-}
-
-// IEthCrossChainDataABI is the input ABI used to generate the binding from.
-const IEthCrossChainDataABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"fromChainId\",\"type\":\"uint64\"},{\"name\":\"fromChainTx\",\"type\":\"bytes32\"}],\"name\":\"markFromChainTxExist\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"key1\",\"type\":\"bytes32\"},{\"name\":\"key2\",\"type\":\"bytes32\"}],\"name\":\"getExtraData\",\"outputs\":[{\"name\":\"\",\"type\":\"bytes\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"key1\",\"type\":\"bytes32\"},{\"name\":\"key2\",\"type\":\"bytes32\"},{\"name\":\"value\",\"type\":\"bytes\"}],\"name\":\"putExtraData\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"unpause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"curEpochPkBytes\",\"type\":\"bytes\"}],\"name\":\"putCurEpochConPubKeyBytes\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"ethTxHash\",\"type\":\"bytes32\"}],\"name\":\"putEthTxHash\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"curEpochStartHeight\",\"type\":\"uint32\"}],\"name\":\"putCurEpochStartHeight\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getCurEpochStartHeight\",\"outputs\":[{\"name\":\"\",\"type\":\"uint32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getCurEpochConPubKeyBytes\",\"outputs\":[{\"name\":\"\",\"type\":\"bytes\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getEthTxHashIndex\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"ethTxHashIndex\",\"type\":\"uint256\"}],\"name\":\"getEthTxHash\",\"outputs\":[{\"name\":\"\",\"type\":\"bytes32\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"fromChainId\",\"type\":\"uint64\"},{\"name\":\"fromChainTx\",\"type\":\"bytes32\"}],\"name\":\"checkIfFromChainTxExist\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"pause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
-
-// IEthCrossChainDataFuncSigs maps the 4-byte function signature to its string representation.
-var IEthCrossChainDataFuncSigs = map[string]string{
-	"e7eed3f3": "checkIfFromChainTxExist(uint64,bytes32)",
-	"a87c3ab2": "getCurEpochConPubKeyBytes()",
-	"a1043138": "getCurEpochStartHeight()",
-	"d5b03fca": "getEthTxHash(uint256)",
-	"ab907a6f": "getEthTxHashIndex()",
-	"2707f9e0": "getExtraData(bytes32,bytes32)",
-	"1ce20756": "markFromChainTxExist(uint64,bytes32)",
-	"f4fbb0c8": "pause()",
-	"d4bc9601": "paused()",
-	"795c2da6": "putCurEpochConPubKeyBytes(bytes)",
-	"9b9272ae": "putCurEpochStartHeight(uint32)",
-	"93645d57": "putEthTxHash(bytes32)",
-	"351f0ea0": "putExtraData(bytes32,bytes32,bytes)",
-	"16cad12a": "transferOwnership(address)",
-	"63c37526": "unpause()",
-}
-
-// IEthCrossChainData is an auto generated Go binding around a Solidity contract.
-type IEthCrossChainData struct {
-	IEthCrossChainDataCaller     // Read-only binding to the contract
-	IEthCrossChainDataTransactor // Write-only binding to the contract
-	IEthCrossChainDataFilterer   // Log filterer for contract events
-}
-
-// IEthCrossChainDataCaller is an auto generated read-only Go binding around a Solidity contract.
-type IEthCrossChainDataCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainDataTransactor is an auto generated write-only Go binding around a Solidity contract.
-type IEthCrossChainDataTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainDataFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type IEthCrossChainDataFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainDataSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type IEthCrossChainDataSession struct {
-	Contract     *IEthCrossChainData // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts       // Call options to use throughout this session
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
-}
-
-// IEthCrossChainDataCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type IEthCrossChainDataCallerSession struct {
-	Contract *IEthCrossChainDataCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts             // Call options to use throughout this session
-}
-
-// IEthCrossChainDataTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type IEthCrossChainDataTransactorSession struct {
-	Contract     *IEthCrossChainDataTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts             // Transaction auth options to use throughout this session
-}
-
-// IEthCrossChainDataRaw is an auto generated low-level Go binding around a Solidity contract.
-type IEthCrossChainDataRaw struct {
-	Contract *IEthCrossChainData // Generic contract binding to access the raw methods on
-}
-
-// IEthCrossChainDataCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type IEthCrossChainDataCallerRaw struct {
-	Contract *IEthCrossChainDataCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// IEthCrossChainDataTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type IEthCrossChainDataTransactorRaw struct {
-	Contract *IEthCrossChainDataTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewIEthCrossChainData creates a new instance of IEthCrossChainData, bound to a specific deployed contract.
-func NewIEthCrossChainData(address common.Address, backend bind.ContractBackend) (*IEthCrossChainData, error) {
-	contract, err := bindIEthCrossChainData(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainData{IEthCrossChainDataCaller: IEthCrossChainDataCaller{contract: contract}, IEthCrossChainDataTransactor: IEthCrossChainDataTransactor{contract: contract}, IEthCrossChainDataFilterer: IEthCrossChainDataFilterer{contract: contract}}, nil
-}
-
-// NewIEthCrossChainDataCaller creates a new read-only instance of IEthCrossChainData, bound to a specific deployed contract.
-func NewIEthCrossChainDataCaller(address common.Address, caller bind.ContractCaller) (*IEthCrossChainDataCaller, error) {
-	contract, err := bindIEthCrossChainData(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainDataCaller{contract: contract}, nil
-}
-
-// NewIEthCrossChainDataTransactor creates a new write-only instance of IEthCrossChainData, bound to a specific deployed contract.
-func NewIEthCrossChainDataTransactor(address common.Address, transactor bind.ContractTransactor) (*IEthCrossChainDataTransactor, error) {
-	contract, err := bindIEthCrossChainData(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainDataTransactor{contract: contract}, nil
-}
-
-// NewIEthCrossChainDataFilterer creates a new log filterer instance of IEthCrossChainData, bound to a specific deployed contract.
-func NewIEthCrossChainDataFilterer(address common.Address, filterer bind.ContractFilterer) (*IEthCrossChainDataFilterer, error) {
-	contract, err := bindIEthCrossChainData(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainDataFilterer{contract: contract}, nil
-}
-
-// bindIEthCrossChainData binds a generic wrapper to an already deployed contract.
-func bindIEthCrossChainData(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(IEthCrossChainDataABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IEthCrossChainData *IEthCrossChainDataRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IEthCrossChainData.Contract.IEthCrossChainDataCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IEthCrossChainData *IEthCrossChainDataRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.IEthCrossChainDataTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IEthCrossChainData *IEthCrossChainDataRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.IEthCrossChainDataTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IEthCrossChainData *IEthCrossChainDataCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IEthCrossChainData.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IEthCrossChainData *IEthCrossChainDataTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IEthCrossChainData *IEthCrossChainDataTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.contract.Transact(opts, method, params...)
-}
-
-// CheckIfFromChainTxExist is a free data retrieval call binding the contract method 0xe7eed3f3.
-//
-// Solidity: function checkIfFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) CheckIfFromChainTxExist(opts *bind.CallOpts, fromChainId uint64, fromChainTx [32]byte) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "checkIfFromChainTxExist", fromChainId, fromChainTx)
-	return *ret0, err
-}
-
-// CheckIfFromChainTxExist is a free data retrieval call binding the contract method 0xe7eed3f3.
-//
-// Solidity: function checkIfFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) CheckIfFromChainTxExist(fromChainId uint64, fromChainTx [32]byte) (bool, error) {
-	return _IEthCrossChainData.Contract.CheckIfFromChainTxExist(&_IEthCrossChainData.CallOpts, fromChainId, fromChainTx)
-}
-
-// CheckIfFromChainTxExist is a free data retrieval call binding the contract method 0xe7eed3f3.
-//
-// Solidity: function checkIfFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) CheckIfFromChainTxExist(fromChainId uint64, fromChainTx [32]byte) (bool, error) {
-	return _IEthCrossChainData.Contract.CheckIfFromChainTxExist(&_IEthCrossChainData.CallOpts, fromChainId, fromChainTx)
-}
-
-// GetCurEpochConPubKeyBytes is a free data retrieval call binding the contract method 0xa87c3ab2.
-//
-// Solidity: function getCurEpochConPubKeyBytes() constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) GetCurEpochConPubKeyBytes(opts *bind.CallOpts) ([]byte, error) {
-	var (
-		ret0 = new([]byte)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "getCurEpochConPubKeyBytes")
-	return *ret0, err
-}
-
-// GetCurEpochConPubKeyBytes is a free data retrieval call binding the contract method 0xa87c3ab2.
-//
-// Solidity: function getCurEpochConPubKeyBytes() constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataSession) GetCurEpochConPubKeyBytes() ([]byte, error) {
-	return _IEthCrossChainData.Contract.GetCurEpochConPubKeyBytes(&_IEthCrossChainData.CallOpts)
-}
-
-// GetCurEpochConPubKeyBytes is a free data retrieval call binding the contract method 0xa87c3ab2.
-//
-// Solidity: function getCurEpochConPubKeyBytes() constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) GetCurEpochConPubKeyBytes() ([]byte, error) {
-	return _IEthCrossChainData.Contract.GetCurEpochConPubKeyBytes(&_IEthCrossChainData.CallOpts)
-}
-
-// GetCurEpochStartHeight is a free data retrieval call binding the contract method 0xa1043138.
-//
-// Solidity: function getCurEpochStartHeight() constant returns(uint32)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) GetCurEpochStartHeight(opts *bind.CallOpts) (uint32, error) {
-	var (
-		ret0 = new(uint32)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "getCurEpochStartHeight")
-	return *ret0, err
-}
-
-// GetCurEpochStartHeight is a free data retrieval call binding the contract method 0xa1043138.
-//
-// Solidity: function getCurEpochStartHeight() constant returns(uint32)
-func (_IEthCrossChainData *IEthCrossChainDataSession) GetCurEpochStartHeight() (uint32, error) {
-	return _IEthCrossChainData.Contract.GetCurEpochStartHeight(&_IEthCrossChainData.CallOpts)
-}
-
-// GetCurEpochStartHeight is a free data retrieval call binding the contract method 0xa1043138.
-//
-// Solidity: function getCurEpochStartHeight() constant returns(uint32)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) GetCurEpochStartHeight() (uint32, error) {
-	return _IEthCrossChainData.Contract.GetCurEpochStartHeight(&_IEthCrossChainData.CallOpts)
-}
-
-// GetEthTxHash is a free data retrieval call binding the contract method 0xd5b03fca.
-//
-// Solidity: function getEthTxHash(uint256 ethTxHashIndex) constant returns(bytes32)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) GetEthTxHash(opts *bind.CallOpts, ethTxHashIndex *big.Int) ([32]byte, error) {
-	var (
-		ret0 = new([32]byte)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "getEthTxHash", ethTxHashIndex)
-	return *ret0, err
-}
-
-// GetEthTxHash is a free data retrieval call binding the contract method 0xd5b03fca.
-//
-// Solidity: function getEthTxHash(uint256 ethTxHashIndex) constant returns(bytes32)
-func (_IEthCrossChainData *IEthCrossChainDataSession) GetEthTxHash(ethTxHashIndex *big.Int) ([32]byte, error) {
-	return _IEthCrossChainData.Contract.GetEthTxHash(&_IEthCrossChainData.CallOpts, ethTxHashIndex)
-}
-
-// GetEthTxHash is a free data retrieval call binding the contract method 0xd5b03fca.
-//
-// Solidity: function getEthTxHash(uint256 ethTxHashIndex) constant returns(bytes32)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) GetEthTxHash(ethTxHashIndex *big.Int) ([32]byte, error) {
-	return _IEthCrossChainData.Contract.GetEthTxHash(&_IEthCrossChainData.CallOpts, ethTxHashIndex)
-}
-
-// GetEthTxHashIndex is a free data retrieval call binding the contract method 0xab907a6f.
-//
-// Solidity: function getEthTxHashIndex() constant returns(uint256)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) GetEthTxHashIndex(opts *bind.CallOpts) (*big.Int, error) {
-	var (
-		ret0 = new(*big.Int)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "getEthTxHashIndex")
-	return *ret0, err
-}
-
-// GetEthTxHashIndex is a free data retrieval call binding the contract method 0xab907a6f.
-//
-// Solidity: function getEthTxHashIndex() constant returns(uint256)
-func (_IEthCrossChainData *IEthCrossChainDataSession) GetEthTxHashIndex() (*big.Int, error) {
-	return _IEthCrossChainData.Contract.GetEthTxHashIndex(&_IEthCrossChainData.CallOpts)
-}
-
-// GetEthTxHashIndex is a free data retrieval call binding the contract method 0xab907a6f.
-//
-// Solidity: function getEthTxHashIndex() constant returns(uint256)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) GetEthTxHashIndex() (*big.Int, error) {
-	return _IEthCrossChainData.Contract.GetEthTxHashIndex(&_IEthCrossChainData.CallOpts)
-}
-
-// GetExtraData is a free data retrieval call binding the contract method 0x2707f9e0.
-//
-// Solidity: function getExtraData(bytes32 key1, bytes32 key2) constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) GetExtraData(opts *bind.CallOpts, key1 [32]byte, key2 [32]byte) ([]byte, error) {
-	var (
-		ret0 = new([]byte)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "getExtraData", key1, key2)
-	return *ret0, err
-}
-
-// GetExtraData is a free data retrieval call binding the contract method 0x2707f9e0.
-//
-// Solidity: function getExtraData(bytes32 key1, bytes32 key2) constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataSession) GetExtraData(key1 [32]byte, key2 [32]byte) ([]byte, error) {
-	return _IEthCrossChainData.Contract.GetExtraData(&_IEthCrossChainData.CallOpts, key1, key2)
-}
-
-// GetExtraData is a free data retrieval call binding the contract method 0x2707f9e0.
-//
-// Solidity: function getExtraData(bytes32 key1, bytes32 key2) constant returns(bytes)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) GetExtraData(key1 [32]byte, key2 [32]byte) ([]byte, error) {
-	return _IEthCrossChainData.Contract.GetExtraData(&_IEthCrossChainData.CallOpts, key1, key2)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _IEthCrossChainData.contract.Call(opts, out, "paused")
-	return *ret0, err
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) Paused() (bool, error) {
-	return _IEthCrossChainData.Contract.Paused(&_IEthCrossChainData.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataCallerSession) Paused() (bool, error) {
-	return _IEthCrossChainData.Contract.Paused(&_IEthCrossChainData.CallOpts)
-}
-
-// MarkFromChainTxExist is a paid mutator transaction binding the contract method 0x1ce20756.
-//
-// Solidity: function markFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) MarkFromChainTxExist(opts *bind.TransactOpts, fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "markFromChainTxExist", fromChainId, fromChainTx)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncMarkFromChainTxExist(handler func(*types.Receipt, error), opts *bind.TransactOpts, fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "markFromChainTxExist", fromChainId, fromChainTx)
-}
-
-// MarkFromChainTxExist is a paid mutator transaction binding the contract method 0x1ce20756.
-//
-// Solidity: function markFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) MarkFromChainTxExist(fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.MarkFromChainTxExist(&_IEthCrossChainData.TransactOpts, fromChainId, fromChainTx)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncMarkFromChainTxExist(handler func(*types.Receipt, error), fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncMarkFromChainTxExist(handler, &_IEthCrossChainData.TransactOpts, fromChainId, fromChainTx)
-}
-
-// MarkFromChainTxExist is a paid mutator transaction binding the contract method 0x1ce20756.
-//
-// Solidity: function markFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) MarkFromChainTxExist(fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.MarkFromChainTxExist(&_IEthCrossChainData.TransactOpts, fromChainId, fromChainTx)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncMarkFromChainTxExist(handler func(*types.Receipt, error), fromChainId uint64, fromChainTx [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncMarkFromChainTxExist(handler, &_IEthCrossChainData.TransactOpts, fromChainId, fromChainTx)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "pause")
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncPause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "pause")
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.Pause(&_IEthCrossChainData.TransactOpts)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPause(handler, &_IEthCrossChainData.TransactOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.Pause(&_IEthCrossChainData.TransactOpts)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPause(handler, &_IEthCrossChainData.TransactOpts)
-}
-
-// PutCurEpochConPubKeyBytes is a paid mutator transaction binding the contract method 0x795c2da6.
-//
-// Solidity: function putCurEpochConPubKeyBytes(bytes curEpochPkBytes) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) PutCurEpochConPubKeyBytes(opts *bind.TransactOpts, curEpochPkBytes []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "putCurEpochConPubKeyBytes", curEpochPkBytes)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncPutCurEpochConPubKeyBytes(handler func(*types.Receipt, error), opts *bind.TransactOpts, curEpochPkBytes []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "putCurEpochConPubKeyBytes", curEpochPkBytes)
-}
-
-// PutCurEpochConPubKeyBytes is a paid mutator transaction binding the contract method 0x795c2da6.
-//
-// Solidity: function putCurEpochConPubKeyBytes(bytes curEpochPkBytes) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) PutCurEpochConPubKeyBytes(curEpochPkBytes []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutCurEpochConPubKeyBytes(&_IEthCrossChainData.TransactOpts, curEpochPkBytes)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncPutCurEpochConPubKeyBytes(handler func(*types.Receipt, error), curEpochPkBytes []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutCurEpochConPubKeyBytes(handler, &_IEthCrossChainData.TransactOpts, curEpochPkBytes)
-}
-
-// PutCurEpochConPubKeyBytes is a paid mutator transaction binding the contract method 0x795c2da6.
-//
-// Solidity: function putCurEpochConPubKeyBytes(bytes curEpochPkBytes) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) PutCurEpochConPubKeyBytes(curEpochPkBytes []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutCurEpochConPubKeyBytes(&_IEthCrossChainData.TransactOpts, curEpochPkBytes)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncPutCurEpochConPubKeyBytes(handler func(*types.Receipt, error), curEpochPkBytes []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutCurEpochConPubKeyBytes(handler, &_IEthCrossChainData.TransactOpts, curEpochPkBytes)
-}
-
-// PutCurEpochStartHeight is a paid mutator transaction binding the contract method 0x9b9272ae.
-//
-// Solidity: function putCurEpochStartHeight(uint32 curEpochStartHeight) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) PutCurEpochStartHeight(opts *bind.TransactOpts, curEpochStartHeight uint32) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "putCurEpochStartHeight", curEpochStartHeight)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncPutCurEpochStartHeight(handler func(*types.Receipt, error), opts *bind.TransactOpts, curEpochStartHeight uint32) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "putCurEpochStartHeight", curEpochStartHeight)
-}
-
-// PutCurEpochStartHeight is a paid mutator transaction binding the contract method 0x9b9272ae.
-//
-// Solidity: function putCurEpochStartHeight(uint32 curEpochStartHeight) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) PutCurEpochStartHeight(curEpochStartHeight uint32) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutCurEpochStartHeight(&_IEthCrossChainData.TransactOpts, curEpochStartHeight)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncPutCurEpochStartHeight(handler func(*types.Receipt, error), curEpochStartHeight uint32) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutCurEpochStartHeight(handler, &_IEthCrossChainData.TransactOpts, curEpochStartHeight)
-}
-
-// PutCurEpochStartHeight is a paid mutator transaction binding the contract method 0x9b9272ae.
-//
-// Solidity: function putCurEpochStartHeight(uint32 curEpochStartHeight) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) PutCurEpochStartHeight(curEpochStartHeight uint32) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutCurEpochStartHeight(&_IEthCrossChainData.TransactOpts, curEpochStartHeight)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncPutCurEpochStartHeight(handler func(*types.Receipt, error), curEpochStartHeight uint32) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutCurEpochStartHeight(handler, &_IEthCrossChainData.TransactOpts, curEpochStartHeight)
-}
-
-// PutEthTxHash is a paid mutator transaction binding the contract method 0x93645d57.
-//
-// Solidity: function putEthTxHash(bytes32 ethTxHash) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) PutEthTxHash(opts *bind.TransactOpts, ethTxHash [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "putEthTxHash", ethTxHash)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncPutEthTxHash(handler func(*types.Receipt, error), opts *bind.TransactOpts, ethTxHash [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "putEthTxHash", ethTxHash)
-}
-
-// PutEthTxHash is a paid mutator transaction binding the contract method 0x93645d57.
-//
-// Solidity: function putEthTxHash(bytes32 ethTxHash) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) PutEthTxHash(ethTxHash [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutEthTxHash(&_IEthCrossChainData.TransactOpts, ethTxHash)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncPutEthTxHash(handler func(*types.Receipt, error), ethTxHash [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutEthTxHash(handler, &_IEthCrossChainData.TransactOpts, ethTxHash)
-}
-
-// PutEthTxHash is a paid mutator transaction binding the contract method 0x93645d57.
-//
-// Solidity: function putEthTxHash(bytes32 ethTxHash) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) PutEthTxHash(ethTxHash [32]byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutEthTxHash(&_IEthCrossChainData.TransactOpts, ethTxHash)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncPutEthTxHash(handler func(*types.Receipt, error), ethTxHash [32]byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutEthTxHash(handler, &_IEthCrossChainData.TransactOpts, ethTxHash)
-}
-
-// PutExtraData is a paid mutator transaction binding the contract method 0x351f0ea0.
-//
-// Solidity: function putExtraData(bytes32 key1, bytes32 key2, bytes value) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) PutExtraData(opts *bind.TransactOpts, key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "putExtraData", key1, key2, value)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncPutExtraData(handler func(*types.Receipt, error), opts *bind.TransactOpts, key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "putExtraData", key1, key2, value)
-}
-
-// PutExtraData is a paid mutator transaction binding the contract method 0x351f0ea0.
-//
-// Solidity: function putExtraData(bytes32 key1, bytes32 key2, bytes value) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) PutExtraData(key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutExtraData(&_IEthCrossChainData.TransactOpts, key1, key2, value)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncPutExtraData(handler func(*types.Receipt, error), key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutExtraData(handler, &_IEthCrossChainData.TransactOpts, key1, key2, value)
-}
-
-// PutExtraData is a paid mutator transaction binding the contract method 0x351f0ea0.
-//
-// Solidity: function putExtraData(bytes32 key1, bytes32 key2, bytes value) returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) PutExtraData(key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.PutExtraData(&_IEthCrossChainData.TransactOpts, key1, key2, value)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncPutExtraData(handler func(*types.Receipt, error), key1 [32]byte, key2 [32]byte, value []byte) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncPutExtraData(handler, &_IEthCrossChainData.TransactOpts, key1, key2, value)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "transferOwnership", newOwner)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncTransferOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_IEthCrossChainData *IEthCrossChainDataSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.TransferOwnership(&_IEthCrossChainData.TransactOpts, newOwner)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncTransferOwnership(handler, &_IEthCrossChainData.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.TransferOwnership(&_IEthCrossChainData.TransactOpts, newOwner)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncTransferOwnership(handler, &_IEthCrossChainData.TransactOpts, newOwner)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.contract.Transact(opts, "unpause")
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactor) AsyncUnpause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _IEthCrossChainData.contract.AsyncTransact(opts, handler, "unpause")
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.Unpause(&_IEthCrossChainData.TransactOpts)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncUnpause(handler, &_IEthCrossChainData.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainData.Contract.Unpause(&_IEthCrossChainData.TransactOpts)
-}
-
-func (_IEthCrossChainData *IEthCrossChainDataTransactorSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IEthCrossChainData.Contract.AsyncUnpause(handler, &_IEthCrossChainData.TransactOpts)
-}
-
-// IEthCrossChainManagerABI is the input ABI used to generate the binding from.
-const IEthCrossChainManagerABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"_toChainId\",\"type\":\"uint64\"},{\"name\":\"_toContract\",\"type\":\"bytes\"},{\"name\":\"_method\",\"type\":\"bytes\"},{\"name\":\"_txData\",\"type\":\"bytes\"}],\"name\":\"crossChain\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
-
-// IEthCrossChainManagerFuncSigs maps the 4-byte function signature to its string representation.
-var IEthCrossChainManagerFuncSigs = map[string]string{
-	"1f5045a8": "crossChain(uint64,bytes,bytes,bytes)",
-}
-
-// IEthCrossChainManager is an auto generated Go binding around a Solidity contract.
-type IEthCrossChainManager struct {
-	IEthCrossChainManagerCaller     // Read-only binding to the contract
-	IEthCrossChainManagerTransactor // Write-only binding to the contract
-	IEthCrossChainManagerFilterer   // Log filterer for contract events
-}
-
-// IEthCrossChainManagerCaller is an auto generated read-only Go binding around a Solidity contract.
-type IEthCrossChainManagerCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainManagerTransactor is an auto generated write-only Go binding around a Solidity contract.
-type IEthCrossChainManagerTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainManagerFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type IEthCrossChainManagerFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IEthCrossChainManagerSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type IEthCrossChainManagerSession struct {
-	Contract     *IEthCrossChainManager // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts          // Call options to use throughout this session
-	TransactOpts bind.TransactOpts      // Transaction auth options to use throughout this session
-}
-
-// IEthCrossChainManagerCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type IEthCrossChainManagerCallerSession struct {
-	Contract *IEthCrossChainManagerCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts                // Call options to use throughout this session
-}
-
-// IEthCrossChainManagerTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type IEthCrossChainManagerTransactorSession struct {
-	Contract     *IEthCrossChainManagerTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts                // Transaction auth options to use throughout this session
-}
-
-// IEthCrossChainManagerRaw is an auto generated low-level Go binding around a Solidity contract.
-type IEthCrossChainManagerRaw struct {
-	Contract *IEthCrossChainManager // Generic contract binding to access the raw methods on
-}
-
-// IEthCrossChainManagerCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type IEthCrossChainManagerCallerRaw struct {
-	Contract *IEthCrossChainManagerCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// IEthCrossChainManagerTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type IEthCrossChainManagerTransactorRaw struct {
-	Contract *IEthCrossChainManagerTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewIEthCrossChainManager creates a new instance of IEthCrossChainManager, bound to a specific deployed contract.
-func NewIEthCrossChainManager(address common.Address, backend bind.ContractBackend) (*IEthCrossChainManager, error) {
-	contract, err := bindIEthCrossChainManager(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainManager{IEthCrossChainManagerCaller: IEthCrossChainManagerCaller{contract: contract}, IEthCrossChainManagerTransactor: IEthCrossChainManagerTransactor{contract: contract}, IEthCrossChainManagerFilterer: IEthCrossChainManagerFilterer{contract: contract}}, nil
-}
-
-// NewIEthCrossChainManagerCaller creates a new read-only instance of IEthCrossChainManager, bound to a specific deployed contract.
-func NewIEthCrossChainManagerCaller(address common.Address, caller bind.ContractCaller) (*IEthCrossChainManagerCaller, error) {
-	contract, err := bindIEthCrossChainManager(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainManagerCaller{contract: contract}, nil
-}
-
-// NewIEthCrossChainManagerTransactor creates a new write-only instance of IEthCrossChainManager, bound to a specific deployed contract.
-func NewIEthCrossChainManagerTransactor(address common.Address, transactor bind.ContractTransactor) (*IEthCrossChainManagerTransactor, error) {
-	contract, err := bindIEthCrossChainManager(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainManagerTransactor{contract: contract}, nil
-}
-
-// NewIEthCrossChainManagerFilterer creates a new log filterer instance of IEthCrossChainManager, bound to a specific deployed contract.
-func NewIEthCrossChainManagerFilterer(address common.Address, filterer bind.ContractFilterer) (*IEthCrossChainManagerFilterer, error) {
-	contract, err := bindIEthCrossChainManager(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &IEthCrossChainManagerFilterer{contract: contract}, nil
-}
-
-// bindIEthCrossChainManager binds a generic wrapper to an already deployed contract.
-func bindIEthCrossChainManager(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(IEthCrossChainManagerABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IEthCrossChainManager *IEthCrossChainManagerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IEthCrossChainManager.Contract.IEthCrossChainManagerCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IEthCrossChainManager *IEthCrossChainManagerRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.IEthCrossChainManagerTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IEthCrossChainManager *IEthCrossChainManagerRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.IEthCrossChainManagerTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IEthCrossChainManager *IEthCrossChainManagerCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IEthCrossChainManager.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.contract.Transact(opts, method, params...)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
-//
-// Solidity: function crossChain(uint64 _toChainId, bytes _toContract, bytes _method, bytes _txData) returns(bool)
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactor) CrossChain(opts *bind.TransactOpts, _toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.contract.Transact(opts, "crossChain", _toChainId, _toContract, _method, _txData)
-}
-
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactor) AsyncCrossChain(handler func(*types.Receipt, error), opts *bind.TransactOpts, _toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, error) {
-	return _IEthCrossChainManager.contract.AsyncTransact(opts, handler, "crossChain", _toChainId, _toContract, _method, _txData)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
-//
-// Solidity: function crossChain(uint64 _toChainId, bytes _toContract, bytes _method, bytes _txData) returns(bool)
-func (_IEthCrossChainManager *IEthCrossChainManagerSession) CrossChain(_toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.CrossChain(&_IEthCrossChainManager.TransactOpts, _toChainId, _toContract, _method, _txData)
-}
-
-func (_IEthCrossChainManager *IEthCrossChainManagerSession) AsyncCrossChain(handler func(*types.Receipt, error), _toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, error) {
-	return _IEthCrossChainManager.Contract.AsyncCrossChain(handler, &_IEthCrossChainManager.TransactOpts, _toChainId, _toContract, _method, _txData)
-}
-
-// CrossChain is a paid mutator transaction binding the contract method 0x1f5045a8.
-//
-// Solidity: function crossChain(uint64 _toChainId, bytes _toContract, bytes _method, bytes _txData) returns(bool)
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactorSession) CrossChain(_toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, *types.Receipt, error) {
-	return _IEthCrossChainManager.Contract.CrossChain(&_IEthCrossChainManager.TransactOpts, _toChainId, _toContract, _method, _txData)
-}
-
-func (_IEthCrossChainManager *IEthCrossChainManagerTransactorSession) AsyncCrossChain(handler func(*types.Receipt, error), _toChainId uint64, _toContract []byte, _method []byte, _txData []byte) (*types.Transaction, error) {
-	return _IEthCrossChainManager.Contract.AsyncCrossChain(handler, &_IEthCrossChainManager.TransactOpts, _toChainId, _toContract, _method, _txData)
-}
-
-// IUpgradableECCMABI is the input ABI used to generate the binding from.
-const IUpgradableECCMABI = "[{\"constant\":false,\"inputs\":[],\"name\":\"unpause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"upgradeToNew\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"pause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
-
-// IUpgradableECCMFuncSigs maps the 4-byte function signature to its string representation.
-var IUpgradableECCMFuncSigs = map[string]string{
-	"ede8e529": "isOwner()",
-	"f4fbb0c8": "pause()",
-	"d4bc9601": "paused()",
-	"63c37526": "unpause()",
-	"f4e614d2": "upgradeToNew(address)",
-}
-
-// IUpgradableECCM is an auto generated Go binding around a Solidity contract.
-type IUpgradableECCM struct {
-	IUpgradableECCMCaller     // Read-only binding to the contract
-	IUpgradableECCMTransactor // Write-only binding to the contract
-	IUpgradableECCMFilterer   // Log filterer for contract events
-}
-
-// IUpgradableECCMCaller is an auto generated read-only Go binding around a Solidity contract.
-type IUpgradableECCMCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IUpgradableECCMTransactor is an auto generated write-only Go binding around a Solidity contract.
-type IUpgradableECCMTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IUpgradableECCMFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type IUpgradableECCMFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// IUpgradableECCMSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type IUpgradableECCMSession struct {
-	Contract     *IUpgradableECCM  // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// IUpgradableECCMCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type IUpgradableECCMCallerSession struct {
-	Contract *IUpgradableECCMCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts          // Call options to use throughout this session
-}
-
-// IUpgradableECCMTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type IUpgradableECCMTransactorSession struct {
-	Contract     *IUpgradableECCMTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts          // Transaction auth options to use throughout this session
-}
-
-// IUpgradableECCMRaw is an auto generated low-level Go binding around a Solidity contract.
-type IUpgradableECCMRaw struct {
-	Contract *IUpgradableECCM // Generic contract binding to access the raw methods on
-}
-
-// IUpgradableECCMCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type IUpgradableECCMCallerRaw struct {
-	Contract *IUpgradableECCMCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// IUpgradableECCMTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type IUpgradableECCMTransactorRaw struct {
-	Contract *IUpgradableECCMTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewIUpgradableECCM creates a new instance of IUpgradableECCM, bound to a specific deployed contract.
-func NewIUpgradableECCM(address common.Address, backend bind.ContractBackend) (*IUpgradableECCM, error) {
-	contract, err := bindIUpgradableECCM(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &IUpgradableECCM{IUpgradableECCMCaller: IUpgradableECCMCaller{contract: contract}, IUpgradableECCMTransactor: IUpgradableECCMTransactor{contract: contract}, IUpgradableECCMFilterer: IUpgradableECCMFilterer{contract: contract}}, nil
-}
-
-// NewIUpgradableECCMCaller creates a new read-only instance of IUpgradableECCM, bound to a specific deployed contract.
-func NewIUpgradableECCMCaller(address common.Address, caller bind.ContractCaller) (*IUpgradableECCMCaller, error) {
-	contract, err := bindIUpgradableECCM(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IUpgradableECCMCaller{contract: contract}, nil
-}
-
-// NewIUpgradableECCMTransactor creates a new write-only instance of IUpgradableECCM, bound to a specific deployed contract.
-func NewIUpgradableECCMTransactor(address common.Address, transactor bind.ContractTransactor) (*IUpgradableECCMTransactor, error) {
-	contract, err := bindIUpgradableECCM(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &IUpgradableECCMTransactor{contract: contract}, nil
-}
-
-// NewIUpgradableECCMFilterer creates a new log filterer instance of IUpgradableECCM, bound to a specific deployed contract.
-func NewIUpgradableECCMFilterer(address common.Address, filterer bind.ContractFilterer) (*IUpgradableECCMFilterer, error) {
-	contract, err := bindIUpgradableECCM(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &IUpgradableECCMFilterer{contract: contract}, nil
-}
-
-// bindIUpgradableECCM binds a generic wrapper to an already deployed contract.
-func bindIUpgradableECCM(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(IUpgradableECCMABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IUpgradableECCM *IUpgradableECCMRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IUpgradableECCM.Contract.IUpgradableECCMCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IUpgradableECCM *IUpgradableECCMRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.IUpgradableECCMTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IUpgradableECCM *IUpgradableECCMRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.IUpgradableECCMTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_IUpgradableECCM *IUpgradableECCMCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _IUpgradableECCM.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_IUpgradableECCM *IUpgradableECCMTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_IUpgradableECCM *IUpgradableECCMTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.contract.Transact(opts, method, params...)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _IUpgradableECCM.contract.Call(opts, out, "isOwner")
-	return *ret0, err
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMSession) IsOwner() (bool, error) {
-	return _IUpgradableECCM.Contract.IsOwner(&_IUpgradableECCM.CallOpts)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMCallerSession) IsOwner() (bool, error) {
-	return _IUpgradableECCM.Contract.IsOwner(&_IUpgradableECCM.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _IUpgradableECCM.contract.Call(opts, out, "paused")
-	return *ret0, err
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMSession) Paused() (bool, error) {
-	return _IUpgradableECCM.Contract.Paused(&_IUpgradableECCM.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMCallerSession) Paused() (bool, error) {
-	return _IUpgradableECCM.Contract.Paused(&_IUpgradableECCM.CallOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.contract.Transact(opts, "pause")
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactor) AsyncPause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _IUpgradableECCM.contract.AsyncTransact(opts, handler, "pause")
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.Pause(&_IUpgradableECCM.TransactOpts)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncPause(handler, &_IUpgradableECCM.TransactOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.Pause(&_IUpgradableECCM.TransactOpts)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncPause(handler, &_IUpgradableECCM.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.contract.Transact(opts, "unpause")
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactor) AsyncUnpause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _IUpgradableECCM.contract.AsyncTransact(opts, handler, "unpause")
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.Unpause(&_IUpgradableECCM.TransactOpts)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncUnpause(handler, &_IUpgradableECCM.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.Unpause(&_IUpgradableECCM.TransactOpts)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncUnpause(handler, &_IUpgradableECCM.TransactOpts)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address ) returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactor) UpgradeToNew(opts *bind.TransactOpts, arg0 common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.contract.Transact(opts, "upgradeToNew", arg0)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactor) AsyncUpgradeToNew(handler func(*types.Receipt, error), opts *bind.TransactOpts, arg0 common.Address) (*types.Transaction, error) {
-	return _IUpgradableECCM.contract.AsyncTransact(opts, handler, "upgradeToNew", arg0)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address ) returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMSession) UpgradeToNew(arg0 common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.UpgradeToNew(&_IUpgradableECCM.TransactOpts, arg0)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), arg0 common.Address) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncUpgradeToNew(handler, &_IUpgradableECCM.TransactOpts, arg0)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address ) returns(bool)
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) UpgradeToNew(arg0 common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _IUpgradableECCM.Contract.UpgradeToNew(&_IUpgradableECCM.TransactOpts, arg0)
-}
-
-func (_IUpgradableECCM *IUpgradableECCMTransactorSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), arg0 common.Address) (*types.Transaction, error) {
-	return _IUpgradableECCM.Contract.AsyncUpgradeToNew(handler, &_IUpgradableECCM.TransactOpts, arg0)
-}
-
-// OwnableABI is the input ABI used to generate the binding from.
-const OwnableABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}]"
-
-// OwnableFuncSigs maps the 4-byte function signature to its string representation.
-var OwnableFuncSigs = map[string]string{
-	"ede8e529": "isOwner()",
-	"5089e2c8": "owner()",
-	"d86e29e2": "renounceOwnership()",
-	"16cad12a": "transferOwnership(address)",
-}
-
-// Ownable is an auto generated Go binding around a Solidity contract.
-type Ownable struct {
-	OwnableCaller     // Read-only binding to the contract
-	OwnableTransactor // Write-only binding to the contract
-	OwnableFilterer   // Log filterer for contract events
-}
-
-// OwnableCaller is an auto generated read-only Go binding around a Solidity contract.
-type OwnableCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// OwnableTransactor is an auto generated write-only Go binding around a Solidity contract.
-type OwnableTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// OwnableFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type OwnableFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// OwnableSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type OwnableSession struct {
-	Contract     *Ownable          // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// OwnableCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type OwnableCallerSession struct {
-	Contract *OwnableCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts  // Call options to use throughout this session
-}
-
-// OwnableTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type OwnableTransactorSession struct {
-	Contract     *OwnableTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts  // Transaction auth options to use throughout this session
-}
-
-// OwnableRaw is an auto generated low-level Go binding around a Solidity contract.
-type OwnableRaw struct {
-	Contract *Ownable // Generic contract binding to access the raw methods on
-}
-
-// OwnableCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type OwnableCallerRaw struct {
-	Contract *OwnableCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// OwnableTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type OwnableTransactorRaw struct {
-	Contract *OwnableTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewOwnable creates a new instance of Ownable, bound to a specific deployed contract.
-func NewOwnable(address common.Address, backend bind.ContractBackend) (*Ownable, error) {
-	contract, err := bindOwnable(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &Ownable{OwnableCaller: OwnableCaller{contract: contract}, OwnableTransactor: OwnableTransactor{contract: contract}, OwnableFilterer: OwnableFilterer{contract: contract}}, nil
-}
-
-// NewOwnableCaller creates a new read-only instance of Ownable, bound to a specific deployed contract.
-func NewOwnableCaller(address common.Address, caller bind.ContractCaller) (*OwnableCaller, error) {
-	contract, err := bindOwnable(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &OwnableCaller{contract: contract}, nil
-}
-
-// NewOwnableTransactor creates a new write-only instance of Ownable, bound to a specific deployed contract.
-func NewOwnableTransactor(address common.Address, transactor bind.ContractTransactor) (*OwnableTransactor, error) {
-	contract, err := bindOwnable(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &OwnableTransactor{contract: contract}, nil
-}
-
-// NewOwnableFilterer creates a new log filterer instance of Ownable, bound to a specific deployed contract.
-func NewOwnableFilterer(address common.Address, filterer bind.ContractFilterer) (*OwnableFilterer, error) {
-	contract, err := bindOwnable(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &OwnableFilterer{contract: contract}, nil
-}
-
-// bindOwnable binds a generic wrapper to an already deployed contract.
-func bindOwnable(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(OwnableABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Ownable.Contract.OwnableCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Ownable *OwnableRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.OwnableTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Ownable *OwnableRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.OwnableTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Ownable.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Ownable *OwnableTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Ownable *OwnableTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.contract.Transact(opts, method, params...)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_Ownable *OwnableCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "isOwner")
-	return *ret0, err
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_Ownable *OwnableSession) IsOwner() (bool, error) {
-	return _Ownable.Contract.IsOwner(&_Ownable.CallOpts)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_Ownable *OwnableCallerSession) IsOwner() (bool, error) {
-	return _Ownable.Contract.IsOwner(&_Ownable.CallOpts)
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_Ownable *OwnableCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "owner")
-	return *ret0, err
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_Ownable *OwnableSession) Owner() (common.Address, error) {
-	return _Ownable.Contract.Owner(&_Ownable.CallOpts)
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_Ownable *OwnableCallerSession) Owner() (common.Address, error) {
-	return _Ownable.Contract.Owner(&_Ownable.CallOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_Ownable *OwnableTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.contract.Transact(opts, "renounceOwnership")
-}
-
-func (_Ownable *OwnableTransactor) AsyncRenounceOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Ownable.contract.AsyncTransact(opts, handler, "renounceOwnership")
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_Ownable *OwnableSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.RenounceOwnership(&_Ownable.TransactOpts)
-}
-
-func (_Ownable *OwnableSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _Ownable.Contract.AsyncRenounceOwnership(handler, &_Ownable.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_Ownable *OwnableTransactorSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.RenounceOwnership(&_Ownable.TransactOpts)
-}
-
-func (_Ownable *OwnableTransactorSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _Ownable.Contract.AsyncRenounceOwnership(handler, &_Ownable.TransactOpts)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_Ownable *OwnableTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.contract.Transact(opts, "transferOwnership", newOwner)
-}
-
-func (_Ownable *OwnableTransactor) AsyncTransferOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _Ownable.contract.AsyncTransact(opts, handler, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_Ownable *OwnableSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.TransferOwnership(&_Ownable.TransactOpts, newOwner)
-}
-
-func (_Ownable *OwnableSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _Ownable.Contract.AsyncTransferOwnership(handler, &_Ownable.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_Ownable *OwnableTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _Ownable.Contract.TransferOwnership(&_Ownable.TransactOpts, newOwner)
-}
-
-func (_Ownable *OwnableTransactorSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _Ownable.Contract.AsyncTransferOwnership(handler, &_Ownable.TransactOpts, newOwner)
-}
-
-// OwnableOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the Ownable contract.
-type OwnableOwnershipTransferredIterator struct {
-	Event *OwnableOwnershipTransferred // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *OwnableOwnershipTransferredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(OwnableOwnershipTransferred)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(OwnableOwnershipTransferred)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *OwnableOwnershipTransferredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *OwnableOwnershipTransferredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// OwnableOwnershipTransferred represents a OwnershipTransferred event raised by the Ownable contract.
-type OwnableOwnershipTransferred struct {
-	PreviousOwner common.Address
-	NewOwner      common.Address
-	Raw           types.Log // Blockchain specific contextual infos
-}
-
-// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_Ownable *OwnableFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*OwnableOwnershipTransferredIterator, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _Ownable.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return &OwnableOwnershipTransferredIterator{contract: _Ownable.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
-}
-
-// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_Ownable *OwnableFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *OwnableOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _Ownable.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(OwnableOwnershipTransferred)
-				if err := _Ownable.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseOwnershipTransferred is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_Ownable *OwnableFilterer) ParseOwnershipTransferred(log types.Log) (*OwnableOwnershipTransferred, error) {
-	event := new(OwnableOwnershipTransferred)
-	if err := _Ownable.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// PausableABI is the input ABI used to generate the binding from.
-const PausableABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"}]"
-
-// PausableFuncSigs maps the 4-byte function signature to its string representation.
-var PausableFuncSigs = map[string]string{
-	"d4bc9601": "paused()",
-}
-
-// Pausable is an auto generated Go binding around a Solidity contract.
-type Pausable struct {
-	PausableCaller     // Read-only binding to the contract
-	PausableTransactor // Write-only binding to the contract
-	PausableFilterer   // Log filterer for contract events
-}
-
-// PausableCaller is an auto generated read-only Go binding around a Solidity contract.
-type PausableCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// PausableTransactor is an auto generated write-only Go binding around a Solidity contract.
-type PausableTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// PausableFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type PausableFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// PausableSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type PausableSession struct {
-	Contract     *Pausable         // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// PausableCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type PausableCallerSession struct {
-	Contract *PausableCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts   // Call options to use throughout this session
-}
-
-// PausableTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type PausableTransactorSession struct {
-	Contract     *PausableTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
-}
-
-// PausableRaw is an auto generated low-level Go binding around a Solidity contract.
-type PausableRaw struct {
-	Contract *Pausable // Generic contract binding to access the raw methods on
-}
-
-// PausableCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type PausableCallerRaw struct {
-	Contract *PausableCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// PausableTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type PausableTransactorRaw struct {
-	Contract *PausableTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewPausable creates a new instance of Pausable, bound to a specific deployed contract.
-func NewPausable(address common.Address, backend bind.ContractBackend) (*Pausable, error) {
-	contract, err := bindPausable(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &Pausable{PausableCaller: PausableCaller{contract: contract}, PausableTransactor: PausableTransactor{contract: contract}, PausableFilterer: PausableFilterer{contract: contract}}, nil
-}
-
-// NewPausableCaller creates a new read-only instance of Pausable, bound to a specific deployed contract.
-func NewPausableCaller(address common.Address, caller bind.ContractCaller) (*PausableCaller, error) {
-	contract, err := bindPausable(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &PausableCaller{contract: contract}, nil
-}
-
-// NewPausableTransactor creates a new write-only instance of Pausable, bound to a specific deployed contract.
-func NewPausableTransactor(address common.Address, transactor bind.ContractTransactor) (*PausableTransactor, error) {
-	contract, err := bindPausable(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &PausableTransactor{contract: contract}, nil
-}
-
-// NewPausableFilterer creates a new log filterer instance of Pausable, bound to a specific deployed contract.
-func NewPausableFilterer(address common.Address, filterer bind.ContractFilterer) (*PausableFilterer, error) {
-	contract, err := bindPausable(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &PausableFilterer{contract: contract}, nil
-}
-
-// bindPausable binds a generic wrapper to an already deployed contract.
-func bindPausable(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(PausableABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Pausable *PausableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Pausable.Contract.PausableCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Pausable *PausableRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Pausable.Contract.PausableTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Pausable *PausableRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Pausable.Contract.PausableTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Pausable *PausableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Pausable.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Pausable *PausableTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Pausable.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Pausable *PausableTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Pausable.Contract.contract.Transact(opts, method, params...)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_Pausable *PausableCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _Pausable.contract.Call(opts, out, "paused")
-	return *ret0, err
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_Pausable *PausableSession) Paused() (bool, error) {
-	return _Pausable.Contract.Paused(&_Pausable.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_Pausable *PausableCallerSession) Paused() (bool, error) {
-	return _Pausable.Contract.Paused(&_Pausable.CallOpts)
-}
-
-// PausablePausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the Pausable contract.
-type PausablePausedIterator struct {
-	Event *PausablePaused // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *PausablePausedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(PausablePaused)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(PausablePaused)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *PausablePausedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *PausablePausedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// PausablePaused represents a Paused event raised by the Pausable contract.
-type PausablePaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterPaused is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_Pausable *PausableFilterer) FilterPaused(opts *bind.FilterOpts) (*PausablePausedIterator, error) {
-
-	logs, sub, err := _Pausable.contract.FilterLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return &PausablePausedIterator{contract: _Pausable.contract, event: "Paused", logs: logs, sub: sub}, nil
-}
-
-// WatchPaused is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_Pausable *PausableFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *PausablePaused) (event.Subscription, error) {
-
-	logs, sub, err := _Pausable.contract.WatchLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(PausablePaused)
-				if err := _Pausable.contract.UnpackLog(event, "Paused", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParsePaused is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_Pausable *PausableFilterer) ParsePaused(log types.Log) (*PausablePaused, error) {
-	event := new(PausablePaused)
-	if err := _Pausable.contract.UnpackLog(event, "Paused", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// PausableUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the Pausable contract.
-type PausableUnpausedIterator struct {
-	Event *PausableUnpaused // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *PausableUnpausedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(PausableUnpaused)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(PausableUnpaused)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *PausableUnpausedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *PausableUnpausedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// PausableUnpaused represents a Unpaused event raised by the Pausable contract.
-type PausableUnpaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterUnpaused is a free log retrieval operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_Pausable *PausableFilterer) FilterUnpaused(opts *bind.FilterOpts) (*PausableUnpausedIterator, error) {
-
-	logs, sub, err := _Pausable.contract.FilterLogs(opts, "Unpaused")
-	if err != nil {
-		return nil, err
-	}
-	return &PausableUnpausedIterator{contract: _Pausable.contract, event: "Unpaused", logs: logs, sub: sub}, nil
-}
-
-// WatchUnpaused is a free log subscription operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_Pausable *PausableFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *PausableUnpaused) (event.Subscription, error) {
-
-	logs, sub, err := _Pausable.contract.WatchLogs(opts, "Unpaused")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(PausableUnpaused)
-				if err := _Pausable.contract.UnpackLog(event, "Unpaused", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseUnpaused is a log parse operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_Pausable *PausableFilterer) ParseUnpaused(log types.Log) (*PausableUnpaused, error) {
-	event := new(PausableUnpaused)
-	if err := _Pausable.contract.UnpackLog(event, "Unpaused", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// SafeMathABI is the input ABI used to generate the binding from.
-const SafeMathABI = "[]"
-
-// SafeMathBin is the compiled bytecode used for deploying new contracts.
-var SafeMathBin = "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058204e92de5d2670d1c1d412555a080f6eb2ef8750083e620e03fe662507ac40dd700029"
-
-// DeploySafeMath deploys a new contract, binding an instance of SafeMath to it.
-func DeploySafeMath(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *SafeMath, error) {
-	parsed, err := abi.JSON(strings.NewReader(SafeMathABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(SafeMathBin), backend)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &SafeMath{SafeMathCaller: SafeMathCaller{contract: contract}, SafeMathTransactor: SafeMathTransactor{contract: contract}, SafeMathFilterer: SafeMathFilterer{contract: contract}}, nil
-}
-
-func AsyncDeploySafeMath(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(SafeMathABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(SafeMathBin), backend)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// SafeMath is an auto generated Go binding around a Solidity contract.
-type SafeMath struct {
-	SafeMathCaller     // Read-only binding to the contract
-	SafeMathTransactor // Write-only binding to the contract
-	SafeMathFilterer   // Log filterer for contract events
-}
-
-// SafeMathCaller is an auto generated read-only Go binding around a Solidity contract.
-type SafeMathCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// SafeMathTransactor is an auto generated write-only Go binding around a Solidity contract.
-type SafeMathTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// SafeMathFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type SafeMathFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// SafeMathSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type SafeMathSession struct {
-	Contract     *SafeMath         // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// SafeMathCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type SafeMathCallerSession struct {
-	Contract *SafeMathCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts   // Call options to use throughout this session
-}
-
-// SafeMathTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type SafeMathTransactorSession struct {
-	Contract     *SafeMathTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
-}
-
-// SafeMathRaw is an auto generated low-level Go binding around a Solidity contract.
-type SafeMathRaw struct {
-	Contract *SafeMath // Generic contract binding to access the raw methods on
-}
-
-// SafeMathCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type SafeMathCallerRaw struct {
-	Contract *SafeMathCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// SafeMathTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type SafeMathTransactorRaw struct {
-	Contract *SafeMathTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewSafeMath creates a new instance of SafeMath, bound to a specific deployed contract.
-func NewSafeMath(address common.Address, backend bind.ContractBackend) (*SafeMath, error) {
-	contract, err := bindSafeMath(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &SafeMath{SafeMathCaller: SafeMathCaller{contract: contract}, SafeMathTransactor: SafeMathTransactor{contract: contract}, SafeMathFilterer: SafeMathFilterer{contract: contract}}, nil
-}
-
-// NewSafeMathCaller creates a new read-only instance of SafeMath, bound to a specific deployed contract.
-func NewSafeMathCaller(address common.Address, caller bind.ContractCaller) (*SafeMathCaller, error) {
-	contract, err := bindSafeMath(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &SafeMathCaller{contract: contract}, nil
-}
-
-// NewSafeMathTransactor creates a new write-only instance of SafeMath, bound to a specific deployed contract.
-func NewSafeMathTransactor(address common.Address, transactor bind.ContractTransactor) (*SafeMathTransactor, error) {
-	contract, err := bindSafeMath(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &SafeMathTransactor{contract: contract}, nil
-}
-
-// NewSafeMathFilterer creates a new log filterer instance of SafeMath, bound to a specific deployed contract.
-func NewSafeMathFilterer(address common.Address, filterer bind.ContractFilterer) (*SafeMathFilterer, error) {
-	contract, err := bindSafeMath(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &SafeMathFilterer{contract: contract}, nil
-}
-
-// bindSafeMath binds a generic wrapper to an already deployed contract.
-func bindSafeMath(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(SafeMathABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_SafeMath *SafeMathRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _SafeMath.Contract.SafeMathCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_SafeMath *SafeMathRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _SafeMath.Contract.SafeMathTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_SafeMath *SafeMathRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _SafeMath.Contract.SafeMathTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_SafeMath *SafeMathCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _SafeMath.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_SafeMath *SafeMathTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _SafeMath.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_SafeMath *SafeMathTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _SafeMath.Contract.contract.Transact(opts, method, params...)
-}
-
-// UpgradableECCMABI is the input ABI used to generate the binding from.
-const UpgradableECCMABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"unpause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"EthCrossChainDataAddress\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isOwner\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"newEthCrossChainManagerAddress\",\"type\":\"address\"}],\"name\":\"upgradeToNew\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"pause\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"ethCrossChainDataAddr\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"}]"
-
-// UpgradableECCMFuncSigs maps the 4-byte function signature to its string representation.
-var UpgradableECCMFuncSigs = map[string]string{
-	"ed9a3dc3": "EthCrossChainDataAddress()",
-	"ede8e529": "isOwner()",
-	"5089e2c8": "owner()",
-	"f4fbb0c8": "pause()",
-	"d4bc9601": "paused()",
-	"d86e29e2": "renounceOwnership()",
-	"16cad12a": "transferOwnership(address)",
-	"63c37526": "unpause()",
-	"f4e614d2": "upgradeToNew(address)",
-}
-
-// UpgradableECCMBin is the compiled bytecode used for deploying new contracts.
-var UpgradableECCMBin = "0x608060405234801561001057600080fd5b50604051602080610b568339810180604052602081101561003057600080fd5b505160006100456401000000006100c4810204565b60008054600160a060020a031916600160a060020a0383169081178255604051929350917f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d0908290a3506000805460a060020a60ff021916905560018054600160a060020a031916600160a060020a03929092169190911790556100c8565b3390565b610a7f806100d76000396000f3fe60806040526004361061008a5760003560e060020a90048063d86e29e21161005d578063d86e29e214610133578063ed9a3dc314610148578063ede8e5291461015d578063f4e614d214610172578063f4fbb0c8146101a55761008a565b806316cad12a1461008f5780635089e2c8146100c457806363c37526146100f5578063d4bc96011461011e575b600080fd5b34801561009b57600080fd5b506100c2600480360360208110156100b257600080fd5b5035600160a060020a03166101ba565b005b3480156100d057600080fd5b506100d9610213565b60408051600160a060020a039092168252519081900360200190f35b34801561010157600080fd5b5061010a610222565b604080519115158252519081900360200190f35b34801561012a57600080fd5b5061010a6103c9565b34801561013f57600080fd5b506100c26103d9565b34801561015457600080fd5b506100d961047d565b34801561016957600080fd5b5061010a61048c565b34801561017e57600080fd5b5061010a6004803603602081101561019557600080fd5b5035600160a060020a03166104b0565b3480156101b157600080fd5b5061010a6105ed565b6101c261048c565b1515610207576040805160e160020a636381e5890281526020600482018190526024820152600080516020610a34833981519152604482015290519081900360640190fd5b6102108161078e565b50565b600054600160a060020a031690565b600061022c61048c565b1515610271576040805160e160020a636381e5890281526020600482018190526024820152600080516020610a34833981519152604482015290519081900360640190fd5b6102796103c9565b1561028657610286610841565b600154604080517fd4bc96010000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691829163d4bc9601916004808301926020929190829003018186803b1580156102e557600080fd5b505afa1580156102f9573d6000803e3d6000fd5b505050506040513d602081101561030f57600080fd5b5051156103c15780600160a060020a03166363c375266040518163ffffffff1660e060020a028152600401602060405180830381600087803b15801561035457600080fd5b505af1158015610368573d6000803e3d6000fd5b505050506040513d602081101561037e57600080fd5b505115156103c15760405160e160020a636381e5890281526004018080602001828103825260298152602001806109be6029913960400191505060405180910390fd5b600191505090565b60005460a060020a900460ff1690565b6103e161048c565b1515610426576040805160e160020a636381e5890281526020600482018190526024820152600080516020610a34833981519152604482015290519081900360640190fd5b60008054604051600160a060020a03909116907f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d0908390a36000805473ffffffffffffffffffffffffffffffffffffffff19169055565b600154600160a060020a031681565b60008054600160a060020a03166104a1610909565b600160a060020a031614905090565b6000805460a060020a900460ff161515610515576040805160e160020a636381e58902815260206004820152601460248201527f5061757361626c653a206e6f7420706175736564000000000000000000000000604482015290519081900360640190fd5b61051d61048c565b1515610562576040805160e160020a636381e5890281526020600482018190526024820152600080516020610a34833981519152604482015290519081900360640190fd5b600154604080517f16cad12a000000000000000000000000000000000000000000000000000000008152600160a060020a0385811660048301529151919092169182916316cad12a9160248082019260009290919082900301818387803b1580156105cc57600080fd5b505af11580156105e0573d6000803e3d6000fd5b5060019695505050505050565b60006105f761048c565b151561063c576040805160e160020a636381e5890281526020600482018190526024820152600080516020610a34833981519152604482015290519081900360640190fd5b6106446103c9565b15156106525761065261090d565b600154604080517fd4bc96010000000000000000000000000000000000000000000000000000000081529051600160a060020a0390921691829163d4bc9601916004808301926020929190829003018186803b1580156106b157600080fd5b505afa1580156106c5573d6000803e3d6000fd5b505050506040513d60208110156106db57600080fd5b505115156103c15780600160a060020a031663f4fbb0c86040518163ffffffff1660e060020a028152600401602060405180830381600087803b15801561072157600080fd5b505af1158015610735573d6000803e3d6000fd5b505050506040513d602081101561074b57600080fd5b505115156103c15760405160e160020a636381e5890281526004018080602001828103825260278152602001806109e76027913960400191505060405180910390fd5b600160a060020a03811615156107d95760405160e160020a636381e589028152600401808060200182810382526026815260200180610a0e6026913960400191505060405180910390fd5b60008054604051600160a060020a03808516939216917f5c7c30d4a0f08950cb23be4132957b357fa5dfdb0fcf218f81b86a1c036e47d091a36000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a0392909216919091179055565b60005460a060020a900460ff1615156108a5576040805160e160020a636381e58902815260206004820152601460248201527f5061757361626c653a206e6f7420706175736564000000000000000000000000604482015290519081900360640190fd5b6000805474ff0000000000000000000000000000000000000000191690557f44693cadc19db35d7d96cdf4ec424cb6160570279ff61a4d437c15aed7a3f2e46108ec610909565b60408051600160a060020a039092168252519081900360200190a1565b3390565b60005460a060020a900460ff1615610970576040805160e160020a636381e58902815260206004820152601060248201527f5061757361626c653a2070617573656400000000000000000000000000000000604482015290519081900360640190fd5b6000805474ff0000000000000000000000000000000000000000191660a060020a1790557f3572985a03189531d14bf182c5069e6eeb1ebd11ac4b5316dd3395136a20af7b6108ec61090956fe756e70617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c656470617573652045746843726f7373436861696e4461746120636f6e7472616374206661696c65644f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573734f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572a165627a7a7230582075fa11624920a158791d4c3a7af901a0a6c87a01e70153e6d5e8d534867eeb9f0029"
-
-// DeployUpgradableECCM deploys a new contract, binding an instance of UpgradableECCM to it.
-func DeployUpgradableECCM(auth *bind.TransactOpts, backend bind.ContractBackend, ethCrossChainDataAddr common.Address) (common.Address, *types.Transaction, *UpgradableECCM, error) {
-	parsed, err := abi.JSON(strings.NewReader(UpgradableECCMABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(UpgradableECCMBin), backend, ethCrossChainDataAddr)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &UpgradableECCM{UpgradableECCMCaller: UpgradableECCMCaller{contract: contract}, UpgradableECCMTransactor: UpgradableECCMTransactor{contract: contract}, UpgradableECCMFilterer: UpgradableECCMFilterer{contract: contract}}, nil
-}
-
-func AsyncDeployUpgradableECCM(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend, ethCrossChainDataAddr common.Address) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(UpgradableECCMABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(UpgradableECCMBin), backend, ethCrossChainDataAddr)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// UpgradableECCM is an auto generated Go binding around a Solidity contract.
-type UpgradableECCM struct {
-	UpgradableECCMCaller     // Read-only binding to the contract
-	UpgradableECCMTransactor // Write-only binding to the contract
-	UpgradableECCMFilterer   // Log filterer for contract events
-}
-
-// UpgradableECCMCaller is an auto generated read-only Go binding around a Solidity contract.
-type UpgradableECCMCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UpgradableECCMTransactor is an auto generated write-only Go binding around a Solidity contract.
-type UpgradableECCMTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UpgradableECCMFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type UpgradableECCMFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UpgradableECCMSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type UpgradableECCMSession struct {
-	Contract     *UpgradableECCM   // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// UpgradableECCMCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type UpgradableECCMCallerSession struct {
-	Contract *UpgradableECCMCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts         // Call options to use throughout this session
-}
-
-// UpgradableECCMTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type UpgradableECCMTransactorSession struct {
-	Contract     *UpgradableECCMTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts         // Transaction auth options to use throughout this session
-}
-
-// UpgradableECCMRaw is an auto generated low-level Go binding around a Solidity contract.
-type UpgradableECCMRaw struct {
-	Contract *UpgradableECCM // Generic contract binding to access the raw methods on
-}
-
-// UpgradableECCMCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type UpgradableECCMCallerRaw struct {
-	Contract *UpgradableECCMCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// UpgradableECCMTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type UpgradableECCMTransactorRaw struct {
-	Contract *UpgradableECCMTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewUpgradableECCM creates a new instance of UpgradableECCM, bound to a specific deployed contract.
-func NewUpgradableECCM(address common.Address, backend bind.ContractBackend) (*UpgradableECCM, error) {
-	contract, err := bindUpgradableECCM(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCM{UpgradableECCMCaller: UpgradableECCMCaller{contract: contract}, UpgradableECCMTransactor: UpgradableECCMTransactor{contract: contract}, UpgradableECCMFilterer: UpgradableECCMFilterer{contract: contract}}, nil
-}
-
-// NewUpgradableECCMCaller creates a new read-only instance of UpgradableECCM, bound to a specific deployed contract.
-func NewUpgradableECCMCaller(address common.Address, caller bind.ContractCaller) (*UpgradableECCMCaller, error) {
-	contract, err := bindUpgradableECCM(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMCaller{contract: contract}, nil
-}
-
-// NewUpgradableECCMTransactor creates a new write-only instance of UpgradableECCM, bound to a specific deployed contract.
-func NewUpgradableECCMTransactor(address common.Address, transactor bind.ContractTransactor) (*UpgradableECCMTransactor, error) {
-	contract, err := bindUpgradableECCM(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMTransactor{contract: contract}, nil
-}
-
-// NewUpgradableECCMFilterer creates a new log filterer instance of UpgradableECCM, bound to a specific deployed contract.
-func NewUpgradableECCMFilterer(address common.Address, filterer bind.ContractFilterer) (*UpgradableECCMFilterer, error) {
-	contract, err := bindUpgradableECCM(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMFilterer{contract: contract}, nil
-}
-
-// bindUpgradableECCM binds a generic wrapper to an already deployed contract.
-func bindUpgradableECCM(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(UpgradableECCMABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_UpgradableECCM *UpgradableECCMRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _UpgradableECCM.Contract.UpgradableECCMCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_UpgradableECCM *UpgradableECCMRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.UpgradableECCMTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_UpgradableECCM *UpgradableECCMRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.UpgradableECCMTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_UpgradableECCM *UpgradableECCMCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _UpgradableECCM.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_UpgradableECCM *UpgradableECCMTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_UpgradableECCM *UpgradableECCMTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.contract.Transact(opts, method, params...)
-}
-
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
-//
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMCaller) EthCrossChainDataAddress(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _UpgradableECCM.contract.Call(opts, out, "EthCrossChainDataAddress")
-	return *ret0, err
-}
-
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
-//
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMSession) EthCrossChainDataAddress() (common.Address, error) {
-	return _UpgradableECCM.Contract.EthCrossChainDataAddress(&_UpgradableECCM.CallOpts)
-}
-
-// EthCrossChainDataAddress is a free data retrieval call binding the contract method 0xed9a3dc3.
-//
-// Solidity: function EthCrossChainDataAddress() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMCallerSession) EthCrossChainDataAddress() (common.Address, error) {
-	return _UpgradableECCM.Contract.EthCrossChainDataAddress(&_UpgradableECCM.CallOpts)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _UpgradableECCM.contract.Call(opts, out, "isOwner")
-	return *ret0, err
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMSession) IsOwner() (bool, error) {
-	return _UpgradableECCM.Contract.IsOwner(&_UpgradableECCM.CallOpts)
-}
-
-// IsOwner is a free data retrieval call binding the contract method 0xede8e529.
-//
-// Solidity: function isOwner() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMCallerSession) IsOwner() (bool, error) {
-	return _UpgradableECCM.Contract.IsOwner(&_UpgradableECCM.CallOpts)
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _UpgradableECCM.contract.Call(opts, out, "owner")
-	return *ret0, err
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMSession) Owner() (common.Address, error) {
-	return _UpgradableECCM.Contract.Owner(&_UpgradableECCM.CallOpts)
-}
-
-// Owner is a free data retrieval call binding the contract method 0x5089e2c8.
-//
-// Solidity: function owner() constant returns(address)
-func (_UpgradableECCM *UpgradableECCMCallerSession) Owner() (common.Address, error) {
-	return _UpgradableECCM.Contract.Owner(&_UpgradableECCM.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMCaller) Paused(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _UpgradableECCM.contract.Call(opts, out, "paused")
-	return *ret0, err
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMSession) Paused() (bool, error) {
-	return _UpgradableECCM.Contract.Paused(&_UpgradableECCM.CallOpts)
-}
-
-// Paused is a free data retrieval call binding the contract method 0xd4bc9601.
-//
-// Solidity: function paused() constant returns(bool)
-func (_UpgradableECCM *UpgradableECCMCallerSession) Paused() (bool, error) {
-	return _UpgradableECCM.Contract.Paused(&_UpgradableECCM.CallOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.contract.Transact(opts, "pause")
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactor) AsyncPause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _UpgradableECCM.contract.AsyncTransact(opts, handler, "pause")
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.Pause(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncPause(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// Pause is a paid mutator transaction binding the contract method 0xf4fbb0c8.
-//
-// Solidity: function pause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactorSession) Pause() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.Pause(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactorSession) AsyncPause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncPause(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_UpgradableECCM *UpgradableECCMTransactor) RenounceOwnership(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.contract.Transact(opts, "renounceOwnership")
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactor) AsyncRenounceOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _UpgradableECCM.contract.AsyncTransact(opts, handler, "renounceOwnership")
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_UpgradableECCM *UpgradableECCMSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.RenounceOwnership(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncRenounceOwnership(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// RenounceOwnership is a paid mutator transaction binding the contract method 0xd86e29e2.
-//
-// Solidity: function renounceOwnership() returns()
-func (_UpgradableECCM *UpgradableECCMTransactorSession) RenounceOwnership() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.RenounceOwnership(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactorSession) AsyncRenounceOwnership(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncRenounceOwnership(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_UpgradableECCM *UpgradableECCMTransactor) TransferOwnership(opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.contract.Transact(opts, "transferOwnership", newOwner)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactor) AsyncTransferOwnership(handler func(*types.Receipt, error), opts *bind.TransactOpts, newOwner common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.contract.AsyncTransact(opts, handler, "transferOwnership", newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_UpgradableECCM *UpgradableECCMSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.TransferOwnership(&_UpgradableECCM.TransactOpts, newOwner)
-}
-
-func (_UpgradableECCM *UpgradableECCMSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncTransferOwnership(handler, &_UpgradableECCM.TransactOpts, newOwner)
-}
-
-// TransferOwnership is a paid mutator transaction binding the contract method 0x16cad12a.
-//
-// Solidity: function transferOwnership(address newOwner) returns()
-func (_UpgradableECCM *UpgradableECCMTransactorSession) TransferOwnership(newOwner common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.TransferOwnership(&_UpgradableECCM.TransactOpts, newOwner)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactorSession) AsyncTransferOwnership(handler func(*types.Receipt, error), newOwner common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncTransferOwnership(handler, &_UpgradableECCM.TransactOpts, newOwner)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.contract.Transact(opts, "unpause")
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactor) AsyncUnpause(handler func(*types.Receipt, error), opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _UpgradableECCM.contract.AsyncTransact(opts, handler, "unpause")
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.Unpause(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncUnpause(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// Unpause is a paid mutator transaction binding the contract method 0x63c37526.
-//
-// Solidity: function unpause() returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactorSession) Unpause() (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.Unpause(&_UpgradableECCM.TransactOpts)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactorSession) AsyncUnpause(handler func(*types.Receipt, error)) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncUnpause(handler, &_UpgradableECCM.TransactOpts)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactor) UpgradeToNew(opts *bind.TransactOpts, newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.contract.Transact(opts, "upgradeToNew", newEthCrossChainManagerAddress)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactor) AsyncUpgradeToNew(handler func(*types.Receipt, error), opts *bind.TransactOpts, newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.contract.AsyncTransact(opts, handler, "upgradeToNew", newEthCrossChainManagerAddress)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_UpgradableECCM *UpgradableECCMSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.UpgradeToNew(&_UpgradableECCM.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-func (_UpgradableECCM *UpgradableECCMSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncUpgradeToNew(handler, &_UpgradableECCM.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-// UpgradeToNew is a paid mutator transaction binding the contract method 0xf4e614d2.
-//
-// Solidity: function upgradeToNew(address newEthCrossChainManagerAddress) returns(bool)
-func (_UpgradableECCM *UpgradableECCMTransactorSession) UpgradeToNew(newEthCrossChainManagerAddress common.Address) (*types.Transaction, *types.Receipt, error) {
-	return _UpgradableECCM.Contract.UpgradeToNew(&_UpgradableECCM.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-func (_UpgradableECCM *UpgradableECCMTransactorSession) AsyncUpgradeToNew(handler func(*types.Receipt, error), newEthCrossChainManagerAddress common.Address) (*types.Transaction, error) {
-	return _UpgradableECCM.Contract.AsyncUpgradeToNew(handler, &_UpgradableECCM.TransactOpts, newEthCrossChainManagerAddress)
-}
-
-// UpgradableECCMOwnershipTransferredIterator is returned from FilterOwnershipTransferred and is used to iterate over the raw logs and unpacked data for OwnershipTransferred events raised by the UpgradableECCM contract.
-type UpgradableECCMOwnershipTransferredIterator struct {
-	Event *UpgradableECCMOwnershipTransferred // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *UpgradableECCMOwnershipTransferredIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(UpgradableECCMOwnershipTransferred)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(UpgradableECCMOwnershipTransferred)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *UpgradableECCMOwnershipTransferredIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *UpgradableECCMOwnershipTransferredIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// UpgradableECCMOwnershipTransferred represents a OwnershipTransferred event raised by the UpgradableECCM contract.
-type UpgradableECCMOwnershipTransferred struct {
-	PreviousOwner common.Address
-	NewOwner      common.Address
-	Raw           types.Log // Blockchain specific contextual infos
-}
-
-// FilterOwnershipTransferred is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_UpgradableECCM *UpgradableECCMFilterer) FilterOwnershipTransferred(opts *bind.FilterOpts, previousOwner []common.Address, newOwner []common.Address) (*UpgradableECCMOwnershipTransferredIterator, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _UpgradableECCM.contract.FilterLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMOwnershipTransferredIterator{contract: _UpgradableECCM.contract, event: "OwnershipTransferred", logs: logs, sub: sub}, nil
-}
-
-// WatchOwnershipTransferred is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_UpgradableECCM *UpgradableECCMFilterer) WatchOwnershipTransferred(opts *bind.WatchOpts, sink chan<- *UpgradableECCMOwnershipTransferred, previousOwner []common.Address, newOwner []common.Address) (event.Subscription, error) {
-
-	var previousOwnerRule []interface{}
-	for _, previousOwnerItem := range previousOwner {
-		previousOwnerRule = append(previousOwnerRule, previousOwnerItem)
-	}
-	var newOwnerRule []interface{}
-	for _, newOwnerItem := range newOwner {
-		newOwnerRule = append(newOwnerRule, newOwnerItem)
-	}
-
-	logs, sub, err := _UpgradableECCM.contract.WatchLogs(opts, "OwnershipTransferred", previousOwnerRule, newOwnerRule)
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(UpgradableECCMOwnershipTransferred)
-				if err := _UpgradableECCM.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseOwnershipTransferred is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000005c7c30d4.
-//
-// Solidity: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-func (_UpgradableECCM *UpgradableECCMFilterer) ParseOwnershipTransferred(log types.Log) (*UpgradableECCMOwnershipTransferred, error) {
-	event := new(UpgradableECCMOwnershipTransferred)
-	if err := _UpgradableECCM.contract.UnpackLog(event, "OwnershipTransferred", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// UpgradableECCMPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the UpgradableECCM contract.
-type UpgradableECCMPausedIterator struct {
-	Event *UpgradableECCMPaused // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *UpgradableECCMPausedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(UpgradableECCMPaused)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(UpgradableECCMPaused)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *UpgradableECCMPausedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *UpgradableECCMPausedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// UpgradableECCMPaused represents a Paused event raised by the UpgradableECCM contract.
-type UpgradableECCMPaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterPaused is a free log retrieval operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) FilterPaused(opts *bind.FilterOpts) (*UpgradableECCMPausedIterator, error) {
-
-	logs, sub, err := _UpgradableECCM.contract.FilterLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMPausedIterator{contract: _UpgradableECCM.contract, event: "Paused", logs: logs, sub: sub}, nil
-}
-
-// WatchPaused is a free log subscription operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *UpgradableECCMPaused) (event.Subscription, error) {
-
-	logs, sub, err := _UpgradableECCM.contract.WatchLogs(opts, "Paused")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(UpgradableECCMPaused)
-				if err := _UpgradableECCM.contract.UnpackLog(event, "Paused", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParsePaused is a log parse operation binding the contract event 0x000000000000000000000000000000000000000000000000000000003572985a.
-//
-// Solidity: event Paused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) ParsePaused(log types.Log) (*UpgradableECCMPaused, error) {
-	event := new(UpgradableECCMPaused)
-	if err := _UpgradableECCM.contract.UnpackLog(event, "Paused", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// UpgradableECCMUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the UpgradableECCM contract.
-type UpgradableECCMUnpausedIterator struct {
-	Event *UpgradableECCMUnpaused // Event containing the contract specifics and raw log
-
-	contract *bind.BoundContract // Generic contract to use for unpacking event data
-	event    string              // Event name to use for unpacking event data
-
-	logs chan types.Log        // Log channel receiving the found contract events
-	sub  ethereum.Subscription // Subscription for errors, completion and termination
-	done bool                  // Whether the subscription completed delivering logs
-	fail error                 // Occurred error to stop iteration
-}
-
-// Next advances the iterator to the subsequent event, returning whether there
-// are any more events found. In case of a retrieval or parsing error, false is
-// returned and Error() can be queried for the exact failure.
-func (it *UpgradableECCMUnpausedIterator) Next() bool {
-	// If the iterator failed, stop iterating
-	if it.fail != nil {
-		return false
-	}
-	// If the iterator completed, deliver directly whatever's available
-	if it.done {
-		select {
-		case log := <-it.logs:
-			it.Event = new(UpgradableECCMUnpaused)
-			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-				it.fail = err
-				return false
-			}
-			it.Event.Raw = log
-			return true
-
-		default:
-			return false
-		}
-	}
-	// Iterator still in progress, wait for either a data or an error event
-	select {
-	case log := <-it.logs:
-		it.Event = new(UpgradableECCMUnpaused)
-		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
-			it.fail = err
-			return false
-		}
-		it.Event.Raw = log
-		return true
-
-	case err := <-it.sub.Err():
-		it.done = true
-		it.fail = err
-		return it.Next()
-	}
-}
-
-// Error returns any retrieval or parsing error occurred during filtering.
-func (it *UpgradableECCMUnpausedIterator) Error() error {
-	return it.fail
-}
-
-// Close terminates the iteration process, releasing any pending underlying
-// resources.
-func (it *UpgradableECCMUnpausedIterator) Close() error {
-	it.sub.Unsubscribe()
-	return nil
-}
-
-// UpgradableECCMUnpaused represents a Unpaused event raised by the UpgradableECCM contract.
-type UpgradableECCMUnpaused struct {
-	Account common.Address
-	Raw     types.Log // Blockchain specific contextual infos
-}
-
-// FilterUnpaused is a free log retrieval operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) FilterUnpaused(opts *bind.FilterOpts) (*UpgradableECCMUnpausedIterator, error) {
-
-	logs, sub, err := _UpgradableECCM.contract.FilterLogs(opts, "Unpaused")
-	if err != nil {
-		return nil, err
-	}
-	return &UpgradableECCMUnpausedIterator{contract: _UpgradableECCM.contract, event: "Unpaused", logs: logs, sub: sub}, nil
-}
-
-// WatchUnpaused is a free log subscription operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *UpgradableECCMUnpaused) (event.Subscription, error) {
-
-	logs, sub, err := _UpgradableECCM.contract.WatchLogs(opts, "Unpaused")
-	if err != nil {
-		return nil, err
-	}
-	return event.NewSubscription(func(quit <-chan struct{}) error {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case log := <-logs:
-				// New log arrived, parse the event and forward to the user
-				event := new(UpgradableECCMUnpaused)
-				if err := _UpgradableECCM.contract.UnpackLog(event, "Unpaused", log); err != nil {
-					return err
-				}
-				event.Raw = log
-
-				select {
-				case sink <- event:
-				case err := <-sub.Err():
-					return err
-				case <-quit:
-					return nil
-				}
-			case err := <-sub.Err():
-				return err
-			case <-quit:
-				return nil
-			}
-		}
-	}), nil
-}
-
-// ParseUnpaused is a log parse operation binding the contract event 0x0000000000000000000000000000000000000000000000000000000044693cad.
-//
-// Solidity: event Unpaused(address account)
-func (_UpgradableECCM *UpgradableECCMFilterer) ParseUnpaused(log types.Log) (*UpgradableECCMUnpaused, error) {
-	event := new(UpgradableECCMUnpaused)
-	if err := _UpgradableECCM.contract.UnpackLog(event, "Unpaused", log); err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
-// UtilsABI is the input ABI used to generate the binding from.
-const UtilsABI = "[]"
-
-// UtilsBin is the compiled bytecode used for deploying new contracts.
-var UtilsBin = "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058204b3f791ec7adfaaffdd52675662c116515f778ebc78037e31874170fde0608520029"
-
-// DeployUtils deploys a new contract, binding an instance of Utils to it.
-func DeployUtils(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Utils, error) {
-	parsed, err := abi.JSON(strings.NewReader(UtilsABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(UtilsBin), backend)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &Utils{UtilsCaller: UtilsCaller{contract: contract}, UtilsTransactor: UtilsTransactor{contract: contract}, UtilsFilterer: UtilsFilterer{contract: contract}}, nil
-}
-
-func AsyncDeployUtils(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(UtilsABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(UtilsBin), backend)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// Utils is an auto generated Go binding around a Solidity contract.
-type Utils struct {
-	UtilsCaller     // Read-only binding to the contract
-	UtilsTransactor // Write-only binding to the contract
-	UtilsFilterer   // Log filterer for contract events
-}
-
-// UtilsCaller is an auto generated read-only Go binding around a Solidity contract.
-type UtilsCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UtilsTransactor is an auto generated write-only Go binding around a Solidity contract.
-type UtilsTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UtilsFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type UtilsFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// UtilsSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type UtilsSession struct {
-	Contract     *Utils            // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// UtilsCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type UtilsCallerSession struct {
-	Contract *UtilsCaller  // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts // Call options to use throughout this session
-}
-
-// UtilsTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type UtilsTransactorSession struct {
-	Contract     *UtilsTransactor  // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// UtilsRaw is an auto generated low-level Go binding around a Solidity contract.
-type UtilsRaw struct {
-	Contract *Utils // Generic contract binding to access the raw methods on
-}
-
-// UtilsCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type UtilsCallerRaw struct {
-	Contract *UtilsCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// UtilsTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type UtilsTransactorRaw struct {
-	Contract *UtilsTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewUtils creates a new instance of Utils, bound to a specific deployed contract.
-func NewUtils(address common.Address, backend bind.ContractBackend) (*Utils, error) {
-	contract, err := bindUtils(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &Utils{UtilsCaller: UtilsCaller{contract: contract}, UtilsTransactor: UtilsTransactor{contract: contract}, UtilsFilterer: UtilsFilterer{contract: contract}}, nil
-}
-
-// NewUtilsCaller creates a new read-only instance of Utils, bound to a specific deployed contract.
-func NewUtilsCaller(address common.Address, caller bind.ContractCaller) (*UtilsCaller, error) {
-	contract, err := bindUtils(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &UtilsCaller{contract: contract}, nil
-}
-
-// NewUtilsTransactor creates a new write-only instance of Utils, bound to a specific deployed contract.
-func NewUtilsTransactor(address common.Address, transactor bind.ContractTransactor) (*UtilsTransactor, error) {
-	contract, err := bindUtils(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &UtilsTransactor{contract: contract}, nil
-}
-
-// NewUtilsFilterer creates a new log filterer instance of Utils, bound to a specific deployed contract.
-func NewUtilsFilterer(address common.Address, filterer bind.ContractFilterer) (*UtilsFilterer, error) {
-	contract, err := bindUtils(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &UtilsFilterer{contract: contract}, nil
-}
-
-// bindUtils binds a generic wrapper to an already deployed contract.
-func bindUtils(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(UtilsABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Utils *UtilsRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Utils.Contract.UtilsCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Utils *UtilsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Utils.Contract.UtilsTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Utils *UtilsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Utils.Contract.UtilsTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_Utils *UtilsCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _Utils.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_Utils *UtilsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _Utils.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_Utils *UtilsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _Utils.Contract.contract.Transact(opts, method, params...)
-}
-
-// ZeroCopySinkABI is the input ABI used to generate the binding from.
-const ZeroCopySinkABI = "[]"
-
-// ZeroCopySinkBin is the compiled bytecode used for deploying new contracts.
-var ZeroCopySinkBin = "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058204411d19f253ed1ead54669f92d798676cfa4513cd1d8dbc7d43f91493886bba30029"
-
-// DeployZeroCopySink deploys a new contract, binding an instance of ZeroCopySink to it.
-func DeployZeroCopySink(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ZeroCopySink, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySinkABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ZeroCopySinkBin), backend)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &ZeroCopySink{ZeroCopySinkCaller: ZeroCopySinkCaller{contract: contract}, ZeroCopySinkTransactor: ZeroCopySinkTransactor{contract: contract}, ZeroCopySinkFilterer: ZeroCopySinkFilterer{contract: contract}}, nil
-}
-
-func AsyncDeployZeroCopySink(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySinkABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(ZeroCopySinkBin), backend)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// ZeroCopySink is an auto generated Go binding around a Solidity contract.
-type ZeroCopySink struct {
-	ZeroCopySinkCaller     // Read-only binding to the contract
-	ZeroCopySinkTransactor // Write-only binding to the contract
-	ZeroCopySinkFilterer   // Log filterer for contract events
-}
-
-// ZeroCopySinkCaller is an auto generated read-only Go binding around a Solidity contract.
-type ZeroCopySinkCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySinkTransactor is an auto generated write-only Go binding around a Solidity contract.
-type ZeroCopySinkTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySinkFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type ZeroCopySinkFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySinkSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type ZeroCopySinkSession struct {
-	Contract     *ZeroCopySink     // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// ZeroCopySinkCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type ZeroCopySinkCallerSession struct {
-	Contract *ZeroCopySinkCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts       // Call options to use throughout this session
-}
-
-// ZeroCopySinkTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type ZeroCopySinkTransactorSession struct {
-	Contract     *ZeroCopySinkTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts       // Transaction auth options to use throughout this session
-}
-
-// ZeroCopySinkRaw is an auto generated low-level Go binding around a Solidity contract.
-type ZeroCopySinkRaw struct {
-	Contract *ZeroCopySink // Generic contract binding to access the raw methods on
-}
-
-// ZeroCopySinkCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type ZeroCopySinkCallerRaw struct {
-	Contract *ZeroCopySinkCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// ZeroCopySinkTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type ZeroCopySinkTransactorRaw struct {
-	Contract *ZeroCopySinkTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewZeroCopySink creates a new instance of ZeroCopySink, bound to a specific deployed contract.
-func NewZeroCopySink(address common.Address, backend bind.ContractBackend) (*ZeroCopySink, error) {
-	contract, err := bindZeroCopySink(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySink{ZeroCopySinkCaller: ZeroCopySinkCaller{contract: contract}, ZeroCopySinkTransactor: ZeroCopySinkTransactor{contract: contract}, ZeroCopySinkFilterer: ZeroCopySinkFilterer{contract: contract}}, nil
-}
-
-// NewZeroCopySinkCaller creates a new read-only instance of ZeroCopySink, bound to a specific deployed contract.
-func NewZeroCopySinkCaller(address common.Address, caller bind.ContractCaller) (*ZeroCopySinkCaller, error) {
-	contract, err := bindZeroCopySink(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySinkCaller{contract: contract}, nil
-}
-
-// NewZeroCopySinkTransactor creates a new write-only instance of ZeroCopySink, bound to a specific deployed contract.
-func NewZeroCopySinkTransactor(address common.Address, transactor bind.ContractTransactor) (*ZeroCopySinkTransactor, error) {
-	contract, err := bindZeroCopySink(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySinkTransactor{contract: contract}, nil
-}
-
-// NewZeroCopySinkFilterer creates a new log filterer instance of ZeroCopySink, bound to a specific deployed contract.
-func NewZeroCopySinkFilterer(address common.Address, filterer bind.ContractFilterer) (*ZeroCopySinkFilterer, error) {
-	contract, err := bindZeroCopySink(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySinkFilterer{contract: contract}, nil
-}
-
-// bindZeroCopySink binds a generic wrapper to an already deployed contract.
-func bindZeroCopySink(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySinkABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ZeroCopySink *ZeroCopySinkRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ZeroCopySink.Contract.ZeroCopySinkCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ZeroCopySink *ZeroCopySinkRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySink.Contract.ZeroCopySinkTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ZeroCopySink *ZeroCopySinkRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySink.Contract.ZeroCopySinkTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ZeroCopySink *ZeroCopySinkCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ZeroCopySink.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ZeroCopySink *ZeroCopySinkTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySink.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ZeroCopySink *ZeroCopySinkTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySink.Contract.contract.Transact(opts, method, params...)
-}
-
-// ZeroCopySourceABI is the input ABI used to generate the binding from.
-const ZeroCopySourceABI = "[]"
-
-// ZeroCopySourceBin is the compiled bytecode used for deploying new contracts.
-var ZeroCopySourceBin = "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058206aec931b9005fd9e382bbc8cfc093562ed50172b3b85697710d8173310d70cd60029"
-
-// DeployZeroCopySource deploys a new contract, binding an instance of ZeroCopySource to it.
-func DeployZeroCopySource(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ZeroCopySource, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySourceABI))
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ZeroCopySourceBin), backend)
-	if err != nil {
-		return common.Address{}, nil, nil, err
-	}
-	return address, tx, &ZeroCopySource{ZeroCopySourceCaller: ZeroCopySourceCaller{contract: contract}, ZeroCopySourceTransactor: ZeroCopySourceTransactor{contract: contract}, ZeroCopySourceFilterer: ZeroCopySourceFilterer{contract: contract}}, nil
-}
-
-func AsyncDeployZeroCopySource(auth *bind.TransactOpts, handler func(*types.Receipt, error), backend bind.ContractBackend) (*types.Transaction, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySourceABI))
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := bind.AsyncDeployContract(auth, handler, parsed, common.FromHex(ZeroCopySourceBin), backend)
-	if err != nil {
-		return nil, err
-	}
-	return tx, nil
-}
-
-// ZeroCopySource is an auto generated Go binding around a Solidity contract.
-type ZeroCopySource struct {
-	ZeroCopySourceCaller     // Read-only binding to the contract
-	ZeroCopySourceTransactor // Write-only binding to the contract
-	ZeroCopySourceFilterer   // Log filterer for contract events
-}
-
-// ZeroCopySourceCaller is an auto generated read-only Go binding around a Solidity contract.
-type ZeroCopySourceCaller struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySourceTransactor is an auto generated write-only Go binding around a Solidity contract.
-type ZeroCopySourceTransactor struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySourceFilterer is an auto generated log filtering Go binding around a Solidity contract events.
-type ZeroCopySourceFilterer struct {
-	contract *bind.BoundContract // Generic contract wrapper for the low level calls
-}
-
-// ZeroCopySourceSession is an auto generated Go binding around a Solidity contract,
-// with pre-set call and transact options.
-type ZeroCopySourceSession struct {
-	Contract     *ZeroCopySource   // Generic contract binding to set the session for
-	CallOpts     bind.CallOpts     // Call options to use throughout this session
-	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
-}
-
-// ZeroCopySourceCallerSession is an auto generated read-only Go binding around a Solidity contract,
-// with pre-set call options.
-type ZeroCopySourceCallerSession struct {
-	Contract *ZeroCopySourceCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts         // Call options to use throughout this session
-}
-
-// ZeroCopySourceTransactorSession is an auto generated write-only Go binding around a Solidity contract,
-// with pre-set transact options.
-type ZeroCopySourceTransactorSession struct {
-	Contract     *ZeroCopySourceTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts         // Transaction auth options to use throughout this session
-}
-
-// ZeroCopySourceRaw is an auto generated low-level Go binding around a Solidity contract.
-type ZeroCopySourceRaw struct {
-	Contract *ZeroCopySource // Generic contract binding to access the raw methods on
-}
-
-// ZeroCopySourceCallerRaw is an auto generated low-level read-only Go binding around a Solidity contract.
-type ZeroCopySourceCallerRaw struct {
-	Contract *ZeroCopySourceCaller // Generic read-only contract binding to access the raw methods on
-}
-
-// ZeroCopySourceTransactorRaw is an auto generated low-level write-only Go binding around a Solidity contract.
-type ZeroCopySourceTransactorRaw struct {
-	Contract *ZeroCopySourceTransactor // Generic write-only contract binding to access the raw methods on
-}
-
-// NewZeroCopySource creates a new instance of ZeroCopySource, bound to a specific deployed contract.
-func NewZeroCopySource(address common.Address, backend bind.ContractBackend) (*ZeroCopySource, error) {
-	contract, err := bindZeroCopySource(address, backend, backend, backend)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySource{ZeroCopySourceCaller: ZeroCopySourceCaller{contract: contract}, ZeroCopySourceTransactor: ZeroCopySourceTransactor{contract: contract}, ZeroCopySourceFilterer: ZeroCopySourceFilterer{contract: contract}}, nil
-}
-
-// NewZeroCopySourceCaller creates a new read-only instance of ZeroCopySource, bound to a specific deployed contract.
-func NewZeroCopySourceCaller(address common.Address, caller bind.ContractCaller) (*ZeroCopySourceCaller, error) {
-	contract, err := bindZeroCopySource(address, caller, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySourceCaller{contract: contract}, nil
-}
-
-// NewZeroCopySourceTransactor creates a new write-only instance of ZeroCopySource, bound to a specific deployed contract.
-func NewZeroCopySourceTransactor(address common.Address, transactor bind.ContractTransactor) (*ZeroCopySourceTransactor, error) {
-	contract, err := bindZeroCopySource(address, nil, transactor, nil)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySourceTransactor{contract: contract}, nil
-}
-
-// NewZeroCopySourceFilterer creates a new log filterer instance of ZeroCopySource, bound to a specific deployed contract.
-func NewZeroCopySourceFilterer(address common.Address, filterer bind.ContractFilterer) (*ZeroCopySourceFilterer, error) {
-	contract, err := bindZeroCopySource(address, nil, nil, filterer)
-	if err != nil {
-		return nil, err
-	}
-	return &ZeroCopySourceFilterer{contract: contract}, nil
-}
-
-// bindZeroCopySource binds a generic wrapper to an already deployed contract.
-func bindZeroCopySource(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(ZeroCopySourceABI))
-	if err != nil {
-		return nil, err
-	}
-	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ZeroCopySource *ZeroCopySourceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ZeroCopySource.Contract.ZeroCopySourceCaller.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ZeroCopySource *ZeroCopySourceRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySource.Contract.ZeroCopySourceTransactor.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ZeroCopySource *ZeroCopySourceRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySource.Contract.ZeroCopySourceTransactor.contract.Transact(opts, method, params...)
-}
-
-// Call invokes the (constant) contract method with params as input values and
-// sets the output to result. The result type might be a single field for simple
-// returns, a slice of interfaces for anonymous returns and a struct for named
-// returns.
-func (_ZeroCopySource *ZeroCopySourceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
-	return _ZeroCopySource.Contract.contract.Call(opts, result, method, params...)
-}
-
-// Transfer initiates a plain transaction to move funds to the contract, calling
-// its default method if one is available.
-func (_ZeroCopySource *ZeroCopySourceTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySource.Contract.contract.Transfer(opts)
-}
-
-// Transact invokes the (paid) contract method with params as input values.
-func (_ZeroCopySource *ZeroCopySourceTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, *types.Receipt, error) {
-	return _ZeroCopySource.Contract.contract.Transact(opts, method, params...)
 }

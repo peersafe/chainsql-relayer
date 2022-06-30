@@ -39,9 +39,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/FISCO-BCOS/go-sdk/client"
-	"github.com/FISCO-BCOS/go-sdk/conf"
-
+	"github.com/polynetwork/chainsql-relayer/client"
 	"github.com/polynetwork/chainsql-relayer/cmd"
 	"github.com/polynetwork/chainsql-relayer/config"
 	"github.com/polynetwork/chainsql-relayer/db"
@@ -64,6 +62,8 @@ func setupApp() *cli.App {
 	app.Flags = []cli.Flag{
 		cmd.LogLevelFlag,
 		cmd.ConfigPathFlag,
+		cmd.ChainsqlConfigPathFlag,
+		cmd.ChainsqlStartForceFlag,
 		cmd.PolyStartFlag,
 		cmd.LogDir,
 	}
@@ -84,6 +84,7 @@ func startServer(ctx *cli.Context) {
 
 	// parse config
 	ConfigPath := ctx.GlobalString(cmd.GetFlagName(cmd.ConfigPathFlag))
+	ChainsqlConfigPath := ctx.GlobalString(cmd.GetFlagName(cmd.ChainsqlConfigPathFlag))
 	StartForceHeight = 0
 	chainsqlstartforce := ctx.GlobalUint64(cmd.GetFlagName(cmd.ChainsqlStartForceFlag))
 	if chainsqlstartforce > 0 {
@@ -112,10 +113,11 @@ func startServer(ctx *cli.Context) {
 	}
 
 	// only simulator to creata a chainsql sdk
-	configs, _ := conf.ParseConfigFile("chainsql.cfg")
-	chainsqlsdk, err := client.Dial(&configs[0])
+	chainsqlConfig := client.NewConfig(ChainsqlConfigPath)
+	chainsqlsdk, err := client.Dial(chainsqlConfig)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	log.Infof("dsd")
 
@@ -146,8 +148,19 @@ func setUpPoly(poly *sdk.PolySdk, RpcAddr string) error {
 	return nil
 }
 
-func initPolyServer(servConfig *config.ServiceConfig, polysdk *sdk.PolySdk, chainsqlsdk *client.Client, boltDB *db.BoltDB) {
-	mgr, err := manager.NewPolyManager(servConfig, uint32(PolyStartHeight), polysdk, chainsqlsdk, boltDB)
+func initPolyServer(
+	servConfig *config.ServiceConfig,
+	polysdk *sdk.PolySdk,
+	chainsqlsdk *client.ChainSqlNode,
+	boltDB *db.BoltDB) {
+
+	mgr, err := manager.NewPolyManager(
+		servConfig,
+		uint32(PolyStartHeight),
+		polysdk,
+		chainsqlsdk,
+		boltDB)
+
 	if err != nil {
 		log.Error("initPolyServer - PolyServer service start failed: %v", err)
 		return
@@ -156,10 +169,22 @@ func initPolyServer(servConfig *config.ServiceConfig, polysdk *sdk.PolySdk, chai
 	go mgr.MonitorChain()
 }
 
-func initChainsqlServer(servConfig *config.ServiceConfig, polysdk *sdk.PolySdk, chainsqlsdk *client.Client, boltDB *db.BoltDB) {
-	mgr, err := manager.NewChainsqlManager(servConfig, StartHeight, StartForceHeight, polysdk, chainsqlsdk, boltDB)
+func initChainsqlServer(
+	servConfig *config.ServiceConfig,
+	polysdk *sdk.PolySdk,
+	chainsqlsdk *client.ChainSqlNode,
+	boltDB *db.BoltDB) {
+
+	mgr, err := manager.NewChainsqlManager(
+		servConfig,
+		StartHeight,
+		StartForceHeight,
+		polysdk,
+		chainsqlsdk,
+		boltDB)
+
 	if err != nil {
-		log.Error("initFiscoServer - fisco service start err: %s", err.Error())
+		log.Errorf("init chainsql Server - chainsql service start err: %s", err.Error())
 		return
 	}
 	go mgr.SubscribeBlockNumber()

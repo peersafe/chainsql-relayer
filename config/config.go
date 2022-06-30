@@ -43,11 +43,12 @@ import (
 )
 
 const (
-	ETH_MONITOR_INTERVAL     = time.Second
-	ONT_MONITOR_INTERVAL     = time.Second
-	ONT_USEFUL_BLOCK_NUM     = 1
-	DEFAULT_CONFIG_FILE_NAME = "./config_default.json"
-	Version                  = "1.0"
+	ETH_MONITOR_INTERVAL              = time.Second
+	ONT_MONITOR_INTERVAL              = time.Second
+	ONT_USEFUL_BLOCK_NUM              = 1
+	DEFAULT_CONFIG_FILE_NAME          = "./config_default.json"
+	CHAINSQL_DEFAULT_CONFIG_FILE_NAME = "chainsql.json"
+	Version                           = "1.0"
 
 	DEFAULT_LOG_LEVEL = log.InfoLog
 )
@@ -72,7 +73,6 @@ type ChainsqlConfig struct {
 	SideChainId         uint64
 	ECCMContractAddress string
 	ECCDContractAddress string
-	Rpc                 string
 	AgencyPath          string
 	NodePath            string
 	KeyPath             string

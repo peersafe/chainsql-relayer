@@ -50,7 +50,7 @@ import (
 
 	"time"
 
-	"github.com/FISCO-BCOS/go-sdk/client"
+	"github.com/polynetwork/chainsql-relayer/client"
 	"github.com/polynetwork/chainsql-relayer/config"
 	"github.com/polynetwork/chainsql-relayer/db"
 	"github.com/polynetwork/chainsql-relayer/go_abi/eccd_abi"
@@ -90,14 +90,19 @@ type PolyManager struct {
 }
 
 type ChainsqlSender struct {
-	client      *client.Client
-	acc         ethcommon.Address
+	client      *client.ChainSqlNode
 	polySdk     *sdk.PolySdk
 	config      *config.ServiceConfig
 	contractAbi *abi.ABI
 }
 
-func NewPolyManager(servCfg *config.ServiceConfig, startblockHeight uint32, polySdk *sdk.PolySdk, chainsqlsdk *client.Client, boltDB *db.BoltDB) (*PolyManager, error) {
+func NewPolyManager(
+	servCfg *config.ServiceConfig,
+	startblockHeight uint32,
+	polySdk *sdk.PolySdk,
+	chainsqlsdk *client.ChainSqlNode,
+	boltDB *db.BoltDB) (*PolyManager, error) {
+
 	contractabi, err := abi.JSON(strings.NewReader(eccm_abi.EthCrossChainManagerABI))
 	if err != nil {
 		return nil, err
@@ -105,7 +110,6 @@ func NewPolyManager(servCfg *config.ServiceConfig, startblockHeight uint32, poly
 
 	chainsqlSender := &ChainsqlSender{
 		client:      chainsqlsdk,
-		acc:         ethcommon.HexToAddress("0x34f00110bad3236f01468799d44fe04d7deb25f0"),
 		polySdk:     polySdk,
 		config:      servCfg,
 		contractAbi: &contractabi,
@@ -123,9 +127,8 @@ func NewPolyManager(servCfg *config.ServiceConfig, startblockHeight uint32, poly
 }
 
 func (poly *PolyManager) findLatestHeight() uint32 {
-
-	address := ethcommon.HexToAddress(poly.config.ChainsqlConfig.ECCDContractAddress)
-	instance, err := eccd_abi.NewEthCrossChainData(address, poly.chainsqlSender.client)
+	address := poly.config.ChainsqlConfig.ECCDContractAddress
+	instance, err := eccd_abi.NewEthCrossChainData(poly.chainsqlSender.client.Chainsql, address)
 	if err != nil {
 		log.Errorf("findLatestHeight - new eth cross chain failed: %s", err.Error())
 		return 0
@@ -170,6 +173,10 @@ func (poly *PolyManager) MonitorChain() {
 				log.Errorf("MonitorChain - get poly chain block height error: %s", err)
 				continue
 			}
+			if latestheight == 0 {
+				continue
+			}
+
 			latestheight--
 			if latestheight-poly.currentHeight < config.ONT_USEFUL_BLOCK_NUM {
 				continue
@@ -291,6 +298,7 @@ func (poly *PolyManager) handleDepositEvents(height uint32) bool {
 			}
 		}
 	}
+	log.Debugf("cnt = %d, isEpoch = %v, isCurr = %v", cnt, isEpoch, isCurr)
 	if cnt == 0 && isEpoch && isCurr {
 		return poly.chainsqlSender.commitHeader(hdr)
 	}
@@ -304,7 +312,14 @@ func (poly *PolyManager) Stop() {
 	log.Infof("poly chain manager exit.")
 }
 
-func (chainsql *ChainsqlSender) commitDepositEventsWithHeader(header *polytypes.Header, param *common2.ToMerkleValue, headerProof string, anchorHeader *polytypes.Header, polyTxHash string, rawAuditPath []byte) bool {
+func (chainsql *ChainsqlSender) commitDepositEventsWithHeader(
+	header *polytypes.Header,
+	param *common2.ToMerkleValue,
+	headerProof string,
+	anchorHeader *polytypes.Header,
+	polyTxHash string,
+	rawAuditPath []byte) bool {
+
 	var (
 		sigs       []byte
 		headerData []byte
@@ -325,14 +340,14 @@ func (chainsql *ChainsqlSender) commitDepositEventsWithHeader(header *polytypes.
 		}
 	}
 
-	eccdAddr := ethcommon.HexToAddress(chainsql.config.ChainsqlConfig.ECCDContractAddress)
-	eccd, err := eccd_abi.NewEthCrossChainData(eccdAddr, chainsql.client)
+	eccdAddr := chainsql.config.ChainsqlConfig.ECCDContractAddress
+	eccd, err := eccd_abi.NewEthCrossChainData(chainsql.client.Chainsql, eccdAddr)
 	if err != nil {
 		panic(fmt.Errorf("failed to new eccd: %v", err))
 	}
 
-	eccmAddr := ethcommon.HexToAddress(chainsql.config.ChainsqlConfig.ECCMContractAddress)
-	eccm, err := eccm_abi.NewEthCrossChainManager(eccmAddr, chainsql.client)
+	eccmAddr := chainsql.config.ChainsqlConfig.ECCMContractAddress
+	eccm, err := eccm_abi.NewEthCrossChainManager(chainsql.client.Chainsql, eccmAddr)
 	if err != nil {
 		panic(fmt.Errorf("failed to new eccm: %v", err))
 	}
@@ -346,7 +361,7 @@ func (chainsql *ChainsqlSender) commitDepositEventsWithHeader(header *polytypes.
 
 		return true
 	}
-	//log.Infof("poly proof with header, height: %d, key: %s, proof: %s", header.Height-1, string(key), proof.AuditPath)
+	log.Infof("poly proof with header, height: %d", header.Height-1)
 
 	rawProof, _ := hex.DecodeString(headerProof)
 	var rawAnchor []byte
@@ -355,12 +370,18 @@ func (chainsql *ChainsqlSender) commitDepositEventsWithHeader(header *polytypes.
 	}
 	headerData = header.GetMessage()
 
-	trans, _, err := eccm.VerifyHeaderAndExecuteTx(chainsql.client.GetTransactOpts(), rawAuditPath, headerData, rawProof, rawAnchor, sigs)
+	trans, err := eccm.VerifyHeaderAndExecuteTx(
+		chainsql.client.GetTransactOpts(),
+		rawAuditPath,
+		headerData,
+		rawProof,
+		rawAnchor,
+		sigs)
 	if err != nil {
 		log.Errorf("commitDepositEventsWithHeader - err:" + err.Error())
 		return false
 	}
-	log.Infof("contractAbi trans txData is : %s", trans.Hash().Hex())
+	log.Infof("contractAbi trans txData is : %s", trans.TxHash)
 
 	return true
 }
@@ -396,14 +417,14 @@ func (chainsql *ChainsqlSender) commitHeader(header *polytypes.Header) bool {
 		publickeys = append(publickeys, tools.GetNoCompresskey(key)...)
 	}
 
-	eccmAddr := ethcommon.HexToAddress(chainsql.config.ChainsqlConfig.ECCDContractAddress)
-	eccm, _ := eccm_abi.NewEthCrossChainManager(eccmAddr, chainsql.client)
+	eccmAddr := chainsql.config.ChainsqlConfig.ECCDContractAddress
+	eccm, _ := eccm_abi.NewEthCrossChainManager(chainsql.client.Chainsql, eccmAddr)
 
-	tx, recp, err := eccm.ChangeBookKeeper(chainsql.client.GetTransactOpts(), headerdata, publickeys, sigs)
+	tx, err := eccm.ChangeBookKeeper(chainsql.client.GetTransactOpts(), headerdata, publickeys, sigs)
 	if err != nil {
 		log.Fatal(err)
 		return false
 	}
-	log.Infof("ChangeBookKeeper:%s,recp:%v", tx.Hash().Hex(), recp.BlockNumber)
+	log.Infof("ChangeBookKeeper: %s", tx.TxHash)
 	return true
 }

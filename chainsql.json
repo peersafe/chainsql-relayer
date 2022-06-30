@@ -1,0 +1,11 @@
+{
+    "URL": "ws://127.0.0.1:6006",
+    "ServerName": "",
+    "RootCertPath":"",
+    "ClientCertPath":"",
+    "ClientKeyPath":"",
+    "Account": {
+        "Address":"",
+        "Secrect":""
+    }
+}

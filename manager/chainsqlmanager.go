@@ -17,43 +17,32 @@
 package manager
 
 import (
-	"context"
 	"crypto/ecdsa"
 	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
-	"strings"
+	"reflect"
 
-	"github.com/FISCO-BCOS/go-sdk/core/types"
-	"github.com/ontio/ontology-crypto/keypair"
+	"github.com/polynetwork/chainsql-relayer/client"
 	"github.com/polynetwork/chainsql-relayer/config"
 	"github.com/polynetwork/chainsql-relayer/db"
 	"github.com/polynetwork/chainsql-relayer/go_abi/eccm_abi"
 	"github.com/polynetwork/chainsql-relayer/log"
 	"github.com/polynetwork/chainsql-relayer/tools"
-	"github.com/polynetwork/poly-io-test/chains/ont"
-	vconfig "github.com/polynetwork/poly/consensus/vbft/config"
 	"github.com/tjfoc/gmsm/pkcs12"
 
-	"github.com/FISCO-BCOS/go-sdk/client"
-	comm "github.com/ethereum/go-ethereum/common"
 	sdk "github.com/polynetwork/poly-go-sdk"
 	"github.com/polynetwork/poly/common"
 	common2 "github.com/polynetwork/poly/native/service/cross_chain_manager/common"
-	"github.com/tjfoc/gmsm/x509"
-
-	"strconv"
-	"unsafe"
+	sm2 "github.com/tjfoc/gmsm/sm2"
 )
 
 type ChainsqlManager struct {
 	config        *config.ServiceConfig
-	client        *client.Client
-	currentHeight uint64
+	client        *client.ChainSqlNode
+	currentHeight int
 	forceHeight   uint64
 	polySdk       *sdk.PolySdk
 	polySigner    *sdk.Account
@@ -61,7 +50,14 @@ type ChainsqlManager struct {
 	caSet         *tools.CertTrustChain
 }
 
-func NewChainsqlManager(servconfig *config.ServiceConfig, startheight uint64, startforceheight uint64, ontsdk *sdk.PolySdk, client *client.Client, boltDB *db.BoltDB) (*ChainsqlManager, error) {
+func NewChainsqlManager(
+	servconfig *config.ServiceConfig,
+	startheight uint64,
+	startforceheight uint64,
+	ontsdk *sdk.PolySdk,
+	client *client.ChainSqlNode,
+	boltDB *db.BoltDB) (*ChainsqlManager, error) {
+
 	var wallet *sdk.Wallet
 	var err error
 	if !common.FileExisted(servconfig.PolyConfig.WalletFile) {
@@ -92,7 +88,7 @@ func NewChainsqlManager(servconfig *config.ServiceConfig, startheight uint64, st
 	log.Infof("ChainsqlManager - poly address: %s", signer.Address.ToBase58())
 
 	caSet := &tools.CertTrustChain{
-		Certs: make([]*x509.Certificate, 2),
+		Certs: make([]*sm2.Certificate, 2),
 	}
 	keysCa, err := ioutil.ReadFile(servconfig.ChainsqlConfig.AgencyPath)
 	if err != nil {
@@ -101,8 +97,9 @@ func NewChainsqlManager(servconfig *config.ServiceConfig, startheight uint64, st
 	}
 
 	blkAgency, _ := pem.Decode(keysCa)
-	caSet.Certs[0], err = x509.ParseCertificate(blkAgency.Bytes)
+	caSet.Certs[0], err = sm2.ParseCertificate(blkAgency.Bytes)
 	if err != nil {
+		log.Errorf("ParseCertificate[0] error. %s", err.Error())
 		return nil, err
 	}
 	keysCert, err := ioutil.ReadFile(servconfig.ChainsqlConfig.NodePath)
@@ -112,11 +109,15 @@ func NewChainsqlManager(servconfig *config.ServiceConfig, startheight uint64, st
 	}
 
 	blk, _ := pem.Decode(keysCert)
-	caSet.Certs[1], _ = x509.ParseCertificate(blk.Bytes)
+	caSet.Certs[1], err = sm2.ParseCertificate(blk.Bytes)
+	if err != nil {
+		log.Errorf("ParseCertificate[1] error. %s", err.Error())
+		return nil, err
+	}
 
 	mgr := &ChainsqlManager{
 		config:        servconfig,
-		currentHeight: startheight,
+		currentHeight: int(startheight),
 		forceHeight:   startforceheight,
 		client:        client,
 		polySdk:       ontsdk,
@@ -127,14 +128,15 @@ func NewChainsqlManager(servconfig *config.ServiceConfig, startheight uint64, st
 	return mgr, nil
 
 }
-func bytes2str(b []byte) string {
-	return *(*string)(unsafe.Pointer(&b))
-}
 
 /**
  * SubscribeBlockNumber
  */
 func (chainsql *ChainsqlManager) SubscribeBlockNumber() {
+	localCurrentHeight := chainsql.db.GetChainsqlHeight()
+	if localCurrentHeight > uint64(chainsql.currentHeight) {
+		chainsql.currentHeight = int(localCurrentHeight)
+	}
 	/**
 	 *Set block height notification
 	 */
@@ -151,127 +153,62 @@ func (chainsql *ChainsqlManager) SubscribeBlockNumber() {
 	chainsql.NotifyBlockNumber(currHeight)
 }
 
-func (chainsql *ChainsqlManager) NotifyBlockNumber(blockNumber int64) {
+func (chainsql *ChainsqlManager) NotifyBlockNumber(blockNumber int) {
 	log.Infof("MonitorChain - chainsql current height: %v", blockNumber)
 	height := uint64(blockNumber)
-	if height <= chainsql.currentHeight {
+	if height <= uint64(chainsql.currentHeight) {
 		return
 	}
-	for chainsql.currentHeight < height {
+
+	for uint64(chainsql.currentHeight) < height {
 		if chainsql.FetchLockDepositEvents(chainsql.currentHeight + 1) {
 			chainsql.currentHeight++
-			if err := chainsql.db.UpdateChainsqlHeight(chainsql.currentHeight); err != nil {
-				log.Errorf("ChainsqlManager MonitorChain - save new height %d to DB failed: %v", chainsql.currentHeight, err)
+			if err := chainsql.db.UpdateChainsqlHeight(uint64(chainsql.currentHeight)); err != nil {
+				log.Errorf(
+					"ChainsqlManager MonitorChain - save new height %d to DB failed: %v",
+					chainsql.currentHeight, err)
 			}
 		}
 	}
 
 }
 
-func (chainsql *ChainsqlManager) BlockNumber() (int64, error) {
-	bn, err := chainsql.client.GetBlockNumber(context.Background())
-	if err != nil {
-		return 0, fmt.Errorf("block number not found: %v", err)
-	}
-	str, err := strconv.Unquote(bytes2str(bn))
-	if err != nil {
-		return 0, fmt.Errorf("ParseInt: %v", err)
-	}
-	height, err := strconv.ParseInt(str, 0, 0)
-	if err != nil {
-		return 0, fmt.Errorf("ParseInt: %v", err)
-	}
-	return height, nil
+func (chainsql *ChainsqlManager) BlockNumber() (int, error) {
+	return chainsql.client.GetBlockNumber()
 }
 
-func (chainsql *ChainsqlManager) SyncChainsqlGenesisHeader(poly *sdk.PolySdk, ecmAddr string) {
-	eccm := comm.HexToAddress(ecmAddr)
-
-	eccmContract, err := eccm_abi.NewEthCrossChainManager(eccm, chainsql.client)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	gB, err := poly.GetBlockByHeight(60000)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	if err != nil {
-		panic(err)
-	}
-	info := &vconfig.VbftBlockInfo{}
-	if err := json.Unmarshal(gB.Header.ConsensusPayload, info); err != nil {
-		panic(fmt.Errorf("commitGenesisHeader - unmarshal blockInfo error: %s", err))
-	}
-
-	var bookkeepers []keypair.PublicKey
-	for _, peer := range info.NewChainConfig.Peers {
-		keystr, _ := hex.DecodeString(peer.ID)
-		key, _ := keypair.DeserializePublicKey(keystr)
-		bookkeepers = append(bookkeepers, key)
-	}
-	bookkeepers = keypair.SortPublicKeys(bookkeepers)
-
-	publickeys := make([]byte, 0)
-	for _, key := range bookkeepers {
-		publickeys = append(publickeys, ont.GetOntNoCompressKey(key)...)
-	}
-	rawHdr := gB.Header.ToArray()
-
-	trans, recp, _ := eccmContract.InitGenesisBlock(chainsql.client.GetTransactOpts(), rawHdr, publickeys)
-
-	log.Infof("InitGenesisBlock: %s,recp:%v", trans.Hash().Hex(), recp.BlockNumber)
-}
-
-type BlockRes struct {
-	Transactions []string `json:"transactions"`
-}
-
-func (chainsql *ChainsqlManager) FetchLockDepositEvents(height uint64) bool {
-	eccmAddress := comm.HexToAddress(chainsql.config.ChainsqlConfig.ECCMContractAddress)
-	eccmContract, err := eccm_abi.NewEthCrossChainManager(eccmAddress, chainsql.client)
+func (chainsql *ChainsqlManager) FetchLockDepositEvents(height int) bool {
+	eccmAddress := chainsql.config.ChainsqlConfig.ECCMContractAddress
+	eccmContract, err := eccm_abi.NewEthCrossChainManager(chainsql.client.Chainsql, eccmAddress)
 	if err != nil {
 		return false
 	}
-	blk, err := chainsql.client.GetBlockByNumber(context.Background(), strconv.FormatUint(height, 10), false)
+	blk := chainsql.client.GetLedgerTransactions(height)
+	var blockRes map[string]interface{}
+	err = json.Unmarshal([]byte(blk), &blockRes)
 	if err != nil {
-		log.Errorf("fetchLockDepositEvents - GetBlockByNumber error :%s", err.Error())
+		log.Debugf("fetchLockDepositEvents - Unmarshal error :%s", err.Error())
 		return false
 	}
-	res := &BlockRes{}
-	err = json.Unmarshal(blk, res)
-	if err != nil {
-		log.Errorf("fetchLockDepositEvents - Unmarshal error :%s", err.Error())
-		return false
-	}
-	for _, tx := range res.Transactions {
-		recp, err := chainsql.client.TransactionReceipt(context.Background(), comm.HexToHash(tx))
+	result := blockRes["result"].(map[string]interface{})
+	ledger := result["ledger"].(map[string]interface{})
+	transactions := reflect.ValueOf(ledger["transactions"])
+	for i := 0; i < transactions.Len(); i++ {
+		txHash := transactions.Index(i).Interface().(string)
+		contractEvents, err := eccmContract.GetCrossChainEventPastEvent(txHash, "")
 		if err != nil {
-			log.Errorf("fetchLockDepositEvents - TransactionReceipt error: %s", err.Error())
+			log.Errorf(
+				"fetchLockDepositEvents - fetchLockDepositEvents error: (se:%d, tx:%s, %s)",
+				height, txHash, err.Error())
 			continue
 		}
-		if recp.Status != 0 {
-			continue
-		}
-		for _, v := range recp.Logs {
-			if v.Address != strings.ToLower(chainsql.config.ChainsqlConfig.ECCMContractAddress) {
-				continue
-			}
-			topics := make([]comm.Hash, len(v.Topics))
-			for i, t := range v.Topics {
-				topics[i] = comm.HexToHash(t.(string))
-			}
-			rawData, _ := hex.DecodeString(strings.TrimPrefix(v.Data, "0x"))
-			evt, err := eccmContract.ParseCrossChainEvent(types.Log{
-				Address: comm.HexToAddress(v.Address),
-				Topics:  topics,
-				Data:    rawData,
-			})
-			if err != nil || evt == nil {
-				continue
-			}
 
+		if len(contractEvents) == 0 {
+			log.Trace("fetchLockDepositEvents - contractEvents is empty")
+			continue
+		}
+
+		for _, evt := range contractEvents {
 			var isTarget bool
 			if len(chainsql.config.TargetContracts) > 0 {
 				toContractStr := evt.ProxyOrAssetContract.String()
@@ -299,11 +236,11 @@ func (chainsql *ChainsqlManager) FetchLockDepositEvents(height uint64) bool {
 			}
 			hash, err := chainsql.SendCrossChainInfoWithRaw(evt.Rawdata)
 			if err != nil {
-				log.Errorf("failed to send for chainsql tx %s: (error: %v, raw_data: %x)", tx, err, rawData)
+				log.Errorf("fetchLockDepositEvents - SendCrossChainInfoWithRaw error: %s", err.Error())
 				continue
 			}
-			log.Infof("fetchLockDepositEvents - successful to send cross chain info: (tx_hash: %s, hash: %s)",
-				hash.ToHexString(), tx)
+			log.Infof("fetchLockDepositEvents - SendCrossChainInfoWithRaw successful to send cross chain info: (tx_hash: %s)",
+				hash.ToHexString())
 		}
 	}
 
@@ -319,28 +256,29 @@ func (chainsql *ChainsqlManager) SendCrossChainInfoWithRaw(rawInfo []byte) (comm
 
 	var sig []byte
 	if !chainsql.config.ChainsqlConfig.IsGM {
-		hasher := sha256.New()
+		hasher := sm2.SHA256.New()
 		hasher.Write(rawInfo)
 		raw := hasher.Sum(nil)
 		key, err := pkcs12.ParsePKCS8PrivateKey(blk.Bytes)
 		if err != nil {
+			log.Errorf("SendCrossChainInfoWithRaw - ParsePKCS8PrivateKey: %s", err.Error())
 			return common.UINT256_EMPTY, err
 		}
 		priv := key.(*ecdsa.PrivateKey)
 		sig, err = priv.Sign(rand.Reader, raw, nil)
 		if err != nil {
+			log.Errorf("SendCrossChainInfoWithRaw - Sign: %s", err.Error())
 			return common.UINT256_EMPTY, err
 		}
 	} else {
-		log.Fatalf("Not support GM now.")
-		//key, err := sm2.ParsePKCS8UnecryptedPrivateKey(blk.Bytes)
-		//if err != nil {
-		//	return common.UINT256_EMPTY, fmt.Errorf("failed to ParsePKCS8UnecryptedPrivateKey: %v", err)
-		//}
-		//sig, err = key.Sign(rand.Reader, rawInfo, nil)
-		//if err != nil {
-		//	return common.UINT256_EMPTY, err
-		//}
+		key, err := sm2.ParsePKCS8UnecryptedPrivateKey(blk.Bytes)
+		if err != nil {
+			return common.UINT256_EMPTY, fmt.Errorf("failed to ParsePKCS8UnecryptedPrivateKey: %v", err)
+		}
+		sig, err = key.Sign(rand.Reader, rawInfo, nil)
+		if err != nil {
+			return common.UINT256_EMPTY, err
+		}
 	}
 
 	txHash, err := chainsql.RelayCrossChainInfo(
@@ -355,8 +293,13 @@ func (chainsql *ChainsqlManager) SendCrossChainInfoWithRaw(rawInfo []byte) (comm
 	return txHash, nil
 }
 
-func (chainsql *ChainsqlManager) RelayCrossChainInfo(sourceChainId uint64, sigForInfo, crossChainInfo,
-	relayerAddress []byte, certs *tools.CertTrustChain, signer *sdk.Account) (common.Uint256, error) {
+func (chainsql *ChainsqlManager) RelayCrossChainInfo(
+	sourceChainId uint64,
+	sigForInfo,
+	crossChainInfo,
+	relayerAddress []byte,
+	certs *tools.CertTrustChain,
+	signer *sdk.Account) (common.Uint256, error) {
 	sink := common.NewZeroCopySink(nil)
 	certs.Serialization(sink)
 	return chainsql.polySdk.Native.Ccm.ImportOuterTransfer(

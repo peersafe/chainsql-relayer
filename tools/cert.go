@@ -37,11 +37,11 @@ import (
 	"fmt"
 
 	"github.com/polynetwork/poly/common"
-	"github.com/tjfoc/gmsm/x509"
+	sm2 "github.com/tjfoc/gmsm/sm2"
 )
 
 type CertTrustChain struct {
-	Certs []*x509.Certificate
+	Certs []*sm2.Certificate
 }
 
 func (set *CertTrustChain) Serialization(sink *common.ZeroCopySink) {
@@ -56,13 +56,13 @@ func (set *CertTrustChain) Deserialization(source *common.ZeroCopySource) (err e
 	if eof {
 		return fmt.Errorf("failed to deserialize length")
 	}
-	set.Certs = make([]*x509.Certificate, l)
+	set.Certs = make([]*sm2.Certificate, l)
 	for i := uint16(0); i < l; i++ {
 		raw, eof := source.NextVarBytes()
 		if eof {
 			return fmt.Errorf("failed to get raw bytes for No.%d cert", i)
 		}
-		set.Certs[i], err = x509.ParseCertificate(raw)
+		set.Certs[i], err = sm2.ParseCertificate(raw)
 		if err != nil {
 			return fmt.Errorf("failed to parse cert for No.%d: %v", i, err)
 		}
@@ -70,7 +70,7 @@ func (set *CertTrustChain) Deserialization(source *common.ZeroCopySource) (err e
 	return nil
 }
 
-func (set *CertTrustChain) CheckSigWithRootCert(root *x509.Certificate, signed, sig []byte) error {
+func (set *CertTrustChain) CheckSigWithRootCert(root *sm2.Certificate, signed, sig []byte) error {
 	for i, c := range set.Certs {
 		if err := c.CheckSignatureFrom(root); err != nil {
 			return fmt.Errorf("failed to check sig for No.%d cert from parent: %v", i, err)
